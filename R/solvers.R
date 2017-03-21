@@ -38,7 +38,7 @@ sgmwcs.solver <- function (sgmwcs, nthreads = 1, timeLimit = -1, nodes.group.by=
             warning("Solution file not found")
             return(NULL)
         }
-        res <- GAM:::readGraph(node.file = solution.file,
+        res <- readGraph(node.file = solution.file,
                                edge.file = paste0(instance$edges.file, ".out"),
                                network = network)
         solutionLog <- readLines(log.file)
@@ -218,4 +218,26 @@ solveSgmwcsRandHeur <- function(g,
     solution
     .messagef("Score: %s", solution$score)
     subgraph.edges(g, E(g)[solution$edges])
+}
+
+readGraph <- function(node.file, edge.file, network) {
+    nodes <- as.matrix(read.table(file = node.file,
+                                  na.strings = "n/a",
+                                  colClasses = c("character", "numeric")))
+    nodes2 <- which(!is.na(as.numeric(nodes[, 2])))
+
+
+    edges <- as.matrix(read.table(file = edge.file,
+                                  na.strings = "n/a",
+                                  colClasses = c("character", "character", "numeric")))
+    edges2 <- which(!is.na(as.numeric(edges[, 3])))
+
+    if (length(edges2) > 0) {
+        res <- subgraph.edges(network, eids = edges2, delete.vertices = T)
+    } else {
+        res <- induced.subgraph(network, vids = nodes2)
+    }
+
+    stopifnot(setequal(V(network)[nodes2]$name, V(res)$name))
+    res
 }

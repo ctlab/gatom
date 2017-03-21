@@ -2,13 +2,17 @@ Package: gatom
 Title: Finding an Active Metabolic Module in Atom Transition Network
 Version: 0.0.0.9000
 Authors@R: person("Alexey", "Sergushichev", email = "alsergbox@gmail.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Description: An package for finding active metabolic modules in atom transition network.
 Depends:
     R (>= 3.3.1)
 Imports:
     data.table,
-    igraph
-License: What license is it under?
+    igraph,
+    BioNet
+License: MIT + file LICENCE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1
+VignetteBuilder: knitr
+URL: https://github.com/ctlab/gatom/
+BugReports: https://github.com/ctlab/gatom/issues

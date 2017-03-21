@@ -85,6 +85,7 @@ makeAtomGraph <- function(network,
     g
 }
 
+#' @import BioNet
 #' @export
 scoreGraph <- function(g, k.gene, k.met,
                        vertex.threshold.min=0.1,
