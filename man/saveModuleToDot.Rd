@@ -16,10 +16,4 @@ saveModuleToDot(module, file, name = NULL)
 \description{
 Save module to a graphviz dot file
 }
-\examples{
-data(examplesGAM)
-\dontrun{
-saveModuleToDot(module.re, "module.re.dot", name="M1 vs M2")
-}
-}
 

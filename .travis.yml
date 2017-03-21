@@ -1,8 +1,8 @@
 language: r
 r: 
-    - bioc-devel
+    #- bioc-devel
     - bioc-release
-warnings_are_errors: false # :todo: comment out
+warnings_are_errors: false # :ToDo: comment out
 sudo: false
 cache: packages
 
@@ -11,21 +11,23 @@ r_packages:
 
 os:
   - linux
-  - osx
+    #  - osx
 
 bioc_required: true
 bioc_packages:
   - BiocCheck
-  - BiocParallel
 
-
-after_script:
-  - ls -lah
-  - FILE=$(ls -1t *.tar.gz | head -n 1)
-  - Rscript -e "library(BiocCheck); BiocCheck(\"${FILE}\")"
+# # :ToDo: uncomment
+# after_script:
+#   - ls -lah
+#   - FILE=$(ls -1t *.tar.gz | head -n 1)
+#   - Rscript -e "library(BiocCheck); BiocCheck(\"${FILE}\")"
 
 after_success:
       - Rscript -e 'covr::codecov()'
+
+deploy:
+    skip_cleanup: true
 
 # Something happend to osx bioc-devel builds 
 matrix:

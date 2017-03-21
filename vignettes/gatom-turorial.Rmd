@@ -118,7 +118,7 @@ tool from graphviz suite.
 ```{r}
 saveModuleToDot(m, file="M0.vs.M1.dot", name="M0.vs.M1")
 system("neato -Tsvg M0.vs.M1.dot > M0.vs.M1.svg", ignore.stderr = T)
-include_graphics("M0.vs.M1.svg")
+knitr::include_graphics("M0.vs.M1.svg")
 ```
 
 The module can also be save to xgmml format and later opened in Cytoscape.
