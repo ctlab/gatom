@@ -9,6 +9,10 @@ Imports:
     data.table,
     igraph,
     BioNet
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown
 License: MIT + file LICENCE
 Encoding: UTF-8
 LazyData: true

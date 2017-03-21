@@ -1,6 +1,12 @@
 ---
-title: "GATOM tutorial"
-output: html_document
+title: "Using gatom package"
+date: "2017-03-21"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using gatom package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
 ---
 
 ```{r setup, include=FALSE}
@@ -9,8 +15,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r message=FALSE}
-library(data.table)
 library(gatom)
+library(data.table)
+library(igraph)
 ```
 
 First let's load data with atom mappings (`network` object),
@@ -95,7 +102,7 @@ gs <- scoreGraph(g, k.gene = 75, k.met=75)
 Finding a module
 
 ```{r}
-m <- solveSgmwcsRandHeur(gs, nodes.group.by = "ion", edges.group.by = "probe", max.iterations = 10000)
+m <- solveSgmwcsRandHeur(gs, nodes.group.by = "ion", edges.group.by = "probe", max.iterations = 1000)
 ```
 
 ```{r}
