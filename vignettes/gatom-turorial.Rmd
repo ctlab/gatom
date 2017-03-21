@@ -1,0 +1,105 @@
+---
+title: "GATOM tutorial"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r message=FALSE}
+library(data.table)
+library(gatom)
+```
+
+First let's load data with atom mappings (`network` object),
+enzyme annotations for mouse (`org.Mm.eg.gatom`)
+and metabolite annotations (`met.kegg.db.rda`):
+
+```{r}
+load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rda"))
+load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rda"))
+load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rda"))
+ls()
+```
+
+
+Loading input data:
+
+```{r message=F}
+met.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv", 
+                    colClasses = "character")
+
+gene.de.raw <-  fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv", 
+                     colClasses = "character")
+```
+
+Pre-processing of metabolite data:
+
+```{r}
+# :ToDO: make automatic
+met.de.meta <- list()
+met.de.meta$idType <- "HMDB"
+
+met.de <- copy(met.de.raw)
+met.de[, ion := paste0(pval, "_", log2FC)]
+met.de[, pval := as.numeric(pval)]
+met.de[, logPval := log(pval)]
+met.de[, log2FC := as.numeric(log2FC)]
+
+```
+
+Pre-procesing gene data
+
+```{r}
+# :ToDO: make automatic
+gene.de.meta <- list()
+gene.de.meta$idType <- "RefSeq"
+
+gene.de <- copy(gene.de.raw)
+gene.de[, probe := paste0(pval, "_", log2FC)]
+gene.de[, pval := as.numeric(pval)]
+gene.de[, logPval := log(pval)]
+gene.de[, log2FC := as.numeric(log2FC)]
+gene.de[, baseMean := as.numeric(baseMean)]
+```
+
+Leaving only top expressed genes
+
+```{r}
+expressedProbes <- gene.de[order(baseMean, decreasing=T)][!duplicated(probe)][,head(probe, 12000)]
+gene.de <- gene.de[probe %in% expressedProbes]
+```
+
+
+Getting atom graph
+
+```{r}
+g <- makeAtomGraph(network, 
+                   org.gatom.anno=org.Mm.eg.gatom.anno, 
+                   gene.de=gene.de,
+                   gene.de.meta=gene.de.meta,
+                   met.db=met.kegg.db, 
+                   met.de=met.de,
+                   met.de.meta=met.de.meta)
+print(g)
+```
+
+Scoring graph
+
+```{r}
+gs <- scoreGraph(g, k.gene = 75, k.met=75)
+```
+
+Finding a module
+
+```{r}
+m <- solveSgmwcsRandHeur(gs, nodes.group.by = "ion", edges.group.by = "probe", max.iterations = 10000)
+```
+
+```{r}
+print(m)
+E(m)$symbol
+V(m)$label
+```
