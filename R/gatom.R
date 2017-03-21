@@ -17,6 +17,7 @@
                                   org.gatom.anno$gene2enzyme)
     reaction.pvals <- convertPvalDT(enzyme.pvals,
                                     network$enzyme2reaction)
+    reaction.pvals <- merge(reaction.pvals, network$reactions)
     rpair.pvals <- convertPvalDT(reaction.pvals,
                                  network$reaction2rpair)
 
@@ -25,7 +26,9 @@
     edge.table <- copy(align.pvals)
     edge.table[, colnames(gene.de) := gene.de[origin]]
     edge.table[, ID := NULL]
-    edge.table[, label := symbol]
+    setnames(edge.table, "symbol", "label")
+    setnames(edge.table, "reaction_url", "url")
+
     edge.table[]
 }
 
@@ -60,7 +63,8 @@
     vertex.table[, colnames(met.de) := met.de[origin]]
     vertex.table[, ID := NULL]
     setcolorder(vertex.table, c("atom", setdiff(colnames(vertex.table), "atom")))
-    vertex.table[, label := metabolite_name]
+    setnames(vertex.table, "metabolite_name", "label")
+    setnames(vertex.table, "metabolite_url", "url")
     vertex.table[]
 }
 

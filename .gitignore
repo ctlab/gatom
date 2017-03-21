@@ -2,4 +2,5 @@
 .Rhistory
 .RData
 inst/doc
+vignettes/M0.vs.M1.*
 *.gz

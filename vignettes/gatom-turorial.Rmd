@@ -102,11 +102,27 @@ gs <- scoreGraph(g, k.gene = 75, k.met=75)
 Finding a module
 
 ```{r}
-m <- solveSgmwcsRandHeur(gs, nodes.group.by = "ion", edges.group.by = "probe", max.iterations = 1000)
+set.seed(42)
+m <- solveSgmwcsRandHeur(gs, nodes.group.by = "ion", edges.group.by = "probe", max.iterations = 2000)
 ```
 
 ```{r}
 print(m)
-E(m)$symbol
+E(m)$label
 V(m)$label
+```
+
+We can save the module to dot format to generate pdf or svg file using `neato`
+tool from graphviz suite.
+
+```{r}
+saveModuleToDot(m, file="M0.vs.M1.dot", name="M0.vs.M1")
+system("neato -Tsvg M0.vs.M1.dot > M0.vs.M1.svg", ignore.stderr = T)
+include_graphics("M0.vs.M1.svg")
+```
+
+The module can also be save to xgmml format and later opened in Cytoscape.
+
+```{r}
+saveModuleToXgmml(m, file="M0.vs.M1.xgmml", name="M0.vs.M1")
 ```
