@@ -1,0 +1,34 @@
+language: r
+r: 
+    - bioc-devel
+    - bioc-release
+# warnings_are_errors: true
+sudo: false
+cache: packages
+
+r_packages:
+      - covr
+
+os:
+  - linux
+  - osx
+
+bioc_required: true
+bioc_packages:
+  - BiocCheck
+  - BiocParallel
+
+
+after_script:
+  - ls -lah
+  - FILE=$(ls -1t *.tar.gz | head -n 1)
+  - Rscript -e "library(BiocCheck); BiocCheck(\"${FILE}\")"
+
+after_success:
+      - Rscript -e 'covr::codecov()'
+
+# Something happend to osx bioc-devel builds 
+matrix:
+  exclude:
+  - os: osx
+    r: bioc-devel
