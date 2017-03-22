@@ -103,7 +103,7 @@ Finding a module
 
 ```{r}
 set.seed(42)
-m <- solveSgmwcsRandHeur(gs, nodes.group.by = "ion", edges.group.by = "probe", max.iterations = 2000)
+m <- solveSgmwcsRandHeur(gs, max.iterations = 2000)
 ```
 
 ```{r}

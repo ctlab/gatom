@@ -23,8 +23,8 @@ bioc_packages:
 #   - FILE=$(ls -1t *.tar.gz | head -n 1)
 #   - Rscript -e "library(BiocCheck); BiocCheck(\"${FILE}\")"
 # 
-# after_success:
-#   - Rscript -e 'covr::codecov()'
+after_success:
+  - Rscript -e 'covr::codecov()'
 
 # Something happend to osx bioc-devel builds 
 matrix:

@@ -1,5 +1,7 @@
 #' @export
-sgmwcs.solver <- function (sgmwcs, nthreads = 1, timeLimit = -1, nodes.group.by=NULL, edges.group.by=NULL,
+sgmwcs.solver <- function (sgmwcs, nthreads = 1, timeLimit = -1,
+                           nodes.group.by="signal",
+                           edges.group.by="signal",
                            group.only.positive=F,
                            minimize.size=F,
                            other.args=NULL) {
@@ -50,7 +52,7 @@ sgmwcs.solver <- function (sgmwcs, nthreads = 1, timeLimit = -1, nodes.group.by=
 writeSgmwcsInstance <- function(graph.dir, network,
                                 nodes.group.by=NULL,
                                 edges.group.by=NULL,
-                                group.only.positive=F) {
+                                group.only.positive=T) {
 
 
 
@@ -61,7 +63,7 @@ writeSgmwcsInstance <- function(graph.dir, network,
 
     synonyms <- c()
 
-    nt <- get.vertex.attributes(network)
+    nt <- as_data_frame(network, what="vertices")
     if (!is.null(nodes.group.by)) {
         f <- as.formula(sprintf("name ~ %s", nodes.group.by))
         if (all(all.vars(f) %in% colnames(nt))) {
@@ -75,9 +77,10 @@ writeSgmwcsInstance <- function(graph.dir, network,
     } else {
         synonyms <- c(synonyms, nt$name)
     }
-    nt <- rename(nt[, c("name", "score")], c("name"="#name"))
+    nt <- nt[, c("name", "score")]
+    colnames(nt) <- c("#name", "score")
 
-    et <- get.edge.attributes(network, include.ends = T)
+    et <- as_data_frame(network, what="edges")
     if (!is.null(edges.group.by)) {
         etx <- if (group.only.positive) {
             synonyms <- c(synonyms, with(et[et$score <= 0,], sprintf("%s -- %s", from, to)))
@@ -97,10 +100,11 @@ writeSgmwcsInstance <- function(graph.dir, network,
 
 
     }
-    et <- rename(et[, c("from", "to", "score")], c("from"="#from"))
+    et <- et[, c("from", "to", "score")]
+    colnames(et) <- c("#from", "to", "score")
 
-    write.tsv(nt, file=nodes.file)
-    write.tsv(et, file=edges.file)
+    write.table(nt, file=nodes.file, sep="\t", row.names=F, quote=F, col.names=T)
+    write.table(et, file=edges.file, sep="\t", row.names=F, quote=F, col.names=T)
     writeLines(sprintf("%s", synonyms), con=synonyms.file)
 
     if (length(synonyms) == 0) {
@@ -114,8 +118,8 @@ writeSgmwcsInstance <- function(graph.dir, network,
 
 #' @export
 solveSgmwcsRandHeur <- function(g,
-                                nodes.group.by=NULL,
-                                edges.group.by=NULL,
+                                nodes.group.by="signal",
+                                edges.group.by="signal",
                                 max.iterations = 10000) {
     n <- length(V(g))
     m <- length(E(g))
