@@ -32,14 +32,20 @@ matrix:
   - os: osx
     r: bioc-devel
 
+addons:
+  apt:
+    packages:
+    - openjdk-8-jre-headless
+env:
+    -PATH="$HOME/bin:$PATH"
+
 # for loading cplex libraries
 before_install:
   - mkdir ~/lib
-  - wget $CPLEX_SO_LINK -O ~/lib/libcplex1263.so
+  - wget -q $CPLEX_SO_LINK -O ~/lib/libcplex1263.so
   - wget https://www.dropbox.com/s/hu9e8ihtyc0f0uh/gmwcs-signal.jar?raw=1 -O ~/lib/sgmwcs.jar
   - mkdir ~/bin
   - echo -e '#!/bin/sh\nexec java -Djava.library.path=$HOME/lib -Xmx2G -jar $HOME/sgmwcs.jar -i "$@"' > ~/bin/sgmwcs
-  - ls ~
-  - ls ~/lib
-  - ls ~/bin
+  - ~/bin/sgmwcs -h
+  - sgmwcs -h
 
