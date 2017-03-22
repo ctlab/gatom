@@ -2,5 +2,6 @@
 .Rhistory
 .RData
 inst/doc
+inst/org.*.rda
 vignettes/M0.vs.M1.*
 *.gz

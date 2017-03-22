@@ -11,7 +11,7 @@ makeOrgGatomAnnotation <- function(org.db,
                                    keggOrgCode=NULL
 ) {
     if (appendEnzymesFromKegg) {
-        stopifnot(requireNamespace(KEGGREST))
+        stopifnot(requireNamespace("KEGGREST"))
         if (is.null(keggOrgCode)) {
             meta <- AnnotationDbi::metadata(org.db)
             organismName <- meta$value[match("ORGANISM", meta$name)]

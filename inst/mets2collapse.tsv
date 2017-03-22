@@ -1,0 +1,275 @@
+short	full	from	to
+"C6H6O2: Catechol"	"Catechol"	C00090	C00090
+"C6H6O2: Catechol"	"Catechol"	C15571	C00090
+"C7H14O7: D-Sedoheptulose"	"D-Sedoheptulose"	C02076	C02076
+"C7H14O7: D-Sedoheptulose"	"beta-D-Sedoheptulose"	C08355	C02076
+"C27H35NO3: PC-M6"	"beta-PC-M6"	C20535	C20535
+"C27H35NO3: PC-M6"	"alpha-PC-M6"	C20558	C20535
+"C11H19NO9: Neu5Ac"	"Neu5Ac"	C00270	C00270
+"C11H19NO9: Neu5Ac"	"alpha-Neu5Ac"	C19909	C00270
+"C11H19NO9: Neu5Ac"	"beta-Neu5Ac"	C19910	C00270
+"C9H8O4: Caffeate"	"Caffeate"	C01197	C01197
+"C9H8O4: Caffeate"	"Caffeate"	C01481	C01197
+"C10H8O: Naphthol"	"beta-Naphthol"	C11713	C11713
+"C10H8O: Naphthol"	"alpha-Naphthol"	C11714	C11713
+"C26H29NO2: Hydroxytamoxifen"	"Hydroxytamoxifen"	C05011	C05011
+"C26H29NO2: Hydroxytamoxifen"	"alpha-Hydroxytamoxifen"	C16544	C05011
+"C6H12O6: D-Hamamelose"	"D-Hamamelose"	C01906	C01906
+"C6H12O6: D-Hamamelose"	"beta-D-Hamamelose"	C08351	C01906
+"C11H8O2: Naphthoic acid"	"alpha-Naphthoic acid"	C14091	C14091
+"C11H8O2: Naphthoic acid"	"beta-Naphthoic acid"	C14101	C14091
+"C12H22O11: Mannobiose"	"Mannobiose"	C01728	C01728
+"C12H22O11: Mannobiose"	"Mannobiose"	C20861	C01728
+"C6H14O12P2: D-Fructose 1,6-bisphosphate"	"D-Fructose 1,6-bisphosphate"	C00354	C00354
+"C6H14O12P2: D-Fructose 1,6-bisphosphate"	"beta-D-Fructose 1,6-bisphosphate"	C05378	C00354
+"C8H8O2: Phenyl acetate"	"Phenyl acetate"	C00548	C00548
+"C8H8O2: Phenyl acetate"	"Phenyl acetate"	C15583	C00548
+"C6H6O4S: Phenol sulfate"	"Phenol sulfate"	C00850	C00850
+"C6H6O4S: Phenol sulfate"	"Phenol sulfate"	C02180	C00850
+"C6H11NO4: Alanopine"	"beta-Alanopine"	C02207	C02207
+"C6H11NO4: Alanopine"	"Alanopine"	C03210	C02207
+"C15H12O3: 4'-Hydroxyflavanone"	"4'-Hydroxyflavanone"	C14241	C14241
+"C15H12O3: 4'-Hydroxyflavanone"	"4'-Hydroxyflavanone"	C19896	C14241
+"C6H13O9P: D-Glucose 1-phosphate"	"D-Glucose 1-phosphate"	C00103	C00103
+"C6H13O9P: D-Glucose 1-phosphate"	"alpha-D-Glucose 1-phosphate"	C00103	C00103
+"C6H13O9P: D-Glucose 1-phosphate"	"beta-D-Glucose 1-phosphate"	C00663	C00103
+"C12H16O7: Arbutin"	"Arbutin"	C06186	C06186
+"C12H16O7: Arbutin"	"alpha-Arbutin"	C12079	C06186
+"C3H9O6P: Glycerophosphoric acid"	"Glycerophosphoric acid"	C00093	C00093
+"C3H9O6P: Glycerophosphoric acid"	"beta-Glycerophosphoric acid"	C02979	C00093
+"C40H56O: Cryptoxanthin"	"beta-Cryptoxanthin"	C08591	C08591
+"C40H56O: Cryptoxanthin"	"alpha-Cryptoxanthin"	C15981	C08591
+"C6H12O5: D-Fucose"	"D-Fucose"	C01018	C01018
+"C6H12O5: D-Fucose"	"beta-D-Fucose"	C02095	C01018
+"C4H6O5: Malate"	"Malate"	C00149	C00149
+"C4H6O5: Malate"	"Malate"	C00711	C00149
+"C6H11O6R: D-Galactoside"	"beta-D-Galactoside"	C00602	C00602
+"C6H11O6R: D-Galactoside"	"D-Galactoside"	C02023	C00602
+"C6H12O5: L-Rhamnose"	"L-Rhamnose"	C00507	C00507
+"C6H12O5: L-Rhamnose"	"beta-L-Rhamnose"	C02338	C00507
+"C6H12O5: L-Rhamnose"	"alpha-L-Rhamnose"	C02476	C00507
+"C5H10O5: L-Arabinose"	"L-Arabinose"	C00259	C00259
+"C5H10O5: L-Arabinose"	"beta-L-Arabinose"	C02479	C00259
+"C5H10O5: L-Arabinose"	"alpha-L-Arabinose"	C02604	C00259
+"C5H10O5: L-Arabinose"	"L-Arabinose"	C11476	C00259
+"C4H6O3: Ketobutyric acid"	"alpha-Ketobutyric acid"	C00109	C00109
+"C4H6O3: Ketobutyric acid"	"beta-Ketobutyric acid"	C00164	C00109
+"C15H23N5O14P2: ADP-D-ribose"	"ADP-D-ribose"	C00301	C00301
+"C15H23N5O14P2: ADP-D-ribose"	"ADP-D-ribose"	C01882	C00301
+"C15H14O5: Pyrufuran"	"alpha-Pyrufuran"	C08929	C08929
+"C15H14O5: Pyrufuran"	"beta-Pyrufuran"	C08948	C08929
+"C8H10O4: Penicillic acid"	"Penicillic acid"	C16804	C16804
+"C8H10O4: Penicillic acid"	"Penicillic acid"	C19495	C16804
+"C6H12O6: D-Galactose"	"D-Galactose"	C00124	C00124
+"C6H12O6: D-Galactose"	"beta-D-Galactose"	C00962	C00124
+"C6H12O6: D-Galactose"	"alpha-D-Galactose"	C00984	C00124
+"C6H11O5R: L-Rhamnoside"	"beta-L-Rhamnoside"	C02605	C02605
+"C6H11O5R: L-Rhamnoside"	"alpha-L-Rhamnoside"	C02757	C02605
+"C15H12O: Chalcone"	"Chalcone"	C01484	C01484
+"C15H12O: Chalcone"	"Chalcone"	C15589	C01484
+"C6H13O9P: D-Galactose 1-phosphate"	"alpha-D-Galactose 1-phosphate"	C00446	C00446
+"C6H13O9P: D-Galactose 1-phosphate"	"D-Galactose 1-phosphate"	C03384	C00446
+"C5H10O5: D-Lyxose"	"D-Lyxose"	C00476	C00476
+"C5H10O5: D-Lyxose"	"alpha-D-Lyxose"	C02204	C00476
+"C6H6Cl6: 1,2,3,4,5,6-Hexachlorocyclohexane"	"beta-1,2,3,4,5,6-Hexachlorocyclohexane"	C06988	C06988
+"C6H6Cl6: 1,2,3,4,5,6-Hexachlorocyclohexane"	"1,2,3,4,5,6-Hexachlorocyclohexane"	C07075	C06988
+"C6H6Cl6: 1,2,3,4,5,6-Hexachlorocyclohexane"	"1,2,3,4,5,6-Hexachlorocyclohexane"	C18738	C06988
+"C18H24O5: trans-Zearalenol"	"trans-Zearalenol"	C14750	C14750
+"C18H24O5: trans-Zearalenol"	"beta-trans-Zearalenol"	C14751	C14750
+"C15H22O: Sinensal"	"alpha-Sinensal"	C09729	C09729
+"C15H22O: Sinensal"	"beta-Sinensal"	C09730	C09729
+"C5H11O8P: D-Ribose 5-phosphate"	"D-Ribose 5-phosphate"	C00117	C00117
+"C5H11O8P: D-Ribose 5-phosphate"	"alpha-D-Ribose 5-phosphate"	C03736	C00117
+"C12H22O11: Cellobiose"	"Cellobiose"	C00185	C00185
+"C12H22O11: Cellobiose"	"alpha-Cellobiose"	C06421	C00185
+"C12H22O11: Cellobiose"	"beta-Cellobiose"	C06422	C00185
+"C6H12O5: 6-Deoxy-L-mannose"	"6-Deoxy-L-mannose"	C00507	C00507
+"C6H12O5: 6-Deoxy-L-mannose"	"beta-6-Deoxy-L-mannose"	C02338	C00507
+"C6H12O5: 6-Deoxy-L-mannose"	"alpha-6-Deoxy-L-mannose"	C02476	C00507
+"C12H22O11: Lactose"	"Lactose"	C00243	C00243
+"C12H22O11: Lactose"	"beta-Lactose"	C01970	C00243
+"C9H8O4: Caffeic acid"	"Caffeic acid"	C01197	C01197
+"C9H8O4: Caffeic acid"	"Caffeic acid"	C01481	C01197
+"C10H12N4O4: N-D-Ribosylpurine"	"N-D-Ribosylpurine"	C01736	C01736
+"C10H12N4O4: N-D-Ribosylpurine"	"N-D-Ribosylpurine"	C15586	C01736
+"C15H26O: Eudesmol"	"alpha-Eudesmol"	C09663	C09663
+"C15H26O: Eudesmol"	"beta-Eudesmol"	C09664	C09663
+"C15H20O2: Cyclocostunolide"	"alpha-Cyclocostunolide"	C09383	C09383
+"C15H20O2: Cyclocostunolide"	"beta-Cyclocostunolide"	C09384	C09383
+"C15H10O2: Flavone"	"Flavone"	C10043	C10043
+"C15H10O2: Flavone"	"Flavone"	C15608	C10043
+"C7H12O2: EMGBL"	"alpha-EMGBL"	C13714	C13714
+"C7H12O2: EMGBL"	"beta-EMGBL"	C13717	C13714
+"C6H12O5: L-Fucopyranose"	"alpha-L-Fucopyranose"	C20835	C20835
+"C6H12O5: L-Fucopyranose"	"beta-L-Fucopyranose"	C20836	C20835
+"C12H22O11: Maltose"	"Maltose"	C00208	C00208
+"C12H22O11: Maltose"	"alpha-Maltose"	C00897	C00208
+"C12H22O11: Maltose"	"beta-Maltose"	C01971	C00208
+"C2H4NO2R: Amino acid"	"Amino acid"	C00045	C00045
+"C2H4NO2R: Amino acid"	"alpha-Amino acid"	C05167	C00045
+"C6H13O9P: D-Fructose 6-phosphate"	"D-Fructose 6-phosphate"	C00085	C00085
+"C6H13O9P: D-Fructose 6-phosphate"	"beta-D-Fructose 6-phosphate"	C05345	C00085
+"C15H24: Farnesene"	"alpha-Farnesene"	C09665	C09665
+"C15H24: Farnesene"	"beta-Farnesene"	C09666	C09665
+"C6H12O5: L-Mannomethylose"	"L-Mannomethylose"	C00507	C00507
+"C6H12O5: L-Mannomethylose"	"beta-L-Mannomethylose"	C02338	C00507
+"C6H12O5: L-Mannomethylose"	"alpha-L-Mannomethylose"	C02476	C00507
+"C6H12O6: D-Fructose"	"D-Fructose"	C00095	C00095
+"C6H12O6: D-Fructose"	"beta-D-Fructose"	C02336	C00095
+"C6H12O6: D-Fructose"	"D-Fructose"	C10906	C00095
+"C10H7NO4: 6-Hydroxykynurenic acid"	"6-Hydroxykynurenic acid"	C05663	C05663
+"C10H7NO4: 6-Hydroxykynurenic acid"	"6-Hydroxykynurenic acid"	C08480	C05663
+"C5H10O5: D-Apiose"	"D-Apiose"	C01488	C01488
+"C5H10O5: D-Apiose"	"beta-D-Apiose"	C08346	C01488
+"C6H12O5: L-Rhamnopyranose"	"L-Rhamnopyranose"	C00507	C00507
+"C6H12O5: L-Rhamnopyranose"	"beta-L-Rhamnopyranose"	C02338	C00507
+"C6H12O5: L-Rhamnopyranose"	"alpha-L-Rhamnopyranose"	C02476	C00507
+"C16H19NO3: Erythroidine"	"alpha-Erythroidine"	C06531	C06531
+"C16H19NO3: Erythroidine"	"beta-Erythroidine"	C06532	C06531
+"C6H6O: Phenol"	"Phenol"	C00146	C00146
+"C6H6O: Phenol"	"Phenol"	C15584	C00146
+"C3H7O7P: 3-Phosphoglycerate"	"3-Phosphoglycerate"	C00197	C00197
+"C3H7O7P: 3-Phosphoglycerate"	"3-Phosphoglycerate"	C00597	C00197
+"C6H9O7R: D-Glucuronoside"	"beta-D-Glucuronoside"	C03033	C03033
+"C6H9O7R: D-Glucuronoside"	"alpha-D-Glucuronoside"	C06370	C03033
+"C5H10O5: D-Ribulose"	"D-Ribulose"	C00309	C00309
+"C5H10O5: D-Ribulose"	"alpha-D-Ribulose"	C08354	C00309
+"C10H16: Pinene"	"alpha-Pinene"	C09880	C09880
+"C10H16: Pinene"	"beta-Pinene"	C09882	C09880
+"C8H11N: Phenylethylamine"	"alpha-Phenylethylamine"	C02455	C02455
+"C8H11N: Phenylethylamine"	"beta-Phenylethylamine"	C05332	C02455
+"C8H11N: Phenylethylamine"	"Phenylethylamine"	C05332	C02455
+"C18H26O5: Zearalanol"	"alpha-Zearalanol"	C14752	C14752
+"C18H26O5: Zearalanol"	"beta-Zearalanol"	C14753	C14752
+"C18H24O5: Zearalenol"	"alpha-Zearalenol"	C14750	C14750
+"C18H24O5: Zearalenol"	"beta-Zearalenol"	C14751	C14750
+"C6H12O6: D-arabino-Hexulose"	"D-arabino-Hexulose"	C00095	C00095
+"C6H12O6: D-arabino-Hexulose"	"beta-D-arabino-Hexulose"	C02336	C00095
+"C3H7NO3: Serine"	"Serine"	C00065	C00065
+"C3H7NO3: Serine"	"Serine"	C00716	C00065
+"C6H6Cl6: Hexachlorocyclohexane"	"beta-Hexachlorocyclohexane"	C06988	C06988
+"C6H6Cl6: Hexachlorocyclohexane"	"alpha-Hexachlorocyclohexane"	C15214	C06988
+"C12H20O2: Terpinyl acetate"	"alpha-Terpinyl acetate"	C12300	C12300
+"C12H20O2: Terpinyl acetate"	"beta-Terpinyl acetate"	C12301	C12300
+"C24H40O5: Muricholic acid"	"alpha-Muricholic acid"	C17647	C17647
+"C24H40O5: Muricholic acid"	"beta-Muricholic acid"	C17726	C17647
+"C6H12O5: L-Fucose"	"L-Fucose"	C01019	C01019
+"C6H12O5: L-Fucose"	"alpha-L-Fucose"	C20835	C01019
+"C6H12O5: L-Fucose"	"beta-L-Fucose"	C20836	C01019
+"C6H11O5R: D-Fucoside"	"beta-D-Fucoside"	C00574	C00574
+"C6H11O5R: D-Fucoside"	"alpha-D-Fucoside"	C02472	C00574
+"C5H9NO4: Glutamate"	"Glutamate"	C00025	C00025
+"C5H9NO4: Glutamate"	"Glutamate"	C00302	C00025
+"C8H16N2O4S2: Homocystine"	"Homocystine"	C01817	C01817
+"C8H16N2O4S2: Homocystine"	"Homocystine"	C20788	C01817
+"C15H22O: Vetivone"	"alpha-Vetivone"	C09744	C09744
+"C15H22O: Vetivone"	"beta-Vetivone"	C09745	C09744
+"C3H7NO2: Alanine"	"beta-Alanine"	C00099	C00099
+"C3H7NO2: Alanine"	"Alanine"	C01401	C00099
+"C6H12O6: Levulose"	"Levulose"	C00095	C00095
+"C6H12O6: Levulose"	"beta-Levulose"	C02336	C00095
+"C4H9NO2S: Homocysteine"	"Homocysteine"	C00155	C00155
+"C4H9NO2S: Homocysteine"	"Homocysteine"	C05330	C00155
+"C15H18O3: Santonin"	"alpha-Santonin"	C02206	C02206
+"C15H18O3: Santonin"	"beta-Santonin"	C09545	C02206
+"C6H13O9P: D-Glucose 6-phosphate"	"D-Glucose 6-phosphate"	C00092	C00092
+"C6H13O9P: D-Glucose 6-phosphate"	"alpha-D-Glucose 6-phosphate"	C00668	C00092
+"C6H13O9P: D-Glucose 6-phosphate"	"beta-D-Glucose 6-phosphate"	C01172	C00092
+"C22H19Cl2NO3: Cypermethrin"	"Cypermethrin"	C10984	C10984
+"C22H19Cl2NO3: Cypermethrin"	"alpha-Cypermethrin"	C18715	C10984
+"C20H34O5: Trioxilin A3"	"Trioxilin A3"	C04843	C04843
+"C20H34O5: Trioxilin A3"	"Trioxilin A3"	C14809	C04843
+"C6H13O9P: D-Hexose 6-phosphate"	"D-Hexose 6-phosphate"	C02965	C02965
+"C6H13O9P: D-Hexose 6-phosphate"	"alpha-D-Hexose 6-phosphate"	C03735	C02965
+"C6H10O7: D-Glucuronic acid"	"beta-D-Glucuronic acid"	C08350	C08350
+"C6H10O7: D-Glucuronic acid"	"D-Glucuronic acid"	C16245	C08350
+"C21H30N7O17P3: NADPH"	"NADPH"	C00005	C00005
+"C21H30N7O17P3: NADPH"	"alpha-NADPH"	C20745	C00005
+"C40H58: Zeacarotene"	"beta-Zeacarotene"	C05434	C05434
+"C40H58: Zeacarotene"	"alpha-Zeacarotene"	C14146	C05434
+"C11H10: Methylnaphthalene"	"alpha-Methylnaphthalene"	C14082	C14082
+"C11H10: Methylnaphthalene"	"beta-Methylnaphthalene"	C14098	C14082
+"C32H41N5O5: Ergocryptine"	"alpha-Ergocryptine"	C07545	C07545
+"C32H41N5O5: Ergocryptine"	"beta-Ergocryptine"	C20590	C07545
+"C5H10O5: D-Xylose"	"D-Xylose"	C00181	C00181
+"C5H10O5: D-Xylose"	"beta-D-Xylose"	C02096	C00181
+"C5H10O5: D-Xylose"	"alpha-D-Xylose"	C02205	C00181
+"C15H24O: Santalol"	"alpha-Santalol"	C09719	C09719
+"C15H24O: Santalol"	"beta-Santalol"	C09720	C09719
+"C15H24: Chamigrene"	"alpha-Chamigrene"	C09635	C09635
+"C15H24: Chamigrene"	"beta-Chamigrene"	C09637	C09635
+"C4H6O5: Malic acid"	"Malic acid"	C00149	C00149
+"C4H6O5: Malic acid"	"Malic acid"	C00711	C00149
+"C5H10O5: L-Arabinofuranose"	"L-Arabinofuranose"	C06115	C06115
+"C5H10O5: L-Arabinofuranose"	"beta-L-Arabinofuranose"	C20569	C06115
+"C40H56: Carotene"	"beta-Carotene"	C02094	C02094
+"C40H56: Carotene"	"alpha-Carotene"	C05433	C02094
+"C6H11O6R: D-Glucoside"	"beta-D-Glucoside"	C00963	C00963
+"C6H11O6R: D-Glucoside"	"D-Glucoside"	C01798	C00963
+"C6H12O6: Fruit sugar"	"Fruit sugar"	C00095	C00095
+"C6H12O6: Fruit sugar"	"beta-Fruit sugar"	C02336	C00095
+"C6H6Cl6: BHC"	"beta-BHC"	C06988	C06988
+"C6H6Cl6: BHC"	"BHC"	C18738	C06988
+"C7H8O2: Guaiacol"	"Guaiacol"	C01502	C01502
+"C7H8O2: Guaiacol"	"Guaiacol"	C15572	C01502
+"C6H6Cl6: Lindane"	"beta-Lindane"	C06988	C06988
+"C6H6Cl6: Lindane"	"Lindane"	C07075	C06988
+"C6H6Cl6: Lindane"	"alpha-Lindane"	C15214	C06988
+"C10H18O: Terpineol"	"alpha-Terpineol"	C16772	C16772
+"C10H18O: Terpineol"	"beta-Terpineol"	C17517	C16772
+"C9H13NO3: Methylnoradrenaline"	"alpha-Methylnoradrenaline"	C11768	C11768
+"C9H13NO3: Methylnoradrenaline"	"alpha-Methylnoradrenaline"	C17925	C11768
+"C15H24: Cubebene"	"alpha-Cubebene"	C09647	C09647
+"C15H24: Cubebene"	"beta-Cubebene"	C09648	C09647
+"C15H24: Cadinene"	"beta-Cadinene"	C09625	C09625
+"C15H24: Cadinene"	"alpha-Cadinene"	C16815	C09625
+"C15H24: Copaene"	"alpha-Copaene"	C09639	C09639
+"C15H24: Copaene"	"Copaene"	C09639	C09639
+"C15H24: Copaene"	"beta-Copaene"	C20274	C09639
+"C5H11NO2S: Methionine"	"Methionine"	C00073	C00073
+"C5H11NO2S: Methionine"	"Methionine"	C01733	C00073
+"C21H29N7O14P2: NADH"	"NADH"	C00004	C00004
+"C21H29N7O14P2: NADH"	"alpha-NADH"	C20744	C00004
+"C5H11O8P: L-Arabinose 1-phosphate"	"beta-L-Arabinose 1-phosphate"	C03906	C03906
+"C5H11O8P: L-Arabinose 1-phosphate"	"L-Arabinose 1-phosphate"	C06238	C03906
+"C5H11O8P: L-Arabinose 1-phosphate"	"alpha-L-Arabinose 1-phosphate"	C06239	C03906
+"C30H50O: seco-Amyrin"	"alpha-seco-Amyrin"	C20191	C20191
+"C30H50O: seco-Amyrin"	"beta-seco-Amyrin"	C20193	C20191
+"C24H40O5: Muricholate"	"alpha-Muricholate"	C17647	C17647
+"C24H40O5: Muricholate"	"beta-Muricholate"	C17726	C17647
+"C24H40O3: Lithocholic acid"	"Lithocholic acid"	C03990	C03990
+"C24H40O3: Lithocholic acid"	"beta-Lithocholic acid"	C17658	C03990
+"C3H7O6P: Glyceraldehyde 3-phosphate"	"Glyceraldehyde 3-phosphate"	C00118	C00118
+"C3H7O6P: Glyceraldehyde 3-phosphate"	"Glyceraldehyde 3-phosphate"	C00661	C00118
+"C12H22O11: Malt sugar"	"Malt sugar"	C00208	C00208
+"C12H22O11: Malt sugar"	"alpha-Malt sugar"	C00897	C00208
+"C11H20O10: Primeverose"	"Primeverose"	C08245	C08245
+"C11H20O10: Primeverose"	"beta-Primeverose"	C11535	C08245
+"C9H11NO3: Tyrosine"	"Tyrosine"	C00082	C00082
+"C9H11NO3: Tyrosine"	"Tyrosine"	C01536	C00082
+"C13H20O: Ionone"	"alpha-Ionone"	C12286	C12286
+"C13H20O: Ionone"	"beta-Ionone"	C12287	C12286
+"C5H9O5R: L-Arabinoside"	"alpha-L-Arabinoside"	C01032	C01032
+"C5H9O5R: L-Arabinoside"	"beta-L-Arabinoside"	C02761	C01032
+"C11H12N2O2: Tryptophan"	"Tryptophan"	C00078	C00078
+"C11H12N2O2: Tryptophan"	"Tryptophan"	C00806	C00078
+"C27H35NO3: 10-Hydroxy-12-demethyl-11,12-dehydropaspaline"	"beta-10-Hydroxy-12-demethyl-11,12-dehydropaspaline"	C20535	C20535
+"C27H35NO3: 10-Hydroxy-12-demethyl-11,12-dehydropaspaline"	"alpha-10-Hydroxy-12-demethyl-11,12-dehydropaspaline"	C20558	C20535
+"C6H12O6: D-Glucose"	"D-Glucose"	C00031	C00031
+"C6H12O6: D-Glucose"	"beta-D-Glucose"	C00221	C00031
+"C6H12O6: D-Glucose"	"alpha-D-Glucose"	C00267	C00031
+"C6H13NO5: D-Glucosamine"	"D-Glucosamine"	C00329	C00329
+"C6H13NO5: D-Glucosamine"	"beta-D-Glucosamine"	C08349	C00329
+"C20H32O4: Hepoxilin A3"	"Hepoxilin A3"	C04849	C04849
+"C20H32O4: Hepoxilin A3"	"Hepoxilin A3"	C14808	C04849
+"C6H11O6R: D-Mannoside"	"beta-D-Mannoside"	C02478	C02478
+"C6H11O6R: D-Mannoside"	"alpha-D-Mannoside"	C02603	C02478
+"C6H12O6: D-Mannose"	"D-Mannose"	C00159	C00159
+"C6H12O6: D-Mannose"	"alpha-D-Mannose"	C00936	C00159
+"C6H12O6: D-Mannose"	"beta-D-Mannose"	C02209	C00159
+"C27H31NO10: 13-Dihydrodaunorubicin"	"13-Dihydrodaunorubicin"	C12430	C12430
+"C27H31NO10: 13-Dihydrodaunorubicin"	"13-Dihydrodaunorubicin"	C12433	C12430
+"C20H33O20PR2: Glycerophosphoglycoglycerolipid"	"Glycerophosphoglycoglycerolipid"	C06041	C06041
+"C20H33O20PR2: Glycerophosphoglycoglycerolipid"	"Glycerophosphoglycoglycerolipid"	C20897	C06041
+"C30H50O: Amyrin"	"alpha-Amyrin"	C08615	C08615
+"C30H50O: Amyrin"	"beta-Amyrin"	C08616	C08615
