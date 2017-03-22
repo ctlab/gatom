@@ -1,7 +1,7 @@
 context("Solvers")
+library(igraph)
 
 testSgmwcsInstance <- function() {
-    stopifnot(require(igraph))
     et <- data.frame(
         from=  c("a1", "a2", "b" , "c" ),
         to=    c("b" , "b" , "c" , "d" ),
