@@ -69,7 +69,7 @@ writeSgmwcsInstance <- function(graph.dir, network,
         if (all(all.vars(f) %in% colnames(nt))) {
             synonyms <- c(synonyms, aggregate(f, data=nt, paste0, collapse=" ")$name)
         } else {
-            warningf("Can't collapse nodes, not all fields present: %s",
+            .warningf("Can't collapse nodes, not all fields present: %s",
                      paste0(setdiff(all.vars(f), colnames(nt)), collapse=", "))
             synonyms <- c(synonyms, nt$name)
         }
