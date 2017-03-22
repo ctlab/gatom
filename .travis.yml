@@ -44,6 +44,7 @@ before_install:
   - wget https://www.dropbox.com/s/hu9e8ihtyc0f0uh/gmwcs-signal.jar?raw=1 -O ~/lib/sgmwcs.jar
   - mkdir ~/bin
   - echo -e '#!/bin/sh\nexec java -Djava.library.path=$HOME/lib -Xmx2G -jar $HOME/sgmwcs.jar -i "$@"' > ~/bin/sgmwcs
+  - chmod a+x ~/bin/sgmwcs
   - ~/bin/sgmwcs -h
   - sgmwcs -h
 
