@@ -13,7 +13,8 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    KEGGREST
+    KEGGREST,
+    AnnotationDbi
 License: MIT + file LICENCE
 Encoding: UTF-8
 LazyData: true

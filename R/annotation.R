@@ -8,8 +8,9 @@ makeOrgGatomAnnotation <- function(org.db,
                                    nameColumn="SYMBOL",
                                    enzymeColumn="ENZYME",
                                    appendEnzymesFromKegg=TRUE,
-                                   keggOrgCode=NULL
-) {
+                                   keggOrgCode=NULL) {
+
+    stopifnot(requireNamespace("AnnotationDbi"))
     if (appendEnzymesFromKegg) {
         stopifnot(requireNamespace("KEGGREST"))
         if (is.null(keggOrgCode)) {
@@ -25,11 +26,11 @@ makeOrgGatomAnnotation <- function(org.db,
     org.gatom.anno <- list()
     org.gatom.anno$genes <- data.table(gene=keys(org.db, keytype = baseColumn))
     setkey(org.gatom.anno$genes, gene)
-    org.gatom.anno$genes[, symbol := mapIds(org.db, keys=gene,
+    org.gatom.anno$genes[, symbol := AnnotationDbi::mapIds(org.db, keys=gene,
                                             keytype = baseColumn,
                                             column = nameColumn)]
     org.gatom.anno$baseId <- names(baseColumn)
-    org.gatom.anno$gene2enzyme <- data.table(select(org.db, keys=org.gatom.anno$genes$gene, columns = c("ENZYME")))
+    org.gatom.anno$gene2enzyme <- data.table(AnnotationDbi::select(org.db, keys=org.gatom.anno$genes$gene, columns = c("ENZYME")))
     setnames(org.gatom.anno$gene2enzyme, c(baseColumn, enzymeColumn), c("gene", "enzyme"))
     org.gatom.anno$gene2enzyme <- org.gatom.anno$gene2enzyme[!is.na(enzyme)]
 
@@ -49,7 +50,7 @@ makeOrgGatomAnnotation <- function(org.db,
     for (i in tail(seq_along(idColumns), -1)) {
         otherColumn <- idColumns[i]
         n <- names(otherColumn)
-        org.gatom.anno$mapFrom[[n]] <- data.table(select(org.db,
+        org.gatom.anno$mapFrom[[n]] <- data.table(AnnotationDbi::select(org.db,
                                                          keys=org.gatom.anno$genes$gene,
                                                          columns = otherColumn))
         setnames(org.gatom.anno$mapFrom[[n]],
