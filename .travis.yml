@@ -43,7 +43,7 @@ before_install:
   - wget -q $CPLEX_SO_LINK -O ~/lib/libcplex1263.so
   - wget https://www.dropbox.com/s/hu9e8ihtyc0f0uh/gmwcs-signal.jar?raw=1 -O ~/lib/sgmwcs.jar
   - mkdir ~/bin
-  - echo -e '#!/bin/sh\nexec java -Djava.library.path=$HOME/lib -Xmx2G -jar $HOME/sgmwcs.jar -i "$@"' > ~/bin/sgmwcs
+  - echo -e '#!/bin/sh\nexec java -Djava.library.path=$HOME/lib -Xmx2G -jar $HOME/lib/sgmwcs.jar -i "$@"' > ~/bin/sgmwcs
   - chmod a+x ~/bin/sgmwcs
   - ~/bin/sgmwcs -h
   - sgmwcs -h
