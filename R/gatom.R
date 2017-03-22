@@ -101,7 +101,7 @@ scoreGraph <- function(g, k.gene, k.met,
     vertex.table <- data.table(as_data_frame(g, what="vertices"))
     edge.table <- data.table(as_data_frame(g, what="edges"))
     if (!is.null(met.de)) {
-        pvalsToFit <- vertex.table[!is.na(pval)][!duplicated(ion), setNames(pval, ion)]
+        pvalsToFit <- vertex.table[!is.na(pval)][!duplicated(signal), setNames(pval, signal)]
 
         vertex.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F)
 
@@ -122,7 +122,7 @@ scoreGraph <- function(g, k.gene, k.met,
     }
 
     if (!is.null(gene.de)) {
-        pvalsToFit <- edge.table[!is.na(pval)][!duplicated(probe), setNames(pval, probe)]
+        pvalsToFit <- edge.table[!is.na(pval)][!duplicated(signal), setNames(pval, signal)]
 
         edge.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F)
 
