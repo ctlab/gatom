@@ -32,15 +32,13 @@ matrix:
   - os: osx
     r: bioc-devel
 
-addons:
-  apt:
-    packages:
-    - openjdk-8-jre-headless
 env:
-    -PATH="$HOME/bin:$PATH"
+  -PATH="$HOME/bin:$PATH"
+  - JDK=openjdk8
 
 # for loading cplex libraries
 before_install:
+  - jdk_switcher use $JDK
   - mkdir ~/lib
   - wget -q $CPLEX_SO_LINK -O ~/lib/libcplex1263.so
   - wget https://www.dropbox.com/s/hu9e8ihtyc0f0uh/gmwcs-signal.jar?raw=1 -O ~/lib/sgmwcs.jar
@@ -49,3 +47,4 @@ before_install:
   - ~/bin/sgmwcs -h
   - sgmwcs -h
 
+dist: trusty
