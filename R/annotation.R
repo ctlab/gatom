@@ -1,4 +1,3 @@
-#' @import KEGGREST
 #' @export
 makeOrgGatomAnnotation <- function(org.db,
                                    idColumns=
@@ -12,11 +11,11 @@ makeOrgGatomAnnotation <- function(org.db,
                                    keggOrgCode=NULL
 ) {
     if (appendEnzymesFromKegg) {
-        stopifnot(require(KEGGREST))
+        stopifnot(requireNamespace(KEGGREST))
         if (is.null(keggOrgCode)) {
             meta <- AnnotationDbi::metadata(org.db)
             organismName <- meta$value[match("ORGANISM", meta$name)]
-            keggOrgCodes <- data.table(keggList("organism"))
+            keggOrgCodes <- data.table(KEGGREST::keggList("organism"))
             keggOrgCode <- keggOrgCodes[grep(organismName, species), organism]
         }
     }
@@ -35,7 +34,7 @@ makeOrgGatomAnnotation <- function(org.db,
     org.gatom.anno$gene2enzyme <- org.gatom.anno$gene2enzyme[!is.na(enzyme)]
 
     if (appendEnzymesFromKegg) {
-        kegg.gene2enzyme <- keggLink("enzyme", keggOrgCode)
+        kegg.gene2enzyme <- KEGGREST::keggLink("enzyme", keggOrgCode)
         kegg.gene2enzyme <- data.table(gene=gsub(paste0(keggOrgCode, ":"), "",
                                                  names(kegg.gene2enzyme)),
                                        enzyme=gsub("ec:", "", kegg.gene2enzyme))
