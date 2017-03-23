@@ -70,13 +70,14 @@ gene.de[, pval := as.numeric(pval)]
 gene.de[, logPval := log(pval)]
 gene.de[, log2FC := as.numeric(log2FC)]
 gene.de[, baseMean := as.numeric(baseMean)]
+probeRanks <- gene.de[order(baseMean, decreasing=T)][!duplicated(probe)][, setNames(seq_along(probe), probe)]
+gene.de[, rank := probeRanks[probe]]
 ```
 
 Leaving only top expressed genes
 
 ```{r}
-expressedProbes <- gene.de[order(baseMean, decreasing=T)][!duplicated(probe)][,head(probe, 12000)]
-gene.de <- gene.de[probe %in% expressedProbes]
+gene.de <- gene.de[rank <= 12000]
 ```
 
 
@@ -128,13 +129,24 @@ saveModuleToXgmml(m, file="M0.vs.M1.xgmml", name="M0.vs.M1")
 ```
 
 
+Next, reactions without highly changing genes but with high average 
+expression can be added.
+
+```{r}
+m.ext <- addHighlyExpressedEdges(m, gs)
+saveModuleToDot(m.ext, file="M0.vs.M1.ext.dot", name="M0.vs.M1")
+system("neato -Tsvg M0.vs.M1.ext.dot > M0.vs.M1.ext.svg", ignore.stderr = T)
+knitr::include_graphics("M0.vs.M1.ext.svg")
+```
+
+
 Sometimes, as in example above, the same metabolite can appear multiple 
 times in the module via different atoms. In such cases it is useful
 to either connect atoms belonging to the same metabolite with edges
 with `connectAtomsInsideMetabolite` function.
 
 ```{r}
-m1 <- connectAtomsInsideMetabolite(m)
+m1 <- connectAtomsInsideMetabolite(m.ext)
 saveModuleToDot(m1, file="M0.vs.M1.v1.dot", name="M0.vs.M1")
 system("neato -Tsvg M0.vs.M1.v1.dot > M0.vs.M1.v1.svg", ignore.stderr = T)
 knitr::include_graphics("M0.vs.M1.v1.svg")
@@ -143,7 +155,7 @@ knitr::include_graphics("M0.vs.M1.v1.svg")
 The other way is to collapse them into one vertex with `collapseAtomsIntoMetabolites`:
 
 ```{r}
-m2 <- collapseAtomsIntoMetabolites(m)
+m2 <- collapseAtomsIntoMetabolites(m.ext)
 saveModuleToDot(m2, file="M0.vs.M1.v2.dot", name="M0.vs.M1")
 system("neato -Tsvg M0.vs.M1.v2.dot > M0.vs.M1.v2.svg", ignore.stderr = T)
 knitr::include_graphics("M0.vs.M1.v2.svg")

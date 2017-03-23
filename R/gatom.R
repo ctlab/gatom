@@ -178,3 +178,23 @@ collapseAtomsIntoMetabolites <- function(m) {
     res <- graph.data.frame(edge.table.c, directed=FALSE, vertices=vertex.table.c)
     res
 }
+
+#' @export
+addHighlyExpressedEdges <- function(m, g, top=3000) {
+    vertex.table <- as_data_frame(m, what=c("vertices"))
+    edge.table <- as_data_frame(m, what=c("edges"))
+
+
+
+    toAdd.edge.table <-
+        as_data_frame(g, what=c("edges")) %>%
+        subset(from %in% vertex.table$name) %>%
+        subset(to %in% vertex.table$name) %>%
+        subset(rank <= top)
+
+    res.edge.table <-
+        rbind.fill(edge.table, toAdd.edge.table) %>%
+        subset(!duplicated(paste0(from, "_", to)))
+
+    res <- graph.data.frame(res.edge.table, directed=FALSE, vertices=vertex.table)
+}
