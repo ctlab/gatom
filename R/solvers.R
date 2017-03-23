@@ -2,7 +2,7 @@
 sgmwcs.solver <- function (sgmwcs, nthreads = 1, timeLimit = -1,
                            nodes.group.by="signal",
                            edges.group.by="signal",
-                           group.only.positive=F,
+                           group.only.positive=T,
                            minimize.size=F,
                            other.args=NULL) {
     function(network) {

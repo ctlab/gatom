@@ -126,3 +126,25 @@ The module can also be save to xgmml format and later opened in Cytoscape.
 ```{r}
 saveModuleToXgmml(m, file="M0.vs.M1.xgmml", name="M0.vs.M1")
 ```
+
+
+Sometimes, as in example above, the same metabolite can appear multiple 
+times in the module via different atoms. In such cases it is useful
+to either connect atoms belonging to the same metabolite with edges
+with `connectAtomsInsideMetabolite` function.
+
+```{r}
+m1 <- connectAtomsInsideMetabolite(m)
+saveModuleToDot(m1, file="M0.vs.M1.v1.dot", name="M0.vs.M1")
+system("neato -Tsvg M0.vs.M1.v1.dot > M0.vs.M1.v1.svg", ignore.stderr = T)
+knitr::include_graphics("M0.vs.M1.v1.svg")
+```
+
+The other way is to collapse them into one vertex with `collapseAtomsIntoMetabolites`:
+
+```{r}
+m2 <- collapseAtomsIntoMetabolites(m)
+saveModuleToDot(m2, file="M0.vs.M1.v2.dot", name="M0.vs.M1")
+system("neato -Tsvg M0.vs.M1.v2.dot > M0.vs.M1.v2.svg", ignore.stderr = T)
+knitr::include_graphics("M0.vs.M1.v2.svg")
+```

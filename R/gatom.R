@@ -143,3 +143,38 @@ scoreGraph <- function(g, k.gene, k.met,
     }
     g
 }
+
+#' @export
+connectAtomsInsideMetabolite <- function(m) {
+    t <- data.frame(v=V(m)$name, met=V(m)$metabolite, stringsAsFactors=F)
+    toCollapse <- merge(t, t, by="met")
+    toCollapse <- toCollapse[(toCollapse$v.x < toCollapse$v.y), ]
+
+    z <- matrix(c(toCollapse$v.x, toCollapse$v.y),
+                nrow=2,
+                byrow=T)
+    res <- igraph::add.edges(m, t(as.matrix(toCollapse[, c("v.x", "v.y")])))
+    res
+}
+
+#' @export
+collapseAtomsIntoMetabolites <- function(m) {
+    vertex.table <- data.table(as_data_frame(m, what="vertices"))
+    edge.table <- data.table(as_data_frame(m, what="edges"))
+
+    atom2metabolite <- vertex.table[, setNames(metabolite, name)]
+
+    vertex.table.c <- copy(vertex.table)
+    vertex.table.c[, name := atom2metabolite[name]]
+    vertex.table.c <- unique(vertex.table.c)
+
+    edge.table.c <- copy(edge.table)
+    edge.table.c[, from :=  atom2metabolite[from]]
+    edge.table.c[, to :=  atom2metabolite[to]]
+    edge.table.c[from > to, c("from", "to") := list(to, from)]
+    edge.table.c <- unique(edge.table.c)
+
+
+    res <- graph.data.frame(edge.table.c, directed=FALSE, vertices=vertex.table.c)
+    res
+}
