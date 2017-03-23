@@ -8,7 +8,9 @@ Depends:
 Imports:
     data.table,
     igraph,
-    BioNet
+    BioNet,
+    magrittr,
+    plyr
 Suggests:
     testthat,
     knitr,

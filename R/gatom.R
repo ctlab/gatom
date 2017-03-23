@@ -179,6 +179,8 @@ collapseAtomsIntoMetabolites <- function(m) {
     res
 }
 
+#' @import magrittr
+#' @import plyr
 #' @export
 addHighlyExpressedEdges <- function(m, g, top=3000) {
     vertex.table <- as_data_frame(m, what=c("vertices"))
