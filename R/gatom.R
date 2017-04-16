@@ -111,7 +111,7 @@ scoreGraph <- function(g, k.gene, k.met,
 
         vertex.threshold <- min(vertex.threshold,
                                 BioNet::fdrThreshold(vertex.threshold.min, vertex.bum))
-        .messagef("Metabolite threshold: %f", vertex.threshold)
+        .messagef("Metabolite p-value threshold: %f", vertex.threshold)
         .messagef("Metabolite BU alpha: %f", vertex.bum$a)
         V(g)$score <- with(vertex.table,
                            (vertex.bum$a - 1) *
@@ -132,7 +132,7 @@ scoreGraph <- function(g, k.gene, k.met,
 
         edge.threshold <- min(edge.threshold,
                               BioNet::fdrThreshold(edge.threshold.min, edge.bum))
-        .messagef("Gene threshold: %f", edge.threshold)
+        .messagef("Gene p-value threshold: %f", edge.threshold)
         .messagef("Gene BU alpha: %f", edge.bum$a)
         E(g)$score <- with(edge.table,
                            (edge.bum$a - 1) *
