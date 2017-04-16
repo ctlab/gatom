@@ -53,6 +53,7 @@ makeOrgGatomAnnotation <- function(org.db,
         org.gatom.anno$mapFrom[[n]] <- data.table(AnnotationDbi::select(org.db,
                                                          keys=org.gatom.anno$genes$gene,
                                                          columns = otherColumn))
+        org.gatom.anno$mapFrom[[n]] <- na.omit(org.gatom.anno$mapFrom[[n]])
         setnames(org.gatom.anno$mapFrom[[n]],
                  c(baseColumn, otherColumn),
                  c("gene", names(otherColumn)))
