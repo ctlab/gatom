@@ -3,6 +3,7 @@
 export(addHighlyExpressedEdges)
 export(collapseAtomsIntoMetabolites)
 export(connectAtomsInsideMetabolite)
+export(getGeneDEMeta)
 export(makeAtomGraph)
 export(makeOrgGatomAnnotation)
 export(saveModuleToDot)
