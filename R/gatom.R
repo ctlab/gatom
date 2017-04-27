@@ -179,7 +179,7 @@ collapseAtomsIntoMetabolites <- function(m) {
     res
 }
 
-#' @import magrittr
+#' @import igraph
 #' @import plyr
 #' @export
 addHighlyExpressedEdges <- function(m, g, top=3000) {

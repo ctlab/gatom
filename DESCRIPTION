@@ -9,7 +9,6 @@ Imports:
     data.table,
     igraph,
     BioNet,
-    magrittr,
     plyr
 Suggests:
     testthat,
