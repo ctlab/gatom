@@ -18,6 +18,7 @@ testSgmwcsInstance <- function() {
 test_that("solveSgmwcsRandHeur works", {
     g <- testSgmwcsInstance()
 
+    set.seed(42)
     m <- solveSgmwcsRandHeur(g)
     expect_false("a1" %in% V(m)$name)
     expect_true("d" %in% V(m)$name)
