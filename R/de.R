@@ -38,17 +38,17 @@ findColumn <- function(de, names) {
      return(colnames(de)[candidates[1]])
 }
 
-findIdColumn <- function(de, ids.list,
+findIdColumn <- function(de, idsList,
                          sample.size=1000,
                          match.threshold=0.6,
                          remove.ensembl.revisions=TRUE) {
     # first looking for column with base IDs
-    gene.de.raw.sample <- if (nrow(gene.de.raw) < sample.size) {
-        copy(gene.de.raw)
+    de.sample <- if (nrow(de) < sample.size) {
+        copy(de)
     } else {
-        gene.de.raw[sample(seq_len(nrow(gene.de.raw)), sample.size)]
+        de[sample(seq_len(nrow(de)), sample.size)]
     }
-    columnSamples <- lapply(gene.de.raw.sample, as.character)
+    columnSamples <- lapply(de.sample, as.character)
 
 
     if (remove.ensembl.revisions) {
@@ -58,21 +58,30 @@ findIdColumn <- function(de, ids.list,
     }
 
     ss <- sapply(columnSamples,
-                 pryr::compose(length, intersect), ids.list[[1]])
+                 pryr::compose(length, intersect), idsList[[1]])
 
-    if (max(ss) / nrow(gene.de.raw.sample) >= match.threshold) {
+    if (max(ss) / nrow(de.sample) >= match.threshold) {
         # we found a good column with base IDs
-        return(list(idColumn=colnames(de)[which.max(ss)],
-                    idType=names(ids.list)[1]))
+        return(list(column=colnames(de)[which.max(ss)],
+                    type=names(idsList)[1]))
     }
 
-    z <- pairwiseCompare(pryr::compose(length, intersect),
+    z <- .pairwiseCompare(pryr::compose(length, intersect),
                          columnSamples,
-                         ids.list)
+                         idsList)
 
     bestMatch <- which(z == max(z), arr.ind = TRUE)[1,]
-    return(list(idColumn=colnames(de)[bestMatch["row"]],
-                idType=names(ids.list)[bestMatch["col"]]))
+    return(list(column=colnames(de)[bestMatch["row"]],
+                type=names(idsList)[bestMatch["col"]]))
+}
+
+idsListFromAnnotation <- function(org.gatom.anno) {
+    res <- c(list(org.gatom.anno$genes$gene),
+                  lapply(names(org.gatom.anno$mapFrom),
+                         function(n) org.gatom.anno$mapFrom[[n]][[n]])
+    )
+    names(res) <- c(org.gatom.anno$baseId, names(org.gatom.anno$mapFrom))
+    res
 }
 
 #' @param baseMeanColumn could be NULL (automatic), NA (no such column),
@@ -95,14 +104,10 @@ getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
     }
 
     if (is.null(idColumn)) {
-        ids.list <- c(list(org.gatom.anno$genes$gene),
-                      lapply(names(org.gatom.anno$mapFrom),
-                             function(n) org.gatom.anno$mapFrom[[n]][[n]])
-                      )
-        names(ids.list) <- c(org.gatom.anno$baseId, names(org.gatom.anno$mapFrom))
-        idColumnInfo <- findIdColumn(gene.de.raw, ids.list)
-        idColumn <- idColumnInfo$idColumn
-        idType <- idColumnInfo$idType
+        idsList <- idsListFromAnnotation(org.gatom.anno)
+        idColumnInfo <- findIdColumn(gene.de.raw, idsList)
+        idColumn <- idColumnInfo$column
+        idType <- idColumnInfo$type
     }
 
     if (is.null(pvalColumn)) {
@@ -142,6 +147,7 @@ getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
          idType=idType,
          pvalColumn=pvalColumn,
          logPvalColumn=logPvalColumn,
+         log2FCColumn=log2FCColumn,
          baseMeanColumn=baseMeanColumn,
          probeColumn=probeColumn)
 }
