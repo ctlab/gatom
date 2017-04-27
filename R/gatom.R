@@ -192,7 +192,7 @@ addHighlyExpressedEdges <- function(m, g, top=3000) {
         as_data_frame(g, what=c("edges")) %>%
         subset(from %in% vertex.table$name) %>%
         subset(to %in% vertex.table$name) %>%
-        subset(rank <= top)
+        subset(probeRank <= top)
 
     res.edge.table <-
         rbind.fill(edge.table, toAdd.edge.table) %>%

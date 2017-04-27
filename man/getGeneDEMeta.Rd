@@ -7,7 +7,7 @@ required for gatom analysis}
 \usage{
 getGeneDEMeta(gene.de.raw, org.gatom.anno, idColumn = NULL, idType = NULL,
   pvalColumn = NULL, logPvalColumn = NULL, log2FCColumn = NULL,
-  baseMeanColumn = NULL, probeColumn = NULL)
+  baseMeanColumn = NULL, probeColumn = NULL, probeRankColumn = NULL)
 }
 \arguments{
 \item{baseMeanColumn}{could be NULL (automatic), NA (no such column),

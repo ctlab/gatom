@@ -21,6 +21,9 @@ prepareDeColumn <- function(gene.de, columnName, from) {
     }
 }
 
+#' Makes data.table with gene expression table containing
+#' all columns required for gatom in the expected format
+#' @export
 prepareGeneDE <- function(gene.de.raw, gene.de.meta) {
     if (!is(gene.de.raw, "data.table")) {
         gene.de.raw <- as.data.table(
@@ -36,9 +39,6 @@ prepareGeneDE <- function(gene.de.raw, gene.de.meta) {
                         columnName,
                         gene.de.meta$columns[[columnName]])
     }
-
-    prepareDeColumn(gene.de, "ID", gene.de.meta$columns$ID)
-    prepareDeColumn(gene.de, "logPval", gene.de.meta$columns$logPval)
     gene.de[]
 }
 
@@ -111,7 +111,8 @@ getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
                           logPvalColumn=NULL,
                           log2FCColumn=NULL,
                           baseMeanColumn=NULL,
-                          probeColumn=NULL
+                          probeColumn=NULL,
+                          probeRankColumn=NULL
                           ) {
 
     if (is.null(idColumn) != is.null(idType)) {
@@ -157,6 +158,18 @@ getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
         }
     }
 
+    if (is.null(probeRankColumn)) {
+        probeRankColumn <- findColumn(gene.de.raw,
+                                  c("probeRank", "rank"))
+        if (is.na(probeRankColumn)) {
+            probeRankColumn <- quote({
+                probeLevels <- setNames(baseMean, probe)[!duplicated(probe)]
+                probeRanks <- setNames(rank(-probeLevels), names(probeLevels))
+                probeRanks[probe]
+                })
+        }
+    }
+
 
     list(idType=idType,
          columns=list(
@@ -165,5 +178,6 @@ getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
              logPval=logPvalColumn,
              log2FC=log2FCColumn,
              baseMean=baseMeanColumn,
-             probe=probeColumn))
+             probe=probeColumn,
+             probeRank=probeRankColumn))
 }

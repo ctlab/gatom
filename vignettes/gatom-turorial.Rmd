@@ -35,11 +35,9 @@ ls()
 Loading input data:
 
 ```{r message=F}
-met.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv", 
-                    colClasses = "character")
+met.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv")
 
-gene.de.raw <-  fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv", 
-                     colClasses = "character")
+gene.de.raw <-  fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv")
 ```
 
 Pre-processing of metabolite data:
@@ -60,24 +58,14 @@ met.de[, log2FC := as.numeric(log2FC)]
 Pre-procesing gene data
 
 ```{r}
-# :ToDO: make automatic
-gene.de.meta <- list()
-gene.de.meta$idType <- "RefSeq"
-
-gene.de <- copy(gene.de.raw)
-gene.de[, probe := paste0(pval, "_", log2FC)]
-gene.de[, pval := as.numeric(pval)]
-gene.de[, logPval := log(pval)]
-gene.de[, log2FC := as.numeric(log2FC)]
-gene.de[, baseMean := as.numeric(baseMean)]
-probeRanks <- gene.de[order(baseMean, decreasing=T)][!duplicated(probe)][, setNames(seq_along(probe), probe)]
-gene.de[, rank := probeRanks[probe]]
+gene.de.meta <- getGeneDEMeta(gene.de.raw, org.Mm.eg.gatom.anno)
+gene.de <- prepareGeneDE(gene.de.raw, gene.de.meta)
 ```
 
 Leaving only top expressed genes
 
 ```{r}
-gene.de <- gene.de[rank <= 12000]
+gene.de <- gene.de[probeRank <= 12000]
 ```
 
 
