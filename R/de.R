@@ -84,6 +84,8 @@ idsListFromAnnotation <- function(org.gatom.anno) {
     res
 }
 
+#' Finds columns in gene differential expression tables
+#' required for gatom analysis
 #' @param baseMeanColumn could be NULL (automatic), NA (no such column),
 #'                       character (coumn name)
 #' @param probeColumn could be NULL (automatic), character (coumn name)

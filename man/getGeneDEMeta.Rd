@@ -2,6 +2,8 @@
 % Please edit documentation in R/de.R
 \name{getGeneDEMeta}
 \alias{getGeneDEMeta}
+\title{Finds columns in gene differential expression tables
+required for gatom analysis}
 \usage{
 getGeneDEMeta(gene.de.raw, org.gatom.anno, idColumn = NULL, idType = NULL,
   pvalColumn = NULL, logPvalColumn = NULL, log2FCColumn = NULL,
@@ -13,5 +15,9 @@ character (coumn name)}
 
 \item{probeColumn}{could be NULL (automatic), character (coumn name)
 function (evaluated in a scope of original data.frame)}
+}
+\description{
+Finds columns in gene differential expression tables
+required for gatom analysis
 }
 
