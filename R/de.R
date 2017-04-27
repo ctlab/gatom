@@ -13,20 +13,33 @@ convertPvalDT <- function(de.pvals, map) {
     res.pvals
 }
 
-
-prepareGeneDE <- function(gene.de, gene.de.meta)
-{
-    if (!is(de, "data.table")) {
-        de <- as.data.table(as.data.frame(de), keep.rownames = !is.numeric(attr(de,
-                                                                                "row.names")))
+prepareDeColumn <- function(gene.de, columnName, from) {
+    if (is.character(from)) {
+        setnames(gene.de, old=from, new=columnName)
+    } else {
+        gene.de[, (columnName) := eval(from, envir = gene.de)]
     }
-    rename.smart(de, ID = c("gene", "entrez", "rn", "symbol"),
-                 pval = c("p.value", "pvalue"), log2FC = c("log2foldchange",
-                                                           "logfc"))
-    de <- de[!duplicated(de$ID), ]
-    de <- de[!is.na(de$pval), ]
-    de <- as.data.table(de[order(de$pval), ])
-    de
+}
+
+prepareGeneDE <- function(gene.de.raw, gene.de.meta) {
+    if (!is(gene.de.raw, "data.table")) {
+        gene.de.raw <- as.data.table(
+            as.data.frame(gene.de.raw),
+            keep.rownames = !is.numeric(attr(de,
+                                             "row.names")))
+    }
+
+    gene.de <- copy(gene.de.raw)
+
+    for (columnName in names(gene.de.meta$columns)) {
+        prepareDeColumn(gene.de,
+                        columnName,
+                        gene.de.meta$columns[[columnName]])
+    }
+
+    prepareDeColumn(gene.de, "ID", gene.de.meta$columns$ID)
+    prepareDeColumn(gene.de, "logPval", gene.de.meta$columns$logPval)
+    gene.de[]
 }
 
 findColumn <- function(de, names) {
@@ -58,7 +71,7 @@ findIdColumn <- function(de, idsList,
     }
 
     ss <- sapply(columnSamples,
-                 pryr::compose(length, intersect), idsList[[1]])
+                 .intersectionSize, idsList[[1]])
 
     if (max(ss) / nrow(de.sample) >= match.threshold) {
         # we found a good column with base IDs
@@ -66,7 +79,7 @@ findIdColumn <- function(de, idsList,
                     type=names(idsList)[1]))
     }
 
-    z <- .pairwiseCompare(pryr::compose(length, intersect),
+    z <- .pairwiseCompare(.intersectionSize,
                          columnSamples,
                          idsList)
 
@@ -145,11 +158,12 @@ getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
     }
 
 
-    list(idColumn=idColumn,
-         idType=idType,
-         pvalColumn=pvalColumn,
-         logPvalColumn=logPvalColumn,
-         log2FCColumn=log2FCColumn,
-         baseMeanColumn=baseMeanColumn,
-         probeColumn=probeColumn)
+    list(idType=idType,
+         columns=list(
+             ID=idColumn,
+             pval=pvalColumn,
+             logPval=logPvalColumn,
+             log2FC=log2FCColumn,
+             baseMean=baseMeanColumn,
+             probe=probeColumn))
 }

@@ -16,3 +16,5 @@
     colnames(z) <- names(list2)
     z
 }
+
+.intersectionSize <- function(...) { length(intersect(...))}
