@@ -21,25 +21,25 @@ prepareDeColumn <- function(gene.de, columnName, from) {
     }
 }
 
-#' Makes data.table with gene expression table containing
+#' Makes data.table with differential expression results containing
 #' all columns required for gatom in the expected format
 #' @export
-prepareGeneDE <- function(gene.de.raw, gene.de.meta) {
-    if (!is(gene.de.raw, "data.table")) {
-        gene.de.raw <- as.data.table(
-            as.data.frame(gene.de.raw),
+prepareDE <- function(de.raw, de.meta) {
+    if (!is(de.raw, "data.table")) {
+        de.raw <- as.data.table(
+            as.data.frame(de.raw),
             keep.rownames = !is.numeric(attr(de,
                                              "row.names")))
     }
 
-    gene.de <- copy(gene.de.raw)
+    de <- copy(de.raw)
 
-    for (columnName in names(gene.de.meta$columns)) {
-        prepareDeColumn(gene.de,
+    for (columnName in names(de.meta$columns)) {
+        prepareDeColumn(de,
                         columnName,
-                        gene.de.meta$columns[[columnName]])
+                        de.meta$columns[[columnName]])
     }
-    gene.de[]
+    de[]
 }
 
 findColumn <- function(de, names) {
@@ -97,12 +97,12 @@ idsListFromAnnotation <- function(org.gatom.anno) {
     res
 }
 
-#' Finds columns in gene differential expression tables
+#' Finds columns in gene differential expression table
 #' required for gatom analysis
 #' @param baseMeanColumn could be NULL (automatic), NA (no such column),
 #'                       character (coumn name)
-#' @param probeColumn could be NULL (automatic), character (coumn name)
-#'                    function (evaluated in a scope of original data.frame)
+#' @param signalColumn could be NULL (automatic), character (coumn name)
+#'                    function (evaluated in a scope of original data frame)
 #' @export
 getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
                           idColumn=NULL,
@@ -111,8 +111,8 @@ getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
                           logPvalColumn=NULL,
                           log2FCColumn=NULL,
                           baseMeanColumn=NULL,
-                          probeColumn=NULL,
-                          probeRankColumn=NULL
+                          signalColumn=NULL,
+                          signalRankColumn=NULL
                           ) {
 
     if (is.null(idColumn) != is.null(idType)) {
@@ -150,22 +150,22 @@ getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
                                      c("baseMean", "aveexpr"))
     }
 
-    if (is.null(probeColumn)) {
-        probeColumn <- findColumn(gene.de.raw,
-                                    c("probe"))
-        if (is.na(probeColumn)) {
-            probeColumn <- quote(paste0(pval, "_", log2FC))
+    if (is.null(signalColumn)) {
+        signalColumn <- findColumn(gene.de.raw,
+                                    c("signal", "probe"))
+        if (is.na(signalColumn)) {
+            signalColumn <- quote(paste0(pval, "_", log2FC))
         }
     }
 
-    if (is.null(probeRankColumn)) {
-        probeRankColumn <- findColumn(gene.de.raw,
-                                  c("probeRank", "rank"))
-        if (is.na(probeRankColumn)) {
-            probeRankColumn <- quote({
-                probeLevels <- setNames(baseMean, probe)[!duplicated(probe)]
-                probeRanks <- setNames(rank(-probeLevels), names(probeLevels))
-                probeRanks[probe]
+    if (is.null(signalRankColumn)) {
+        signalRankColumn <- findColumn(gene.de.raw,
+                                  c("signalRank", "rank"))
+        if (is.na(signalRankColumn)) {
+            signalRankColumn <- quote({
+                signalLevels <- setNames(baseMean, signal)[!duplicated(signal)]
+                signalRanks <- setNames(rank(-signalLevels), names(signalLevels))
+                signalRanks[signal]
                 })
         }
     }
@@ -178,6 +178,92 @@ getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
              logPval=logPvalColumn,
              log2FC=log2FCColumn,
              baseMean=baseMeanColumn,
-             probe=probeColumn,
-             probeRank=probeRankColumn))
+             signal=signalColumn,
+             signalRank=signalRankColumn
+             ))
+}
+
+#' Finds columns in differential expression table for metabolites
+#' required for gatom analysis
+#' @export
+getMetDEMeta <- function(met.de.raw, met.db,
+                         idColumn=NULL,
+                         idType=NULL,
+                         pvalColumn=NULL,
+                         logPvalColumn=NULL,
+                         log2FCColumn=NULL,
+                         baseMeanColumn=NULL,
+                         signalColumn=NULL,
+                         signalRankColumn=NULL
+) {
+
+    if (is.null(idColumn) != is.null(idType)) {
+        stop("Either both or none of idColumn and idType can be specified")
+    }
+
+    if (is.null(idColumn)) {
+        idsList <- c(list(met.db$metabolites$metabolite),
+                     lapply(names(met.db$mapFrom),
+                            function(n) met.db$mapFrom[[n]][[n]])
+        )
+        names(idsList) <- c(met.db$baseId, names(met.db$mapFrom))
+        idColumnInfo <- findIdColumn(met.de.raw, idsList)
+        idColumn <- idColumnInfo$column
+        idType <- idColumnInfo$type
+    }
+
+    if (is.null(pvalColumn)) {
+        pvalColumn <- findColumn(met.de.raw,
+                                 c("pval", "p.value", "pvalue"))
+    }
+
+    if (is.null(logPvalColumn)) {
+        logPvalColumn <- findColumn(met.de.raw,
+                                    c("logpval"))
+        if (is.na(logPvalColumn)) {
+            logPvalColumn <- quote(log(pval))
+        }
+    }
+
+    if (is.null(log2FCColumn)) {
+        log2FCColumn <- findColumn(met.de.raw,
+                                   c("log2FC", "log2foldchange",
+                                     "logfc"))
+    }
+
+    if (is.null(baseMeanColumn)) {
+        baseMeanColumn <- findColumn(met.de.raw,
+                                     c("baseMean", "aveexpr"))
+    }
+
+    if (is.null(signalColumn)) {
+        signalColumn <- findColumn(met.de.raw,
+                                  c("signal", "ion"))
+        if (is.na(signalColumn)) {
+            signalColumn <- quote(paste0(pval, "_", log2FC))
+        }
+    }
+
+    if (is.null(signalRankColumn)) {
+        signalRankColumn <- findColumn(met.de.raw,
+                                      c("signalRank", "rank"))
+        if (is.na(signalRankColumn)) {
+            signalRankColumn <- quote({
+                signalLevels <- setNames(baseMean, signal)[!duplicated(signal)]
+                signalRanks <- setNames(rank(-signalLevels), names(signalLevels))
+                signalRanks[signal]
+            })
+        }
+    }
+
+
+    list(idType=idType,
+         columns=list(
+             ID=idColumn,
+             pval=pvalColumn,
+             logPval=logPvalColumn,
+             log2FC=log2FCColumn,
+             baseMean=baseMeanColumn,
+             signal=signalColumn,
+             signalRank=signalRankColumn))
 }

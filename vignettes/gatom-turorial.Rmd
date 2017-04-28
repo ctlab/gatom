@@ -43,29 +43,21 @@ gene.de.raw <-  fread("http://artyomovlab.wustl.edu/publications/supp_materials/
 Pre-processing of metabolite data:
 
 ```{r}
-# :ToDO: make automatic
-met.de.meta <- list()
-met.de.meta$idType <- "HMDB"
-
-met.de <- copy(met.de.raw)
-met.de[, ion := paste0(pval, "_", log2FC)]
-met.de[, pval := as.numeric(pval)]
-met.de[, logPval := log(pval)]
-met.de[, log2FC := as.numeric(log2FC)]
-
+met.de.meta <- getMetDEMeta(met.de.raw, met.kegg.db)
+met.de <- prepareDE(met.de.raw, met.de.meta)
 ```
 
 Pre-procesing gene data
 
 ```{r}
 gene.de.meta <- getGeneDEMeta(gene.de.raw, org.Mm.eg.gatom.anno)
-gene.de <- prepareGeneDE(gene.de.raw, gene.de.meta)
+gene.de <- prepareDE(gene.de.raw, gene.de.meta)
 ```
 
 Leaving only top expressed genes
 
 ```{r}
-gene.de <- gene.de[probeRank <= 12000]
+gene.de <- gene.de[signalRank <= 12000]
 ```
 
 

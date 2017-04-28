@@ -2,22 +2,22 @@
 % Please edit documentation in R/de.R
 \name{getGeneDEMeta}
 \alias{getGeneDEMeta}
-\title{Finds columns in gene differential expression tables
+\title{Finds columns in gene differential expression table
 required for gatom analysis}
 \usage{
 getGeneDEMeta(gene.de.raw, org.gatom.anno, idColumn = NULL, idType = NULL,
   pvalColumn = NULL, logPvalColumn = NULL, log2FCColumn = NULL,
-  baseMeanColumn = NULL, probeColumn = NULL, probeRankColumn = NULL)
+  baseMeanColumn = NULL, signalColumn = NULL, signalRankColumn = NULL)
 }
 \arguments{
 \item{baseMeanColumn}{could be NULL (automatic), NA (no such column),
 character (coumn name)}
 
-\item{probeColumn}{could be NULL (automatic), character (coumn name)
-function (evaluated in a scope of original data.frame)}
+\item{signalColumn}{could be NULL (automatic), character (coumn name)
+function (evaluated in a scope of original data frame)}
 }
 \description{
-Finds columns in gene differential expression tables
+Finds columns in gene differential expression table
 required for gatom analysis
 }
 

@@ -24,12 +24,12 @@ test_that("getGeneDeMeta works", {
     expect_true(de.meta$columns$log2FC == "log2FC")
 })
 
-test_that("prepareGeneDE works", {
+test_that("prepareDE works", {
     de.raw <- fread(system.file("extdata", "de.samples/Ctrl.vs.MandLPSandIFNg.gene.de.tsv", package="gatom"))
 
     de.meta <- getGeneDEMeta(de.raw, org.gatom.anno = org.Mm.eg.gatom.anno)
 
-    de <- prepareGeneDE(de.raw, de.meta)
+    de <- prepareDE(de.raw, de.meta)
 
     expect_equal(de$logPval, log(de.raw$pval))
 })

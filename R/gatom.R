@@ -27,7 +27,6 @@
     edge.table[, colnames(gene.de) := gene.de[origin]]
     edge.table[, ID := NULL]
     setnames(edge.table, "symbol", "label")
-    setnames(edge.table, "probe", "signal")
     setnames(edge.table, "reaction_url", "url")
 
 
@@ -65,7 +64,6 @@
     vertex.table[, colnames(met.de) := met.de[origin]]
     vertex.table[, ID := NULL]
     setcolorder(vertex.table, c("atom", setdiff(colnames(vertex.table), "atom")))
-    setnames(vertex.table, "ion", "signal")
     setnames(vertex.table, "metabolite_name", "label")
     setnames(vertex.table, "metabolite_url", "url")
     vertex.table[]
@@ -192,7 +190,7 @@ addHighlyExpressedEdges <- function(m, g, top=3000) {
         as_data_frame(g, what=c("edges")) %>%
         subset(from %in% vertex.table$name) %>%
         subset(to %in% vertex.table$name) %>%
-        subset(probeRank <= top)
+        subset(signalRank <= top)
 
     res.edge.table <-
         rbind.fill(edge.table, toAdd.edge.table) %>%
