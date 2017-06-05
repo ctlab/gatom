@@ -16,4 +16,3 @@ saveModuleToDot(module, file, name = NULL)
 \description{
 Save module to a graphviz dot file
 }
-

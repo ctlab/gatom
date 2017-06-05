@@ -20,4 +20,3 @@ function (evaluated in a scope of original data frame)}
 Finds columns in gene differential expression table
 required for gatom analysis
 }
-

@@ -13,7 +13,7 @@ convertPvalDT <- function(de.pvals, map) {
     res.pvals
 }
 
-prepareDeColumn <- function(gene.de, columnName, from) {
+prepareDEColumn <- function(gene.de, columnName, from) {
     if (is.character(from)) {
         setnames(gene.de, old=from, new=columnName)
     } else {
@@ -28,14 +28,14 @@ prepareDE <- function(de.raw, de.meta) {
     if (!is(de.raw, "data.table")) {
         de.raw <- as.data.table(
             as.data.frame(de.raw),
-            keep.rownames = !is.numeric(attr(de,
+            keep.rownames = !is.numeric(attr(de.raw,
                                              "row.names")))
     }
 
     de <- copy(de.raw)
 
     for (columnName in names(de.meta$columns)) {
-        prepareDeColumn(de,
+        prepareDEColumn(de,
                         columnName,
                         de.meta$columns[[columnName]])
     }
@@ -59,7 +59,7 @@ findIdColumn <- function(de, idsList,
     de.sample <- if (nrow(de) < sample.size) {
         copy(de)
     } else {
-        de[sample(seq_len(nrow(de)), sample.size)]
+        de[sample(seq_len(nrow(de)), sample.size), ]
     }
     columnSamples <- lapply(de.sample, as.character)
 

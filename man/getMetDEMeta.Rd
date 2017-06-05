@@ -13,4 +13,3 @@ getMetDEMeta(met.de.raw, met.db, idColumn = NULL, idType = NULL,
 Finds columns in differential expression table for metabolites
 required for gatom analysis
 }
-

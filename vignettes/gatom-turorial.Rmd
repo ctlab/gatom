@@ -18,6 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(gatom)
 library(data.table)
 library(igraph)
+library(readr)
 ```
 
 First let's load data with atom mappings (`network` object),
@@ -35,9 +36,11 @@ ls()
 Loading input data:
 
 ```{r message=F}
-met.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv")
+met.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv.gz")
 
-gene.de.raw <-  fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv")
+
+gene.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv.gz")
+
 ```
 
 Pre-processing of metabolite data:

@@ -16,4 +16,3 @@ saveModuleToXgmml(module, file, name = NULL)
 \description{
 Save module to an XGMML file
 }
-

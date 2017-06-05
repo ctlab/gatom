@@ -11,4 +11,3 @@ prepareDE(de.raw, de.meta)
 Makes data.table with differential expression results containing
 all columns required for gatom in the expected format
 }
-
