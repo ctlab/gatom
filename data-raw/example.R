@@ -1,9 +1,13 @@
+library(readr)
 library(KEGGREST)
 library(devtools)
 
 load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rda"))
 load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rda"))
 load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rda"))
+
+met.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv.gz")
+gene.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv.gz")
 
 reactionsEx <- c(gsub("^rn:", "", unname(keggLink("reaction", "rn01200"))),
                  "R02243")
@@ -34,3 +38,10 @@ met.kegg.dbEx$mapFrom <- lapply(met.kegg.db$mapFrom,
 
 
 use_data(networkEx, org.Mm.eg.gatom.annoEx, met.kegg.dbEx)
+
+genesEx <- union(intersect(org.Mm.eg.gatom.annoEx$mapFrom$RefSeq$RefSeq,
+                           gene.de.raw$ID),
+                 sample(gene.de.raw$ID, 500))
+gene.de.rawEx <- gene.de.raw[gene.de.raw$ID %in% genesEx, ]
+met.de.rawEx <- met.de.raw[met.de.raw$ID %in% met.kegg.dbEx$mapFrom$HMDB$HMDB, ]
+use_data(met.de.rawEx, gene.de.rawEx)
