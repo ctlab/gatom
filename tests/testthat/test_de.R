@@ -1,11 +1,11 @@
 context("Differential expression utils")
 
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rda"))
+data("org.Mm.eg.gatom.annoEx")
 
 test_that("findIdColumn works", {
     de <- fread(system.file("extdata", "de.samples/Ctrl.vs.MandLPSandIFNg.gene.de.tsv", package="gatom"))
 
-    idsList <- idsListFromAnnotation(org.gatom.anno = org.Mm.eg.gatom.anno)
+    idsList <- idsListFromAnnotation(org.gatom.anno = org.Mm.eg.gatom.annoEx)
 
     idColumn <- findIdColumn(de, idsList)
     expect_true(idColumn$column == "ID")
@@ -16,7 +16,7 @@ test_that("findIdColumn works", {
 test_that("getGeneDeMeta works", {
     de <- fread(system.file("extdata", "de.samples/Ctrl.vs.MandLPSandIFNg.gene.de.tsv", package="gatom"))
 
-    de.meta <- getGeneDEMeta(de, org.gatom.anno = org.Mm.eg.gatom.anno)
+    de.meta <- getGeneDEMeta(de, org.gatom.anno = org.Mm.eg.gatom.annoEx)
     expect_true(de.meta$idType == "RefSeq")
     expect_true(de.meta$columns$ID == "ID")
     expect_true(de.meta$columns$pval == "pval")
@@ -27,7 +27,7 @@ test_that("getGeneDeMeta works", {
 test_that("prepareDE works", {
     de.raw <- fread(system.file("extdata", "de.samples/Ctrl.vs.MandLPSandIFNg.gene.de.tsv", package="gatom"))
 
-    de.meta <- getGeneDEMeta(de.raw, org.gatom.anno = org.Mm.eg.gatom.anno)
+    de.meta <- getGeneDEMeta(de.raw, org.gatom.anno = org.Mm.eg.gatom.annoEx)
 
     de <- prepareDE(de.raw, de.meta)
 
