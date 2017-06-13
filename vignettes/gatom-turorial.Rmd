@@ -18,7 +18,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(gatom)
 library(data.table)
 library(igraph)
-library(readr)
 ```
 
 First let's load data with atom mappings (`network` object),
@@ -26,61 +25,35 @@ enzyme annotations for mouse (`org.Mm.eg.gatom`)
 and metabolite annotations (`met.kegg.db.rda`):
 
 ```{r}
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rda"))
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rda"))
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rda"))
-ls()
+data("networkEx")
+data("org.Mm.eg.gatom.annoEx")
+data("met.kegg.dbEx")
 ```
 
 
 Loading input data:
 
 ```{r message=F}
-met.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv.gz")
-
-
-gene.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv.gz")
+data("met.de.rawEx")
+data("gene.de.rawEx")
 
 ```
-
-Pre-processing of metabolite data:
-
-```{r}
-met.de.meta <- getMetDEMeta(met.de.raw, met.kegg.db)
-met.de <- prepareDE(met.de.raw, met.de.meta)
-```
-
-Pre-procesing gene data
-
-```{r}
-gene.de.meta <- getGeneDEMeta(gene.de.raw, org.Mm.eg.gatom.anno)
-gene.de <- prepareDE(gene.de.raw, gene.de.meta)
-```
-
-Leaving only top expressed genes
-
-```{r}
-gene.de <- gene.de[signalRank <= 12000]
-```
-
 
 Getting atom graph
 
 ```{r}
-g <- makeAtomGraph(network, 
-                   org.gatom.anno=org.Mm.eg.gatom.anno, 
-                   gene.de=gene.de,
-                   gene.de.meta=gene.de.meta,
-                   met.db=met.kegg.db, 
-                   met.de=met.de,
-                   met.de.meta=met.de.meta)
+g <- makeAtomGraph(network=networkEx, 
+                   org.gatom.anno=org.Mm.eg.gatom.annoEx, 
+                   gene.de=gene.de.rawEx,
+                   met.db=met.kegg.dbEx, 
+                   met.de=met.de.rawEx)
 print(g)
 ```
 
 Scoring graph
 
 ```{r}
-gs <- scoreGraph(g, k.gene = 75, k.met=75)
+gs <- scoreGraph(g, k.gene = 25, k.met=25)
 ```
 
 Finding a module
@@ -142,4 +115,25 @@ m2 <- collapseAtomsIntoMetabolites(m.ext)
 saveModuleToDot(m2, file="M0.vs.M1.v2.dot", name="M0.vs.M1")
 system("neato -Tsvg M0.vs.M1.v2.dot > M0.vs.M1.v2.svg", ignore.stderr = T)
 knitr::include_graphics("M0.vs.M1.v2.svg")
+```
+
+## Pre-generated annotations
+
+
+```{r eval=FALSE}
+load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rda"))
+load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rda"))
+load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rda"))
+load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rda"))
+```
+
+Full dataset for example can be downloaded here:
+
+```{r eval=FALSE}
+library(readr)
+met.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv.gz")
+
+
+gene.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv.gz")
+
 ```

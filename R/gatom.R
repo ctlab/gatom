@@ -72,8 +72,16 @@
 #' @export
 #' @import igraph
 makeAtomGraph <- function(network,
-                          org.gatom.anno, gene.de, gene.de.meta,
-                          met.db, met.de, met.de.meta) {
+                          org.gatom.anno,
+                          gene.de,
+                          gene.de.meta=getGeneDEMeta(gene.de, org.gatom.anno),
+                          gene.keep.top=12000,
+                          met.db,
+                          met.de,
+                          met.de.meta=getMetDEMeta(met.de, met.db)) {
+    gene.de <- prepareDE(gene.de, gene.de.meta)[signalRank <= gene.keep.top]
+    met.de <- prepareDE(met.de, met.de.meta)
+
     edge.table <- .makeEdgeTable(network=network,
                                  org.gatom.anno=org.gatom.anno,
                                  gene.de=gene.de,
@@ -98,7 +106,7 @@ scoreGraph <- function(g, k.gene, k.met,
                        met.score.coef=1) {
     vertex.table <- data.table(as_data_frame(g, what="vertices"))
     edge.table <- data.table(as_data_frame(g, what="edges"))
-    if (!is.null(met.de)) {
+    if (!is.null(k.met)) {
         pvalsToFit <- vertex.table[!is.na(pval)][!duplicated(signal), setNames(pval, signal)]
 
         vertex.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F)
@@ -119,7 +127,7 @@ scoreGraph <- function(g, k.gene, k.met,
         V(g)$score <- 0
     }
 
-    if (!is.null(gene.de)) {
+    if (!is.null(k.gene)) {
         pvalsToFit <- edge.table[!is.na(pval)][!duplicated(signal), setNames(pval, signal)]
 
         edge.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F)
