@@ -17,7 +17,7 @@ test_that("overall pipeline works", {
     expect_is(g, "igraph")
     expect_true("Idh1" %in% E(g)$label)
 
-    gs <- scoreGraph(g, k.gene = 25, k.met=25)
+    gs <- scoreGraph(g, k.gene = 25, k.met=25, show.warnings = FALSE)
 
     expect_true(E(gs)[match("Idh1", label)]$score > 0)
     expect_true(E(gs)[match("Gapdh", label)]$score < 0)
@@ -38,7 +38,7 @@ test_that("overall pipeline works without met data", {
     expect_is(g, "igraph")
     expect_true("Idh1" %in% E(g)$label)
 
-    gs <- scoreGraph(g, k.gene = 25)
+    gs <- scoreGraph(g, k.gene=25, k.met=NULL, show.warnings = FALSE)
 
     expect_true(E(gs)[match("Idh1", label)]$score > 0)
     expect_true(E(gs)[match("Gapdh", label)]$score < 0)
@@ -48,4 +48,13 @@ test_that("overall pipeline works without met data", {
     m <- solveSgmwcsRandHeur(gs, max.iterations = 2000)
 
     expect_true("Idh1" %in% E(m)$label)
+})
+
+test_that(".makeVertexTable works with null DE", {
+    all.atoms <- networkEx$atoms$atom
+    vt <- .makeVertexTable(network=networkEx,
+                           atoms=all.atoms,
+                           met.db=met.kegg.dbEx,
+                           met.de=NULL,
+                           met.de.meta=NULL)
 })

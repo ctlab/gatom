@@ -1,9 +1,11 @@
 context("Differential expression utils")
 
 data("org.Mm.eg.gatom.annoEx")
+data("gene.de.rawEx")
+data("met.kegg.dbEx")
 
 test_that("findIdColumn works", {
-    de <- fread(system.file("extdata", "de.samples/Ctrl.vs.MandLPSandIFNg.gene.de.tsv", package="gatom"))
+    de <- gene.de.rawEx
 
     idsList <- idsListFromAnnotation(org.gatom.anno = org.Mm.eg.gatom.annoEx)
 
@@ -14,7 +16,7 @@ test_that("findIdColumn works", {
 
 
 test_that("getGeneDeMeta works", {
-    de <- fread(system.file("extdata", "de.samples/Ctrl.vs.MandLPSandIFNg.gene.de.tsv", package="gatom"))
+    de <- gene.de.rawEx
 
     de.meta <- getGeneDEMeta(de, org.gatom.anno = org.Mm.eg.gatom.annoEx)
     expect_true(de.meta$idType == "RefSeq")
@@ -25,7 +27,7 @@ test_that("getGeneDeMeta works", {
 })
 
 test_that("prepareDE works", {
-    de.raw <- fread(system.file("extdata", "de.samples/Ctrl.vs.MandLPSandIFNg.gene.de.tsv", package="gatom"))
+    de.raw <- gene.de.rawEx
 
     de.meta <- getGeneDEMeta(de.raw, org.gatom.anno = org.Mm.eg.gatom.annoEx)
 
@@ -33,4 +35,16 @@ test_that("prepareDE works", {
 
     expect_equal(de$logPval, log(de.raw$pval))
 })
+
+
+test_that("getMetDEMeta works for NULL", {
+    nullMeta <- getMetDEMeta(NULL, met.db=met.kegg.dbEx)
+    expect_is(nullMeta, "NULL")
+})
+
+test_that("prepareDE works for NULL", {
+    de <- prepareDE(de.raw=NULL, de.meta=NULL)
+    expect_is(de, "NULL")
+})
+
 

@@ -25,6 +25,9 @@ prepareDEColumn <- function(gene.de, columnName, from) {
 #' all columns required for gatom in the expected format
 #' @export
 prepareDE <- function(de.raw, de.meta) {
+    if (is.null(de.raw)) {
+        return(NULL)
+    }
     if (!is(de.raw, "data.table")) {
         de.raw <- as.data.table(
             as.data.frame(de.raw),
@@ -196,6 +199,9 @@ getMetDEMeta <- function(met.de.raw, met.db,
                          signalColumn=NULL,
                          signalRankColumn=NULL
 ) {
+    if (is.null(met.de.raw)) {
+        return(NULL)
+    }
 
     if (is.null(idColumn) != is.null(idType)) {
         stop("Either both or none of idColumn and idType can be specified")

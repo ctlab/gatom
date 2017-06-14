@@ -35,13 +35,18 @@
 
 #' @import data.table
 .makeVertexTable <- function(network, atoms, met.db, met.de, met.de.meta) {
-    metabolite.pvals <- met.de[, list(ID=ID, pval=pval, origin=seq_len(nrow(met.de)))]
-    if (met.de.meta$idType != met.db$baseId) {
-        metabolite.pvals <- convertPvalDT(metabolite.pvals,
-                                          met.db$mapFrom[[met.de.meta$idType]])
+    if (is.null(met.de)) {
+        metabolite.pvals <- data.table(metabolite=character(0), pval=numeric(0), origin=integer(0))
     } else {
-        setnames(metabolite.pvals, "ID", "metabolite")
+        metabolite.pvals <- met.de[, list(ID=ID, pval=pval, origin=seq_len(nrow(met.de)))]
+        if (met.de.meta$idType != met.db$baseId) {
+            metabolite.pvals <- convertPvalDT(metabolite.pvals,
+                                              met.db$mapFrom[[met.de.meta$idType]])
+        } else {
+            setnames(metabolite.pvals, "ID", "metabolite")
+        }
     }
+
 
     # Extending p-values to anomers
     base_metabolite.pvals <- convertPvalDT(metabolite.pvals, met.db$anomers$metabolite2base_metabolite)
@@ -61,8 +66,11 @@
                           by="metabolite",
                           all.x=TRUE)
     vertex.table <- merge(vertex.table, metabolite.pvals, all.x=T)
-    vertex.table[, colnames(met.de) := met.de[origin]]
-    vertex.table[, ID := NULL]
+    if (!is.null(met.de)) {
+        vertex.table[, colnames(met.de) := met.de[origin]]
+        vertex.table[, ID := NULL]
+    }
+
     setcolorder(vertex.table, c("atom", setdiff(colnames(vertex.table), "atom")))
     setnames(vertex.table, "metabolite_name", "label")
     setnames(vertex.table, "metabolite_url", "url")
@@ -103,13 +111,21 @@ makeAtomGraph <- function(network,
 scoreGraph <- function(g, k.gene, k.met,
                        vertex.threshold.min=0.1,
                        edge.threshold.min=0.1,
-                       met.score.coef=1) {
+                       met.score.coef=1,
+                       show.warnings=TRUE) {
+    if (show.warnings) {
+        warnWrapper <- identity
+    } else {
+        warnWrapper <- suppressWarnings
+    }
+
     vertex.table <- data.table(as_data_frame(g, what="vertices"))
     edge.table <- data.table(as_data_frame(g, what="edges"))
     if (!is.null(k.met)) {
         pvalsToFit <- vertex.table[!is.na(pval)][!duplicated(signal), setNames(pval, signal)]
 
-        vertex.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F)
+        warnWrapper(vertex.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F))
+
 
         vertex.threshold <- if (k.met > length(pvalsToFit)) 1 else {
             sort(pvalsToFit)[k.met]
@@ -130,7 +146,7 @@ scoreGraph <- function(g, k.gene, k.met,
     if (!is.null(k.gene)) {
         pvalsToFit <- edge.table[!is.na(pval)][!duplicated(signal), setNames(pval, signal)]
 
-        edge.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F)
+        warnWrapper(edge.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F))
 
         edge.threshold <- if (k.gene > length(pvalsToFit)) 1 else {
             sort(pvalsToFit)[k.gene]
