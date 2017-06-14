@@ -1,14 +1,20 @@
 #' @import data.table
 .makeEdgeTable <- function(network, org.gatom.anno, gene.de, gene.de.meta) {
-    gene.pvals <- gene.de[, list(ID=ID, pval=pval, origin=seq_len(nrow(gene.de)))]
-    gene.pvals <- gene.pvals[order(pval)][!duplicated(ID)]
-    setkey(gene.pvals, ID)
-
-    if (gene.de.meta$idType != org.gatom.anno$baseId) {
-        gene.pvals <- convertPvalDT(gene.pvals,
-                                    org.gatom.anno$mapFrom[[gene.de.meta$idType]])
+    if (is.null(gene.de)) {
+        gene.pvals <- data.table(gene=org.gatom.anno$genes$gene,
+                                 pval=NA)
+        setkey(gene.pvals, gene)
     } else {
-        setnames(gene.pvals, "ID", "gene")
+        gene.pvals <- gene.de[, list(ID=ID, pval=pval, origin=seq_len(nrow(gene.de)))]
+        gene.pvals <- gene.pvals[order(pval)][!duplicated(ID)]
+        setkey(gene.pvals, ID)
+
+        if (gene.de.meta$idType != org.gatom.anno$baseId) {
+            gene.pvals <- convertPvalDT(gene.pvals,
+                                        org.gatom.anno$mapFrom[[gene.de.meta$idType]])
+        } else {
+            setnames(gene.pvals, "ID", "gene")
+        }
     }
 
     gene.pvals <- org.gatom.anno$genes[gene.pvals]
@@ -24,8 +30,10 @@
     align.pvals <- convertPvalDT(rpair.pvals, network$rpair2align)
 
     edge.table <- copy(align.pvals)
-    edge.table[, colnames(gene.de) := gene.de[origin]]
-    edge.table[, ID := NULL]
+    if (!is.null(gene.de)) {
+        edge.table[, colnames(gene.de) := gene.de[origin]]
+        edge.table[, ID := NULL]
+    }
     setnames(edge.table, "symbol", "label")
     setnames(edge.table, "reaction_url", "url")
 
@@ -87,7 +95,11 @@ makeAtomGraph <- function(network,
                           met.db,
                           met.de,
                           met.de.meta=getMetDEMeta(met.de, met.db)) {
-    gene.de <- prepareDE(gene.de, gene.de.meta)[signalRank <= gene.keep.top]
+    if (!is.null(gene.de)) {
+        gene.de <- prepareDE(gene.de, gene.de.meta)
+        gene.de <- gene.de[signalRank <= gene.keep.top]
+    }
+
     met.de <- prepareDE(met.de, met.de.meta)
 
     edge.table <- .makeEdgeTable(network=network,
@@ -205,6 +217,11 @@ collapseAtomsIntoMetabolites <- function(m) {
 #' @import plyr
 #' @export
 addHighlyExpressedEdges <- function(m, g, top=3000) {
+    if (!"signalRank" %in% list.edge.attributes(g)) {
+        warning("No signalRank edge attribute, returing graph as is")
+        return(m)
+    }
+
     vertex.table <- as_data_frame(m, what=c("vertices"))
     edge.table <- as_data_frame(m, what=c("edges"))
 

@@ -53,7 +53,7 @@ test_that("overall pipeline works", {
 
 })
 
-test_that("overall pipeline works without met data", {
+test_that("overall pipeline works with data only for genes", {
     g <- makeAtomGraph(network=networkEx,
                        org.gatom.anno=org.Mm.eg.gatom.annoEx,
                        gene.de=gene.de.rawEx,
@@ -85,6 +85,40 @@ test_that("overall pipeline works without met data", {
     expect_equivalent(V(m.ext)$metabolite, V(m.connected)$metabolite)
 })
 
+test_that("overall pipeline works with data only for metabolites", {
+    g <- makeAtomGraph(network=networkEx,
+                       org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                       gene.de=NULL,
+                       met.db=met.kegg.dbEx,
+                       met.de=met.de.rawEx)
+    expect_is(g, "igraph")
+    expect_true("Idh1" %in% E(g)$label)
+
+    gs <- scoreGraph(g, k.gene=NULL, k.met=25, show.warnings = FALSE)
+
+    expect_true(V(gs)[match("Isocitrate", label)]$score > 0)
+    expect_true(V(gs)[match("Acetyl-CoA", label)]$score < 0)
+
+
+    set.seed(42)
+    m <- solveSgmwcsRandHeur(gs, max.iterations = 2000)
+
+    # expect_true("Idh1" %in% E(m)$label)
+
+    # no gene expression, no adding edges
+    expect_warning(m.ext <- addHighlyExpressedEdges(m, g, top=200))
+
+    expect_equivalent(E(m)$label, E(m.ext)$label)
+
+    m.collapsed <- collapseAtomsIntoMetabolites(m.ext)
+    expect_equivalent(unique(V(m.ext)$metabolite), V(m.collapsed)$metabolite)
+
+    m.connected <- connectAtomsInsideMetabolite(m.ext)
+    expect_equivalent(V(m.ext)$metabolite, V(m.connected)$metabolite)
+})
+
+
+
 test_that(".makeVertexTable works with null DE", {
     all.atoms <- networkEx$atoms$atom
     vt <- .makeVertexTable(network=networkEx,
@@ -92,6 +126,13 @@ test_that(".makeVertexTable works with null DE", {
                            met.db=met.kegg.dbEx,
                            met.de=NULL,
                            met.de.meta=NULL)
+})
+
+test_that(".makeVertexTable works with null DE", {
+    et <- .makeEdgeTable(network=networkEx,
+                         org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                         gene.de=NULL,
+                         gene.de.meta=NULL)
 })
 
 test_that("scoreGraph shows warning on bad distribution", {
