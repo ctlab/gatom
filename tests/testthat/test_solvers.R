@@ -25,11 +25,24 @@ test_that("solveSgmwcsRandHeur works", {
 })
 
 test_that("sgmwcs.solver works", {
-    g <- testSgmwcsInstance()
     skip_if_not(system("sgmwcs -h", ignore.stdout = T) == 0)
+
+    g <- testSgmwcsInstance()
 
     solve <- sgmwcs.solver("sgmwcs")
     m <- solve(g)
     expect_false("a1" %in% V(m)$name)
     expect_true("d" %in% V(m)$name)
+})
+
+test_that("sgmwcs.solver works for single-vertex solution", {
+    skip_if_not(system("sgmwcs -h", ignore.stdout = T) == 0)
+
+    g <- testSgmwcsInstance()
+    V(g)$score <- c(1, rep(-1, vcount(g) - 1))
+    E(g)$score <- 0
+
+    solve <- sgmwcs.solver("sgmwcs")
+    m <- solve(g)
+    expect_equivalent(V(m)$name, V(g)[1]$name)
 })
