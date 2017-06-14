@@ -7,6 +7,9 @@ data("met.kegg.dbEx")
 data("met.de.rawEx")
 data("gene.de.rawEx")
 
+data("gEx")
+data("gsEx")
+data("mEx")
 
 test_that("overall pipeline works", {
     g <- makeAtomGraph(network=networkEx,
@@ -28,12 +31,17 @@ test_that("overall pipeline works", {
 
     expect_true("Idh1" %in% E(m)$label)
 
-    m.collapsed <- collapseAtomsIntoMetabolites(m)
-    expect_equivalent(unique(V(m)$metabolite), V(m.collapsed)$metabolite)
+    m.ext <- addHighlyExpressedEdges(m, g, top=200)
+
+    addedGenes <- setdiff(E(m.ext)$label, E(m)$label)
+    expect_true(all(E(m.ext)[label %in% addedGenes]$signalRank <= 200))
+
+    m.collapsed <- collapseAtomsIntoMetabolites(m.ext)
+    expect_equivalent(unique(V(m.ext)$metabolite), V(m.collapsed)$metabolite)
     expect_true(all(!duplicated(V(m.collapsed)$metabolite)))
 
-    m.connected <- connectAtomsInsideMetabolite(m)
-    expect_equivalent(V(m)$metabolite, V(m.connected)$metabolite)
+    m.connected <- connectAtomsInsideMetabolite(m.ext)
+    expect_equivalent(V(m.ext)$metabolite, V(m.connected)$metabolite)
     components <- split(V(m)$name, V(m.connected)$metabolite)
     components <- components[sapply(components, length) > 1]
     for (component in components) {
@@ -41,6 +49,8 @@ test_that("overall pipeline works", {
             expect_equivalent(setdiff(component, V(m.connected)[nei(v)]$name), v)
         }
     }
+
+
 })
 
 test_that("overall pipeline works without met data", {
@@ -62,6 +72,17 @@ test_that("overall pipeline works without met data", {
     m <- solveSgmwcsRandHeur(gs, max.iterations = 2000)
 
     expect_true("Idh1" %in% E(m)$label)
+
+    m.ext <- addHighlyExpressedEdges(m, g, top=200)
+
+    addedGenes <- setdiff(E(m.ext)$label, E(m)$label)
+    expect_true(all(E(m.ext)[label %in% addedGenes]$signalRank <= 200))
+
+    m.collapsed <- collapseAtomsIntoMetabolites(m.ext)
+    expect_equivalent(unique(V(m.ext)$metabolite), V(m.collapsed)$metabolite)
+
+    m.connected <- connectAtomsInsideMetabolite(m.ext)
+    expect_equivalent(V(m.ext)$metabolite, V(m.connected)$metabolite)
 })
 
 test_that(".makeVertexTable works with null DE", {
@@ -71,4 +92,13 @@ test_that(".makeVertexTable works with null DE", {
                            met.db=met.kegg.dbEx,
                            met.de=NULL,
                            met.de.meta=NULL)
+})
+
+test_that("scoreGraph shows warning on bad distribution", {
+    g <- gEx
+    tryCatch(gs <- scoreGraph(g, k.gene=NULL, k.met=25),
+             warning=fail)
+
+    V(g)$pval <- 1
+    expect_warning(gs <- scoreGraph(g, k.gene=NULL, k.met=25))
 })

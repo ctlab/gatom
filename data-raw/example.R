@@ -45,3 +45,15 @@ genesEx <- union(intersect(org.Mm.eg.gatom.annoEx$mapFrom$RefSeq$RefSeq,
 gene.de.rawEx <- gene.de.raw[gene.de.raw$ID %in% genesEx, ]
 met.de.rawEx <- met.de.raw[met.de.raw$ID %in% met.kegg.dbEx$mapFrom$HMDB$HMDB, ]
 use_data(met.de.rawEx, gene.de.rawEx)
+
+
+gEx <- makeAtomGraph(network=networkEx,
+                   org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                   gene.de=gene.de.rawEx,
+                   met.db=met.kegg.dbEx,
+                   met.de=met.de.rawEx)
+
+gsEx <- scoreGraph(gEx, k.gene=25, k.met=25)
+set.seed(42)
+mEx <- solveSgmwcsRandHeur(gsEx, max.iterations = 2000)
+use_data(gEx, gsEx, mEx)
