@@ -102,3 +102,21 @@ test_that("scoreGraph shows warning on bad distribution", {
     V(g)$pval <- 1
     expect_warning(gs <- scoreGraph(g, k.gene=NULL, k.met=25))
 })
+
+test_that("makeAtomGraph works on already good DE tables", {
+    gene.de <- data.table(gene.de.rawEx)
+    gene.de <- convertPvalDT(gene.de, org.Mm.eg.gatom.annoEx$mapFrom$RefSeq)
+
+    met.de <- data.table(met.de.rawEx)
+    met.de <- convertPvalDT(met.de, met.kegg.dbEx$mapFrom$HMDB)
+
+    g <- makeAtomGraph(network=networkEx,
+                       org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                       gene.de=gene.de,
+                       met.db=met.kegg.dbEx,
+                       met.de=met.de)
+    expect_is(g, "igraph")
+    expect_true("Idh1" %in% E(g)$label)
+
+
+})
