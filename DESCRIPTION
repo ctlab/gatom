@@ -16,6 +16,7 @@ Suggests:
     rmarkdown,
     KEGGREST,
     AnnotationDbi,
+    org.Mm.eg.db,
     readr
 License: MIT + file LICENCE
 Encoding: UTF-8
