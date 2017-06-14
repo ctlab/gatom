@@ -14,6 +14,16 @@ test_that("findIdColumn works", {
     expect_true(idColumn$type == "RefSeq")
 })
 
+test_that("findIdColumn works with sampling", {
+    de <- gene.de.rawEx
+
+    idsList <- idsListFromAnnotation(org.gatom.anno = org.Mm.eg.gatom.annoEx)
+
+    idColumn <- findIdColumn(de, idsList, sample.size=100)
+    expect_true(idColumn$column == "ID")
+    expect_true(idColumn$type == "RefSeq")
+})
+
 
 test_that("getGeneDeMeta works", {
     de <- gene.de.rawEx
