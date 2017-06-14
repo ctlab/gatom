@@ -27,6 +27,20 @@ test_that("overall pipeline works", {
     m <- solveSgmwcsRandHeur(gs, max.iterations = 2000)
 
     expect_true("Idh1" %in% E(m)$label)
+
+    m.collapsed <- collapseAtomsIntoMetabolites(m)
+    expect_equivalent(unique(V(m)$metabolite), V(m.collapsed)$metabolite)
+    expect_true(all(!duplicated(V(m.collapsed)$metabolite)))
+
+    m.connected <- connectAtomsInsideMetabolite(m)
+    expect_equivalent(V(m)$metabolite, V(m.connected)$metabolite)
+    components <- split(V(m)$name, V(m.connected)$metabolite)
+    components <- components[sapply(components, length) > 1]
+    for (component in components) {
+        for (v in component) {
+            expect_equivalent(setdiff(component, V(m.connected)[nei(v)]$name), v)
+        }
+    }
 })
 
 test_that("overall pipeline works without met data", {
