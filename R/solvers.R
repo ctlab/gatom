@@ -117,6 +117,7 @@ writeSgmwcsInstance <- function(graph.dir, network,
 }
 
 #' @export
+#' @importFrom methods newEmptyObject
 solveSgmwcsRandHeur <- function(g,
                                 nodes.group.by="signal",
                                 edges.group.by="signal",

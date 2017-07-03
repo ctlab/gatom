@@ -4,3 +4,4 @@
 ^appveyor\.yml$
 ^inst/org\..*\.rda$
 .gz
+^data-raw$

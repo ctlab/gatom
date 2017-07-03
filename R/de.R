@@ -22,8 +22,20 @@ prepareDEColumn <- function(gene.de, columnName, from) {
 }
 
 #' Makes data.table with differential expression results containing
-#' all columns required for gatom in the expected format
+#' all columns required for gatom and in the expected format
+#' based on metadata object
+#' @param de.raw Table with defferential expression results, an object
+#'        convertable to data.frame
+#' @param de.met Object with differential expression table metadata
+#'        acquired with getGeneDEMeta or getMetDEMeta functions
+#' @return data.table object with converted differential expressiond table
 #' @export
+#' @importFrom methods is
+#' @examples
+#' data("org.Mm.eg.gatom.annoEx")
+#' data("gene.de.rawEx")
+#' de.meta <- getGeneDEMeta(gene.de.rawEx, org.gatom.anno = org.Mm.eg.gatom.annoEx)
+#' de <- prepareDE(gene.de.rawEx, de.meta)
 prepareDE <- function(de.raw, de.meta) {
     if (is.null(de.raw)) {
         return(NULL)
@@ -102,11 +114,20 @@ idsListFromAnnotation <- function(org.gatom.anno) {
 
 #' Finds columns in gene differential expression table
 #' required for gatom analysis
+#' @param gene.de.raw A table with differential expression results, an object
+#'        convertable to data.frame.
+#' @param org.gatom.anno Organsim-specific annotation obtained from
+#'                       makeOrgGatomAnnotation function
 #' @param baseMeanColumn could be NULL (automatic), NA (no such column),
 #'                       character (coumn name)
 #' @param signalColumn could be NULL (automatic), character (coumn name)
 #'                    function (evaluated in a scope of original data frame)
 #' @export
+#' @examples
+#' data("org.Mm.eg.gatom.annoEx")
+#' data("gene.de.rawEx")
+#' de.meta <- getGeneDEMeta(gene.de.rawEx, org.gatom.anno = org.Mm.eg.gatom.annoEx)
+#' de <- prepareDE(gene.de.rawEx, de.meta)
 getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
                           idColumn=NULL,
                           idType=NULL,

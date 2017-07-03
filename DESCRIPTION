@@ -9,7 +9,8 @@ Imports:
     data.table,
     igraph,
     BioNet,
-    plyr
+    plyr,
+    methods
 Suggests:
     testthat,
     knitr,

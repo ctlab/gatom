@@ -10,6 +10,12 @@ getGeneDEMeta(gene.de.raw, org.gatom.anno, idColumn = NULL, idType = NULL,
   baseMeanColumn = NULL, signalColumn = NULL, signalRankColumn = NULL)
 }
 \arguments{
+\item{gene.de.raw}{A table with differential expression results, an object
+convertable to data.frame.}
+
+\item{org.gatom.anno}{Organsim-specific annotation obtained from
+makeOrgGatomAnnotation function}
+
 \item{baseMeanColumn}{could be NULL (automatic), NA (no such column),
 character (coumn name)}
 
@@ -19,4 +25,10 @@ function (evaluated in a scope of original data frame)}
 \description{
 Finds columns in gene differential expression table
 required for gatom analysis
+}
+\examples{
+data("org.Mm.eg.gatom.annoEx")
+data("gene.de.rawEx")
+de.meta <- getGeneDEMeta(gene.de.rawEx, org.gatom.anno = org.Mm.eg.gatom.annoEx)
+de <- prepareDE(gene.de.rawEx, de.meta)
 }

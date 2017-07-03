@@ -3,11 +3,29 @@
 \name{prepareDE}
 \alias{prepareDE}
 \title{Makes data.table with differential expression results containing
-all columns required for gatom in the expected format}
+all columns required for gatom and in the expected format
+based on metadata object}
 \usage{
 prepareDE(de.raw, de.meta)
 }
+\arguments{
+\item{de.raw}{Table with defferential expression results, an object
+convertable to data.frame}
+
+\item{de.met}{Object with differential expression table metadata
+acquired with getGeneDEMeta or getMetDEMeta functions}
+}
+\value{
+data.table object with converted differential expressiond table
+}
 \description{
 Makes data.table with differential expression results containing
-all columns required for gatom in the expected format
+all columns required for gatom and in the expected format
+based on metadata object
+}
+\examples{
+data("org.Mm.eg.gatom.annoEx")
+data("gene.de.rawEx")
+de.meta <- getGeneDEMeta(gene.de.rawEx, org.gatom.anno = org.Mm.eg.gatom.annoEx)
+de <- prepareDE(gene.de.rawEx, de.meta)
 }
