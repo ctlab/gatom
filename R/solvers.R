@@ -28,7 +28,7 @@ sgmwcs.solver <- function (sgmwcs, nthreads = 1, timeLimit = -1,
 
         system2(sgmwcs, c("--nodes", instance$nodes.file,
                           "--edges", instance$edges.file,
-                          "--synonyms", instance$synonyms.file,
+                          "--signals", instance$signals.file,
                           "--threads", nthreads,
                           "--timelimit", timeLimit,
                           if (minimize.size) c("-p", 1e-3) else NULL,
@@ -59,61 +59,73 @@ writeSgmwcsInstance <- function(graph.dir, network,
     dir.create(graph.dir, showWarnings = FALSE)
     edges.file <- file.path(graph.dir, "edges.txt")
     nodes.file <- file.path(graph.dir, "nodes.txt")
-    synonyms.file <- file.path(graph.dir, "synonyms.txt")
-
-    synonyms <- c()
+    signals.file <- file.path(graph.dir, "signals.txt")
 
     nt <- as_data_frame(network, what="vertices")
     if (!is.null(nodes.group.by)) {
-        f <- as.formula(sprintf("name ~ %s", nodes.group.by))
-        if (all(all.vars(f) %in% colnames(nt))) {
-            synonyms <- c(synonyms, aggregate(f, data=nt, paste0, collapse=" ")$name)
+        if (all(nodes.group.by %in% colnames(nt))) {
+            nt$signal <- do.call(paste, c(nt[, nodes.group.by, drop=F], sep="\r"))
+            if (group.only.positive) {
+                nt$signal <- paste(nt$signal, ifelse(nt$score > 0,
+                                                    "",
+                                                    seq_len(nrow(nt))), sep="\r")
+            }
         } else {
             .warningf("Can't collapse nodes, not all fields present: %s",
                      paste0(setdiff(all.vars(f), colnames(nt)), collapse=", "))
-            synonyms <- c(synonyms, nt$name)
+            nt$signal <- seq_len(nrow(nt))
         }
 
     } else {
-        synonyms <- c(synonyms, nt$name)
+        nt$signal <- seq_len(nrow(nt))
     }
-    nt <- nt[, c("name", "score")]
-    colnames(nt) <- c("#name", "score")
+    nt$signal <- factor(nt$signal)
+    levels(nt$signal) <- paste0("ns", seq_len(length(levels(nt$signal))))
+
 
     et <- as_data_frame(network, what="edges")
     if (!is.null(edges.group.by)) {
-        etx <- if (group.only.positive) {
-            synonyms <- c(synonyms, with(et[et$score <= 0,], sprintf("%s -- %s", from, to)))
-            et[et$score > 0,]
+        if (all(edges.group.by %in% colnames(et))) {
+            et$signal <- do.call(paste, c(et[, edges.group.by, drop=F], sep="\r"))
+            if (group.only.positive) {
+                et$signal <- paste(et$signal, ifelse(et$score > 0,
+                                                     "",
+                                                     seq_len(nrow(et))), sep="\r")
+            }
         } else {
-            et
-        }
-        if (nrow(etx) > 0) {
-            synonyms <- c(synonyms,
-                          aggregate(name ~ edges.group.by,
-                                    data=list(
-                                        name=sprintf("%s -- %s", etx$from, etx$to),
-                                        edges.group.by=etx[[edges.group.by]]),
-                                    paste0, collapse=" ")$name
-            )
+            .warningf("Can't collapse edges, not all fields present: %s",
+                      paste0(setdiff(all.vars(f), colnames(et)), collapse=", "))
+            et$signal <- seq_len(nrow(et))
         }
 
+    } else {
+        et$signal <- seq_len(nrow(nt))
 
     }
-    et <- et[, c("from", "to", "score")]
-    colnames(et) <- c("#from", "to", "score")
+    et$signal <- factor(et$signal)
+    levels(et$signal) <- paste0("es", seq_len(length(levels(et$signal))))
+
+    st <- rbind(nt[, c("signal", "score")],
+                et[, c("signal", "score")])
+    st <- st[!duplicated(st$signal),]
+    rownames(st) <- NULL
+    colnames(st) <- c("#signal", "score")
+
+    nt <- nt[, c("name", "signal")]
+    colnames(nt) <- c("#name", "signal")
+
+    et <- et[, c("from", "to", "signal")]
+    colnames(et) <- c("#from", "to", "signal")
+
+
 
     write.table(nt, file=nodes.file, sep="\t", row.names=F, quote=F, col.names=T)
     write.table(et, file=edges.file, sep="\t", row.names=F, quote=F, col.names=T)
-    writeLines(sprintf("%s", synonyms), con=synonyms.file)
-
-    if (length(synonyms) == 0) {
-        synonyms.file <- NULL
-    }
+    write.table(st, file=signals.file, sep="\t", row.names=F, quote=F, col.names=T)
 
     list(nodes.file=nodes.file,
          edges.file=edges.file,
-         synonyms.file=synonyms.file)
+         signals.file=signals.file)
 }
 
 #' @export
@@ -226,23 +238,17 @@ solveSgmwcsRandHeur <- function(g,
 }
 
 readGraph <- function(node.file, edge.file, network) {
-    nodes <- as.matrix(read.table(file = node.file,
-                                  na.strings = "n/a",
-                                  colClasses = c("character", "numeric")))
-    nodes2 <- which(!is.na(as.numeric(nodes[, 2])))
+    nodes <- readLines(node.file)
 
-
-    edges <- as.matrix(read.table(file = edge.file,
-                                  na.strings = "n/a",
-                                  colClasses = c("character", "character", "numeric")))
-    edges2 <- which(!is.na(as.numeric(edges[, 3])))
-
-    if (length(edges2) > 0) {
-        res <- subgraph.edges(network, eids = edges2, delete.vertices = T)
-    } else {
-        res <- induced.subgraph(network, vids = nodes2)
+    if (length(nodes) <= 1) {
+        return(induced.subgraph(network, vids = nodes))
     }
 
-    stopifnot(setequal(V(network)[nodes2]$name, V(res)$name))
+    edges <- as.matrix(read.table(file = edge.file,
+                                  colClasses = "character"))
+
+    eids <- get.edge.ids(network, t(edges))
+    res <- subgraph.edges(network, eids = eids, delete.vertices = T)
+
     res
 }
