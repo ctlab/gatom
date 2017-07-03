@@ -137,3 +137,18 @@ met.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials
 gene.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv.gz")
 
 ```
+
+And run it:
+
+```{r eval=FALSE}
+g <- makeAtomGraph(network=network, 
+                   org.gatom.anno=org.Mm.eg.gatom.anno, 
+                   gene.de=gene.de.raw,
+                   met.db=met.kegg.db, 
+                   met.de=met.de.raw)
+
+gs <- scoreGraph(g, k.gene = 50, k.met=50)
+
+solve <- sgmwcs.solver("sgmwcs", nthreads = 4, timeLimit = 60) 
+m <- solve(gs)
+```
