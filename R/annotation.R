@@ -30,8 +30,13 @@ makeOrgGatomAnnotation <- function(org.db,
                                             keytype = baseColumn,
                                             column = nameColumn)]
     org.gatom.anno$baseId <- names(baseColumn)
-    org.gatom.anno$gene2enzyme <- data.table(AnnotationDbi::select(org.db, keys=org.gatom.anno$genes$gene, columns = c("ENZYME")))
-    setnames(org.gatom.anno$gene2enzyme, c(baseColumn, enzymeColumn), c("gene", "enzyme"))
+    org.gatom.anno$gene2enzyme <- data.table(
+        AnnotationDbi::select(org.db,
+                              keys=org.gatom.anno$genes$gene,
+                              columns = c("ENZYME")))
+    setnames(org.gatom.anno$gene2enzyme,
+             c(baseColumn, enzymeColumn),
+             c("gene", "enzyme"))
     org.gatom.anno$gene2enzyme <- org.gatom.anno$gene2enzyme[!is.na(enzyme)]
 
     if (appendEnzymesFromKegg) {
@@ -40,7 +45,8 @@ makeOrgGatomAnnotation <- function(org.db,
                                                  names(kegg.gene2enzyme)),
                                        enzyme=gsub("ec:", "", kegg.gene2enzyme))
 
-        org.gatom.anno$gene2enzyme <- rbind(org.gatom.anno$gene2enzyme, kegg.gene2enzyme)
+        org.gatom.anno$gene2enzyme <- rbind(org.gatom.anno$gene2enzyme,
+                                            kegg.gene2enzyme)
         org.gatom.anno$gene2enzyme <- unique(org.gatom.anno$gene2enzyme)
         setkey(org.gatom.anno$gene2enzyme, gene)
     }
@@ -50,9 +56,10 @@ makeOrgGatomAnnotation <- function(org.db,
     for (i in tail(seq_along(idColumns), -1)) {
         otherColumn <- idColumns[i]
         n <- names(otherColumn)
-        org.gatom.anno$mapFrom[[n]] <- data.table(AnnotationDbi::select(org.db,
-                                                         keys=org.gatom.anno$genes$gene,
-                                                         columns = otherColumn))
+        org.gatom.anno$mapFrom[[n]] <- data.table(
+            AnnotationDbi::select(org.db,
+                                  keys=org.gatom.anno$genes$gene,
+                                  columns = otherColumn))
         org.gatom.anno$mapFrom[[n]] <- na.omit(org.gatom.anno$mapFrom[[n]])
         setnames(org.gatom.anno$mapFrom[[n]],
                  c(baseColumn, otherColumn),

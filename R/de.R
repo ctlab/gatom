@@ -114,21 +114,32 @@ idsListFromAnnotation <- function(org.gatom.anno) {
 
 #' Finds columns in gene differential expression table
 #' required for gatom analysis
+#'
+#' Default values for all columns are NULL which mean they are
+#' determined automatically.
+#'
 #' @param gene.de.raw A table with differential expression results, an object
-#'        convertable to data.frame.
+#'                    convertable to data.frame.
 #' @param org.gatom.anno Organsim-specific annotation obtained from
-#'                       makeOrgGatomAnnotation function
-#' @param baseMeanColumn could be NULL (automatic), NA (no such column),
-#'                       character (coumn name)
+#'                       makeOrgGatomAnnotation function.
+#' @param idColumn Specifies column name with gene identifiers.
+#' @param idType Specifies type of gene IDs (one of the supported by annotation).
+#' @param pvalColumn Specifies column with p-values.
+#' @param logPvalColumn Specifies column with log p-values, if there is no such
+#'                      column one will be generated automatically.
+#' @param log2FCColumn Specifies coln with log2-fold changes.
+#' @param baseMeanColumn Spefies column with average axpression across samples.
+#' @param
 #' @param signalColumn could be NULL (automatic), character (coumn name)
-#'                    function (evaluated in a scope of original data frame)
+#'                     function (evaluated in a scope of original data frame)
 #' @export
 #' @examples
 #' data("org.Mm.eg.gatom.annoEx")
 #' data("gene.de.rawEx")
 #' de.meta <- getGeneDEMeta(gene.de.rawEx, org.gatom.anno = org.Mm.eg.gatom.annoEx)
 #' de <- prepareDE(gene.de.rawEx, de.meta)
-getGeneDEMeta <- function(gene.de.raw, org.gatom.anno,
+getGeneDEMeta <- function(gene.de.raw,
+                          org.gatom.anno,
                           idColumn=NULL,
                           idType=NULL,
                           pvalColumn=NULL,
