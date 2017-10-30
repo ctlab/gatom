@@ -72,7 +72,7 @@ writeSgmwcsInstance <- function(graph.dir, network,
             }
         } else {
             .warningf("Can't collapse nodes, not all fields present: %s",
-                     paste0(setdiff(all.vars(f), colnames(nt)), collapse=", "))
+                     paste0(setdiff(nodes.group.by, colnames(nt)), collapse=", "))
             nt$signal <- seq_len(nrow(nt))
         }
 
@@ -94,7 +94,7 @@ writeSgmwcsInstance <- function(graph.dir, network,
             }
         } else {
             .warningf("Can't collapse edges, not all fields present: %s",
-                      paste0(setdiff(all.vars(f), colnames(et)), collapse=", "))
+                      paste0(setdiff(edges.group.by, colnames(et)), collapse=", "))
             et$signal <- seq_len(nrow(et))
         }
 
