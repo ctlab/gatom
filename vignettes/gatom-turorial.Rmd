@@ -123,7 +123,7 @@ knitr::include_graphics("M0.vs.M1.v2.svg")
 ```{r eval=FALSE}
 load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rda"))
 load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rda"))
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rda"))
+load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Hs.eg.gatom.anno.rda"))
 load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rda"))
 ```
 
