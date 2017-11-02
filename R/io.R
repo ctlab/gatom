@@ -192,7 +192,7 @@ edgeStyleMap <- c(main="solid", trans="dashed")
 
 getDotNodeStyleAttributes <- function(attrs) {
     logPval <- if (!is.null(attrs$logPval)) attrs$logPval else 0.1
-        with(attrs, data.frame(
+    with(attrs, data.frame(
         label=if (!is.null(attrs$label)) label else "",
         shape=if (!is.null(attrs$nodeType)) nodeShapeMap[nodeType] else "circle",
         fixedsize="true",
