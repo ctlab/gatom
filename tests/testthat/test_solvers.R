@@ -36,19 +36,13 @@ test_that("sgmwcs.solver works", {
 
 })
 
-test_that("sgmwcs.solver works when grouping nodes by absent attributes", {
+test_that("sgmwcs.solver works when grouping nodes/edges by absent attributes", {
     skip_if_not(system("sgmwcs -h", ignore.stdout = T) == 0)
 
     g <- testSgmwcsInstance()
 
     solve <- sgmwcs.solver("sgmwcs", nodes.group.by = "bla")
     m <- solve(g)
-})
-
-test_that("sgmwcs.solver works when grouping edges by absent attributes", {
-    skip_if_not(system("sgmwcs -h", ignore.stdout = T) == 0)
-
-    g <- testSgmwcsInstance()
 
     solve <- sgmwcs.solver("sgmwcs", edges.group.by = "bla")
     m <- solve(g)
