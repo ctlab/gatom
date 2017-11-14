@@ -2,6 +2,12 @@
 #' @param module Module to save
 #' @param file File to save to
 #' @param name Name of the module
+
+#' @import XML
+sanitizeForXml <- function (string) {
+    xmlValue(xmlTextNode(string))
+}
+
 #' @export
 saveModuleToXgmml <- function(module, file, name=NULL) {
     if (is.null(name)) {
@@ -63,6 +69,10 @@ getAttrXmlStrings <- function(attr.values, indent="") {
         } else {
             type <- "string"
             attr.values[[i]] <- as.character(attr.values[[i]])
+        }
+
+        if(type=="string"){
+            attr.values[[i]] <- sapply(as.vector(attr.values[[i]]), sanitizeForXml)
         }
 
         attr.xmlStrings[[i]] <- paste0(indent, "<att type=", "\"", type, "\"", " name=", "\"", attr.names[i], "\"", " value=", "\"", attr.values[[i]], "\"/>\n")
