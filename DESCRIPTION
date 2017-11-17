@@ -10,7 +10,8 @@ Imports:
     igraph,
     BioNet,
     plyr,
-    methods
+    methods,
+    XML
 Suggests:
     testthat,
     knitr,
