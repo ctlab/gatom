@@ -14,17 +14,27 @@ getGeneDEMeta(gene.de.raw, org.gatom.anno, idColumn = NULL, idType = NULL,
 convertable to data.frame.}
 
 \item{org.gatom.anno}{Organsim-specific annotation obtained from
-makeOrgGatomAnnotation function}
+makeOrgGatomAnnotation function.}
 
-\item{baseMeanColumn}{could be NULL (automatic), NA (no such column),
-character (coumn name)}
+\item{idColumn}{Specifies column name with gene identifiers.}
+
+\item{idType}{Specifies type of gene IDs (one of the supported by annotation).}
+
+\item{pvalColumn}{Specifies column with p-values.}
+
+\item{logPvalColumn}{Specifies column with log p-values, if there is no such
+column one will be generated automatically.}
+
+\item{log2FCColumn}{Specifies coln with log2-fold changes.}
+
+\item{baseMeanColumn}{Spefies column with average axpression across samples.}
 
 \item{signalColumn}{could be NULL (automatic), character (coumn name)
 function (evaluated in a scope of original data frame)}
 }
 \description{
-Finds columns in gene differential expression table
-required for gatom analysis
+Default values for all columns are NULL which mean they are
+determined automatically.
 }
 \examples{
 data("org.Mm.eg.gatom.annoEx")

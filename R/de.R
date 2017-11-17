@@ -129,7 +129,6 @@ idsListFromAnnotation <- function(org.gatom.anno) {
 #'                      column one will be generated automatically.
 #' @param log2FCColumn Specifies coln with log2-fold changes.
 #' @param baseMeanColumn Spefies column with average axpression across samples.
-#' @param
 #' @param signalColumn could be NULL (automatic), character (coumn name)
 #'                     function (evaluated in a scope of original data frame)
 #' @export

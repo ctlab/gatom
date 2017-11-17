@@ -1,13 +1,13 @@
-#' Save module to an XGMML file
-#' @param module Module to save
-#' @param file File to save to
-#' @param name Name of the module
 
 #' @import XML
 sanitizeForXml <- function (string) {
     xmlValue(xmlTextNode(string))
 }
 
+#' Save module to an XGMML file
+#' @param module Module to save
+#' @param file File to save to
+#' @param name Name of the module
 #' @export
 saveModuleToXgmml <- function(module, file, name=NULL) {
     if (is.null(name)) {
