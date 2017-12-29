@@ -94,7 +94,8 @@ makeAtomGraph <- function(network,
                           gene.keep.top=12000,
                           met.db,
                           met.de,
-                          met.de.meta=getMetDEMeta(met.de, met.db)) {
+                          met.de.meta=getMetDEMeta(met.de, met.db),
+                          met.to.filter=NULL) {
     if (!is.null(gene.de)) {
         gene.de <- prepareDE(gene.de, gene.de.meta)
         gene.de <- gene.de[signalRank <= gene.keep.top]
@@ -115,6 +116,7 @@ makeAtomGraph <- function(network,
     g <- graph.data.frame(edge.table, directed=FALSE, vertices = vertex.table)
     gc <- components(g)
     g <- induced.subgraph(g, gc$membership == which.max(gc$csize))
+    if(!is.null(met.to.filter)){g <- delete_vertices(g, v=V(g)[label %in% met.to.filter])}
     g
 }
 

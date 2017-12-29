@@ -78,12 +78,20 @@ system("neato -Tsvg M0.vs.M1.dot > M0.vs.M1.svg", ignore.stderr = T)
 knitr::include_graphics("M0.vs.M1.svg")
 ```
 
-The module can also be save to xgmml format and later opened in Cytoscape.
+The module can also be saved to xgmml format and later opened in Cytoscape.
 
 ```{r}
 saveModuleToXgmml(m, file="M0.vs.M1.xgmml", name="M0.vs.M1")
 ```
 
+The module can also be saved to pdf format with a nice layout.
+You may vary the meaning of repel force and the number of iterations of repel algorithm for label layout.
+You may also choose either sna, either igraph force algorithm for edge layout.
+Note, that the larger your graph is the softer force you should use. 
+
+```{r}
+saveModuleToPdf(m, layout="sna_kk", n_iter=100, force=1e-5, file="M0.vs.M1.pdf", name="M0.vs.M1")
+```
 
 Next, reactions without highly changing genes but with high average 
 expression can be added.
