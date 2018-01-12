@@ -6,7 +6,7 @@
 #' @param file File to save to
 #' @param name Name of the module
 #' @export
-#' @import ggnet
+#' @import GGally
 #' @import igraph
 saveModuleToPdf <- function(module, layout="sna_kk", n_iter=100, force=1e-5, file, name=NULL) {
 
