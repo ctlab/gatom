@@ -23,7 +23,8 @@ saveModuleToPdf <- function(module, layout="sna_kk", n_iter=100, force=1e-5, fil
                 edge.size=edge_attrs$penwidth, edge.color=edge_attrs$color,
                 edge.label.fill=NA, edge.label=E(module)$label, edge.label.size=edge_attrs$fontsize,
                 legend.size=0, legend.position="up") +
-        ggtitle(name))
+         ggplot2::ggtitle(name) +
+         ggplot2::theme(plot.title=ggplot2::element_text(size=50)))
     dev.off()
 }
 
@@ -78,7 +79,7 @@ getModulePdfLayout <- function(module, layout, n_iter, force) {
                       y=store_all_info(module, layout1)$nt$y[i],
                       default.units="npc",
 
-                      gp=gpar(fontsize=node_attrs$fontsize[i] * .pt
+                      gp=gpar(fontsize=node_attrs$fontsize[i] * ggplot2::.pt
                       ),
                       name="text"
         )
@@ -99,7 +100,7 @@ getModulePdfLayout <- function(module, layout, n_iter, force) {
                       y=store_all_info(module, layout1)$lines_to_check$middle_y[i],
                       default.units="npc",
 
-                      gp=gpar(fontsize=edge_attrs$fontsize[i] * .pt
+                      gp=gpar(fontsize=edge_attrs$fontsize[i] * ggplot2::.pt
                       ),
                       name="text"
         )
@@ -348,7 +349,7 @@ nodeShapeMap <- c(met="circle", rxn="square")
 edgeStyleMap <- c(main="solid", trans="dashed")
 
 getDotNodeStyleAttributes <- function(attrs) {
-    logPval <- if (!is.null(attrs$logPval)) attrs$logPval else -1
+    logPval <- if (!is.null(attrs$logPval)) attrs$logPval else -5
     with(attrs, data.frame(
         label=if (!is.null(attrs$label)) label else "",
         shape=if (!is.null(attrs$nodeType)) nodeShapeMap[nodeType] else "circle",
@@ -362,7 +363,7 @@ getDotNodeStyleAttributes <- function(attrs) {
 }
 
 getDotEdgeStyleAttributes <- function(attrs) {
-    logPval <- if (!is.null(attrs$logPval)) attrs$logPval else -1
+    logPval <- if (!is.null(attrs$logPval)) attrs$logPval else -5
     with(attrs, data.frame(
         label=if (!is.null(attrs$label)) label else "",
         style=if (!is.null(attrs$rptype)) edgeStyleMap[rptype] else "solid",

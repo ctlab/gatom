@@ -1,6 +1,3 @@
-#' @import sna
-#' @import intergraph
-#' @import network
 make_layout <- function(m, layout="sna_kk"){
     start_layouts <- list()
     start_layout_inters <- 1
@@ -10,7 +7,7 @@ make_layout <- function(m, layout="sna_kk"){
         if(layout=="sna_kk"){
             net <- intergraph::asNetwork(m)
             xy <- network::as.matrix.network.adjacency(net)
-            layout1 <- gplot.layout.kamadakawai(xy, layout.par=list(niter=500))
+            layout1 <- sna::gplot.layout.kamadakawai(xy, layout.par=list(niter=500))
         }
         if(layout=="igraph_kk"){
             layout1 <- layout_with_kk(m)

@@ -153,10 +153,13 @@ g <- makeAtomGraph(network=network,
                    org.gatom.anno=org.Mm.eg.gatom.anno, 
                    gene.de=gene.de.raw,
                    met.db=met.kegg.db, 
-                   met.de=met.de.raw)
+                   met.de=met.de.raw,
+                   met.to.filter=NULL)
 
 gs <- scoreGraph(g, k.gene = 50, k.met=50)
 
 solve <- sgmwcs.solver("sgmwcs", nthreads = 4, timeLimit = 60) 
 m <- solve(gs)
 ```
+
+If there is no metabolite data in your experiment assign met.de and k.met to NULL.
