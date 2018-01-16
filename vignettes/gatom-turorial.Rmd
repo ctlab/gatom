@@ -91,6 +91,7 @@ Note, that the larger your graph is the softer force you should use.
 
 ```{r}
 saveModuleToPdf(m, layout="sna_kk", n_iter=100, force=1e-5, file="M0.vs.M1.pdf", name="M0.vs.M1")
+knitr::include_graphics("M0.vs.M1.pdf")
 ```
 
 Next, reactions without highly changing genes but with high average 
@@ -156,7 +157,7 @@ g <- makeAtomGraph(network=network,
                    met.de=met.de.raw,
                    met.to.filter=NULL)
 
-gs <- scoreGraph(g, k.gene = 50, k.met=50)
+gs <- scoreGraph(g, k.gene = 50, k.met = 50)
 
 solve <- sgmwcs.solver("sgmwcs", nthreads = 4, timeLimit = 60) 
 m <- solve(gs)
