@@ -95,7 +95,7 @@ makeAtomGraph <- function(network,
                           met.db,
                           met.de,
                           met.de.meta=getMetDEMeta(met.de, met.db),
-                          met.to.filter=NULL) {
+                          met.to.filter=fread(system.file("mets2mask.lst", package="gatom"))$ID) {
     if (!is.null(gene.de)) {
         gene.de <- prepareDE(gene.de, gene.de.meta)
         gene.de <- gene.de[signalRank <= gene.keep.top]
@@ -116,7 +116,14 @@ makeAtomGraph <- function(network,
     g <- graph.data.frame(edge.table, directed=FALSE, vertices = vertex.table)
     gc <- components(g)
     g <- induced.subgraph(g, gc$membership == which.max(gc$csize))
-    if(!is.null(met.to.filter)){g <- delete_vertices(g, v=V(g)[label %in% met.to.filter])}
+
+    if(!is.null(met.to.filter)){
+        nodes.to.del <- V(g)[metabolite %in% met.to.filter]
+        if(length(nodes.to.del) == 0){
+            warning("Found no metabolites to mask")}else{
+                g <- delete_vertices(g, v=V(g)[metabolite %in% met.to.filter])
+            }
+        }
     g
 }
 

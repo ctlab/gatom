@@ -154,8 +154,7 @@ g <- makeAtomGraph(network=network,
                    org.gatom.anno=org.Mm.eg.gatom.anno, 
                    gene.de=gene.de.raw,
                    met.db=met.kegg.db, 
-                   met.de=met.de.raw,
-                   met.to.filter=NULL)
+                   met.de=met.de.raw)
 
 gs <- scoreGraph(g, k.gene = 50, k.met = 50)
 
@@ -164,3 +163,7 @@ m <- solve(gs)
 ```
 
 If there is no metabolite data in your experiment assign met.de and k.met to NULL.
+
+Optional:
+ -- You may add met.to.filter=NULL option to makeAtomGraph function not to hide common metabolites.
+ -- You may add minimize.size=T option to sgmwcs.solver function to hide excessively repeated meaningless reactions.
