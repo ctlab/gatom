@@ -158,6 +158,13 @@ test_that("makeAtomGraph works on already good DE tables", {
                        met.de=met.de)
     expect_is(g, "igraph")
     expect_true("Idh1" %in% E(g)$label)
+})
 
-
+test_that("makeAtomGraph notifies if none of the metabolites was masked", {
+    expect_warning(g <- makeAtomGraph(network=networkEx,
+                                      org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                                      gene.de=gene.de.rawEx,
+                                      met.db=met.kegg.dbEx,
+                                      met.de=met.de.rawEx,
+                                      met.to.filter="abrakadabra"))
 })

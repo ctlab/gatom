@@ -117,13 +117,14 @@ makeAtomGraph <- function(network,
     gc <- components(g)
     g <- induced.subgraph(g, gc$membership == which.max(gc$csize))
 
-    if(!is.null(met.to.filter)){
+    if (!is.null(met.to.filter)) {
         nodes.to.del <- V(g)[metabolite %in% met.to.filter]
-        if(length(nodes.to.del) == 0){
-            warning("Found no metabolites to mask")}else{
-                g <- delete_vertices(g, v=V(g)[metabolite %in% met.to.filter])
-            }
+        if (length(nodes.to.del) == 0) {
+            warning("Found no metabolites to mask")
+        } else {
+            g <- delete_vertices(g, v = V(g)[metabolite %in% met.to.filter])
         }
+    }
     g
 }
 
