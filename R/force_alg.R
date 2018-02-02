@@ -3,7 +3,9 @@ force_alg <- function(layout1,
                       elabel_semisizes,
                       edges,
                       xlim, ylim,
-                      n_iter, force){
+                      n_iter, force, seed){
+
+    set.seed(seed)
 
     longer_goes_Y <- mean(nlabel_semisizes[ ,1])
     intersection <- TRUE

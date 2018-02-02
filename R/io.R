@@ -8,9 +8,9 @@
 #' @export
 #' @import GGally
 #' @import igraph
-saveModuleToPdf <- function(module, layout="sna_kk", n_iter=100, force=1e-5, file, name=NULL) {
+saveModuleToPdf <- function(module, n_iter=100, force=1e-5, seed=1, file, name=NULL) {
 
-    pdflayout <- getModulePdfLayout(module, layout, n_iter, force)
+    pdflayout <- getModulePdfLayout(module, n_iter, force, seed)
     layout2 <- pdflayout$layout2
     node_attrs <- getPdfModuleAttrs(module)$produce_node_attrs
     edge_attrs <- getPdfModuleAttrs(module)$produce_edge_attrs
@@ -51,9 +51,9 @@ getPdfModuleAttrs <- function(module) {
 
 
 #' @import grid
-getModulePdfLayout <- function(module, layout, n_iter, force) {
+getModulePdfLayout <- function(module, n_iter, force, seed) {
 
-    layout1 <- make_layout(module, layout=layout)
+    layout1 <- make_layout(module)
 
     # produce labels' grobs on canvas of a particular size
     # by modifying geom_text_repel algorithm (see function force_alg)
@@ -138,7 +138,7 @@ getModulePdfLayout <- function(module, layout, n_iter, force) {
                          edges,
                          xlim=new_borders_x_bot,
                          ylim=new_borders_y_bot,
-                         n_iter, force)
+                         n_iter, force, seed)
 
     return(list(
         layout2=layout2,

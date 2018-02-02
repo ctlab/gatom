@@ -1,17 +1,13 @@
-make_layout <- function(m, layout="sna_kk"){
+make_layout <- function(m){
     start_layouts <- list()
     start_layout_inters <- 1
     n <- 1
 
-    while(start_layout_inters[length(start_layout_inters)]!=0 & n < 10){
-        if(layout=="sna_kk"){
-            net <- intergraph::asNetwork(m)
-            xy <- network::as.matrix.network.adjacency(net)
-            layout1 <- sna::gplot.layout.kamadakawai(xy, layout.par=list(niter=500))
-        }
-        if(layout=="igraph_kk"){
-            layout1 <- layout_with_kk(m)
-        }
+    while (start_layout_inters[length(start_layout_inters)] != 0 & n < 10) {
+        net <- intergraph::asNetwork(m)
+        xy <- network::as.matrix.network.adjacency(net)
+        layout1 <- sna::gplot.layout.kamadakawai(xy, layout.par=list(niter=500))
+        # layout1 <- layout_with_kk(m) # if (layout=="igraph_kk")
 
         start_layout_inters <- c(start_layout_inters,
                                  n_intersect_segm(store_all_info(m, layout1)$lines_to_check))
