@@ -53,7 +53,7 @@ getPdfModuleAttrs <- function(module) {
 #' @import grid
 getModulePdfLayout <- function(module, n_iter, force, seed) {
 
-    layout1 <- make_layout(module)
+    layout1 <- make_layout(module, seed)
 
     # produce labels' grobs on canvas of a particular size
     # by modifying geom_text_repel algorithm (see function force_alg)
@@ -138,7 +138,7 @@ getModulePdfLayout <- function(module, n_iter, force, seed) {
                          edges,
                          xlim=new_borders_x_bot,
                          ylim=new_borders_y_bot,
-                         n_iter, force, seed)
+                         n_iter, force)
 
     return(list(
         layout2=layout2,

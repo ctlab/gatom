@@ -1,7 +1,9 @@
-make_layout <- function(m){
+make_layout <- function(m, seed){
     start_layouts <- list()
     start_layout_inters <- 1
     n <- 1
+
+    set.seed(seed)
 
     while (start_layout_inters[length(start_layout_inters)] != 0 & n < 10) {
         net <- intergraph::asNetwork(m)
