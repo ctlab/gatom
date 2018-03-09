@@ -11,7 +11,13 @@ Imports:
     BioNet,
     plyr,
     methods,
-    XML
+    XML,
+    sna,
+    intergraph,
+    network,
+    GGally,
+    grid,
+    ggplot2
 Suggests:
     testthat,
     knitr,
