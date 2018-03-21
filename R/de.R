@@ -19,6 +19,13 @@ prepareDEColumn <- function(gene.de, columnName, from) {
     } else {
         gene.de[, (columnName) := eval(from, envir = gene.de)]
     }
+    if (columnName == "pval") {
+        if (any(gene.de$pval == 0, na.rm = T)) {
+            mpval <- min(gene.de$pval[gene.de$pval != 0])
+            gene.de[pval == 0, pval := mpval]
+            warning("Some of your p-values are equal to zero. Replaced it by the minimum p-value meaning.")
+        }
+    }
 }
 
 #' Makes data.table with differential expression results containing
