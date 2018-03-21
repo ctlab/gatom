@@ -8,7 +8,7 @@
 #' @export
 #' @import GGally
 #' @import igraph
-saveModuleToPdf <- function(module, n_iter=100, force=1e-5, seed=1, file, name=NULL) {
+saveModuleToPdf <- function(module, file, name=NULL, n_iter=100, force=1e-5, seed=1) {
 
     pdflayout <- getModulePdfLayout(module, n_iter, force, seed)
     layout2 <- pdflayout$layout2

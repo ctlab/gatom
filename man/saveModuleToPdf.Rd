@@ -4,21 +4,21 @@
 \alias{saveModuleToPdf}
 \title{Save module to a nice pdf file}
 \usage{
-saveModuleToPdf(module, layout = "sna_kk", n_iter = 100, force = 1e-05,
-  file, name = NULL)
+saveModuleToPdf(module, file, name = NULL, n_iter = 100, force = 1e-05,
+  seed = 1)
 }
 \arguments{
 \item{module}{Module to save}
 
-\item{layout}{Edge layout}
+\item{file}{File to save to}
+
+\item{name}{Name of the module}
 
 \item{n_iter}{Number of repel algorithm iterations}
 
 \item{force}{Value of repel force}
 
-\item{file}{File to save to}
-
-\item{name}{Name of the module}
+\item{layout}{Edge layout}
 }
 \description{
 Save module to a nice pdf file

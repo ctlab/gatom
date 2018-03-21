@@ -89,7 +89,7 @@ You may vary the meaning of repel force and the number of iterations of repel al
 You may also change seed for different variants of edge layout.
 
 ```{r}
-saveModuleToPdf(m, n_iter=100, force=1e-5, seed=1, file="M0.vs.M1.pdf", name="M0.vs.M1")
+saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=1)
 knitr::include_graphics("M0.vs.M1.pdf")
 ```
 
