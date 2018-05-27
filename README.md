@@ -8,21 +8,74 @@ An R-package for finding active metabolic modules in atom transition network.
 
 ---
 
-* To work with **gatom** you need to download [sgmwcs solver](https://github.com/ctlab/sgmwcs-solver/releases) depending on [CPLEX solver](https://www.ibm.com/uk-en/marketplace/ibm-ilog-cplex) into PATH_TO_SGMWCS and PATH_TO_CPLEX respectively. Make sure you have downloaded cplex.jar and libcplex.so into one folder and both of the same version. Note that CPLEX solver is a proprietary software, still you can find community version on the official site.
+Full vignette can be found here [https://github.com/ctlab/gatom/blob/master/inst/Using_gatom_package.html]: 
 
-* Create the following wrapper for your sgmwcs solver, name it `sgmwcs` for consistency with [gatom-tutorial.Rmd](https://github.com/ctlab/gatom/blob/master/vignettes/gatom-tutorial.Rmd#pre-generated-annotations), fill it out as shown below:
-    ```{bash}
-    #!/bin/sh
-    exec java -Djava.library.path=PATH_TO_CPLEX \
-        -Xmx2G \
-        -cp PATH_TO_CPLEX/cplex.jar:/PATH_TO_SGMWCS/sgmwcs-solver.jar \
-        ru.ifmo.ctddev.gmwcs.Main "$@"
-    ```
-    and put this file into the directory included in your $PATH.
+### Installation 
 
-* Install **gatom** as R-package running the following command inside R:
-    ```{R}
-    #install.packages("devtools")
-    devtools::install_github("ctlab/gatom")
-    ```
+```{r}
+library(devtools)
+install_github("ctlab/gatom")
+```
 
+### Quick start
+
+```{r message=FALSE}
+library(gatom)
+library(data.table)
+library(igraph)
+```
+
+First let's load data with atom mappings (`network` object),
+enzyme annotations for mouse (`org.Mm.eg.gatom`)
+and metabolite annotations (`met.kegg.db.rda`):
+
+```{r}
+data("networkEx")
+data("org.Mm.eg.gatom.annoEx")
+data("met.kegg.dbEx")
+```
+
+Loading input data:
+
+```{r message=F}
+data("met.de.rawEx")
+data("gene.de.rawEx")
+
+```
+
+Getting atom graph:
+
+```{r}
+g <- makeAtomGraph(network=networkEx, 
+                   org.gatom.anno=org.Mm.eg.gatom.annoEx, 
+                   gene.de=gene.de.rawEx,
+                   met.db=met.kegg.dbEx, 
+                   met.de=met.de.rawEx)
+print(g)
+```
+
+Scoring graph:
+
+```{r}
+gs <- scoreGraph(g, k.gene = 25, k.met=25)
+```
+
+Finding a module:
+
+```{r}
+set.seed(42)
+m <- solveSgmwcsRandHeur(gs, max.iterations = 2000)
+```
+
+```{r}
+print(m)
+E(m)$label
+V(m)$label
+```
+
+We can save the module to different formats (dot, xgmml, svg, pdf):
+
+```{r echo=-2, message=F, warning=F, out.height=550}
+saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=1)
+knitr::include_graphics("M0.vs.M1.pdf")
+```

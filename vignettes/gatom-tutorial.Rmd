@@ -1,18 +1,28 @@
 ---
 title: "Using gatom package"
+author: 
+- "Alexey A. Sergushichev"
 date: "2017-03-21"
-output: rmarkdown::html_vignette
+output: 
+    BiocStyle::html_document:
+        toc_float: true
+    pdf_document:
+        keep_tex: true
 vignette: >
   %\VignetteIndexEntry{Using gatom package}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
-
+  %\VignetteEncoding{UTF-8} 
 ---
+
+This tutorial describes an R-package for finding active metabolic modules in atom transition network.
+
+# Example workfow for active metabolic module finding based on macrophage activation gene expression data
+
+## Starting application
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
 
 ```{r message=FALSE}
 library(gatom)
@@ -30,16 +40,14 @@ data("org.Mm.eg.gatom.annoEx")
 data("met.kegg.dbEx")
 ```
 
-
 Loading input data:
 
 ```{r message=F}
 data("met.de.rawEx")
 data("gene.de.rawEx")
-
 ```
 
-Getting atom graph
+Getting atom graph:
 
 ```{r}
 g <- makeAtomGraph(network=networkEx, 
@@ -50,29 +58,29 @@ g <- makeAtomGraph(network=networkEx,
 print(g)
 ```
 
-Scoring graph
+Scoring graph:
 
-```{r}
+```{r message=F, warning=F}
 gs <- scoreGraph(g, k.gene = 25, k.met=25)
 ```
 
-Finding a module
+Finding a module:
 
-```{r}
+```{r message=F, warning=F}
 set.seed(42)
 m <- solveSgmwcsRandHeur(gs, max.iterations = 2000)
 ```
 
 ```{r}
 print(m)
-E(m)$label
-V(m)$label
+head(E(m)$label)
+head(V(m)$label)
 ```
 
 We can save the module to dot format to generate pdf or svg file using `neato`
 tool from graphviz suite.
 
-```{r}
+```{r echo=-3}
 saveModuleToDot(m, file="M0.vs.M1.dot", name="M0.vs.M1")
 system("neato -Tsvg M0.vs.M1.dot > M0.vs.M1.svg", ignore.stderr = T)
 knitr::include_graphics("M0.vs.M1.svg")
@@ -88,7 +96,7 @@ The module can also be saved to pdf format with a nice layout.
 You may vary the meaning of repel force and the number of iterations of repel algorithm for label layout. Note, that the larger your graph is the softer force you should use. 
 You may also change seed for different variants of edge layout.
 
-```{r}
+```{r echo=-2, message=F, warning=F, out.height=550}
 saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=1)
 knitr::include_graphics("M0.vs.M1.pdf")
 ```
@@ -96,7 +104,7 @@ knitr::include_graphics("M0.vs.M1.pdf")
 Next, reactions without highly changing genes but with high average 
 expression can be added.
 
-```{r}
+```{r echo=-4}
 m.ext <- addHighlyExpressedEdges(m, gs)
 saveModuleToDot(m.ext, file="M0.vs.M1.ext.dot", name="M0.vs.M1")
 system("neato -Tsvg M0.vs.M1.ext.dot > M0.vs.M1.ext.svg", ignore.stderr = T)
@@ -109,7 +117,7 @@ times in the module via different atoms. In such cases it is useful
 to either connect atoms belonging to the same metabolite with edges
 with `connectAtomsInsideMetabolite` function.
 
-```{r}
+```{r echo=-4}
 m1 <- connectAtomsInsideMetabolite(m.ext)
 saveModuleToDot(m1, file="M0.vs.M1.v1.dot", name="M0.vs.M1")
 system("neato -Tsvg M0.vs.M1.v1.dot > M0.vs.M1.v1.svg", ignore.stderr = T)
@@ -118,15 +126,15 @@ knitr::include_graphics("M0.vs.M1.v1.svg")
 
 The other way is to collapse them into one vertex with `collapseAtomsIntoMetabolites`:
 
-```{r}
+```{r echo=-4}
 m2 <- collapseAtomsIntoMetabolites(m.ext)
 saveModuleToDot(m2, file="M0.vs.M1.v2.dot", name="M0.vs.M1")
 system("neato -Tsvg M0.vs.M1.v2.dot > M0.vs.M1.v2.svg", ignore.stderr = T)
 knitr::include_graphics("M0.vs.M1.v2.svg")
 ```
 
-## Pre-generated annotations
 
+## Pre-generated annotations
 
 ```{r eval=FALSE}
 load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rda"))
@@ -164,5 +172,27 @@ m <- solve(gs)
 If there is no metabolite data in your experiment assign met.de and k.met to NULL.
 
 Optional:
- -- You may add met.to.filter=NULL option to makeAtomGraph function not to hide common metabolites.
- -- You may add minimize.size=T option to sgmwcs.solver function to hide excessively repeated meaningless reactions.
+You may add `met.to.filter=NULL` option to makeAtomGraph function not to hide common metabolites.
+You may add `minimize.size=T` option to sgmwcs.solver function to hide excessively repeated meaningless reactions.
+ 
+# Installation
+ 
+ * To work with **gatom** you need to download [sgmwcs solver](https://github.com/ctlab/sgmwcs-solver/releases) depending on [CPLEX solver](https://www.ibm.com/uk-en/marketplace/ibm-ilog-cplex) into PATH_TO_SGMWCS and PATH_TO_CPLEX respectively. Make sure you have downloaded cplex.jar and libcplex.so into one folder and both of the same version. Note that CPLEX solver is a proprietary software, still you can find community version on the official site.
+
+* Create the following wrapper for your sgmwcs solver, name it `sgmwcs` for consistency with [gatom-tutorial.Rmd](https://github.com/ctlab/gatom/blob/master/vignettes/gatom-tutorial.Rmd#pre-generated-annotations), fill it out as shown below:
+```{bash eval = FALSE}
+    #!/bin/sh
+    exec java -Djava.library.path=PATH_TO_CPLEX \
+        -Xmx2G \
+        -cp PATH_TO_CPLEX/cplex.jar:/PATH_TO_SGMWCS/sgmwcs-solver.jar \
+        ru.ifmo.ctddev.gmwcs.Main "$@"
+```
+    
+and put this file into the directory included in your $PATH.
+
+* Install **gatom** as R-package running the following command inside R:
+```{R eval = FALSE}
+    #install.packages("devtools")
+    devtools::install_github("ctlab/gatom")
+```
+
