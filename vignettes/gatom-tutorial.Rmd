@@ -91,12 +91,12 @@ The module can also be saved to pdf format with a nice layout.
 You may vary the meaning of repel force and the number of iterations of repel algorithm for label layout. Note, that the larger your graph is the softer force you should use. 
 You may also change seed for different variants of edge layout.
 
-```{r eval=FALSE, echo=-2, message=F, warning=F, out.height=550}
+```{r eval=FALSE, echo=-2, message=F, warning=F}
 saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=1)
 knitr::include_graphics("M0.vs.M1.pdf")
 ```
 
-![M0.vs.M1.pdf](https://github.com/ctlab/gatom/blob/master/inst/M0.vs.M1.pdf)
+<embed src="https://rawgit.com/ctlab/gatom/master/inst/M0.vs.M1.pdf" width="100%" height="550px" type="application/pdf">
 
 Next, reactions without highly changing genes but with high average 
 expression can be added.

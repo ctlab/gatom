@@ -8,7 +8,7 @@ An R-package for finding active metabolic modules in atom transition network.
 
 ---
 
-Full vignette can be found here [https://github.com/ctlab/gatom/blob/master/inst/Using_gatom_package.html]: 
+Full vignette can be found [here](https://rawgit.com/ctlab/gatom/master/inst/Using_gatom_package.html).
 
 ### Installation 
 
@@ -77,4 +77,4 @@ We can save the module to different formats (dot, xgmml, svg, pdf):
 ```{r}
 saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=1)
 ```
-<img src="https://github.com/ctlab/gatom/blob/master/inst/M0.vs.M1.pdf" heigth="550">
+<embed src="https://rawgit.com/ctlab/gatom/master/inst/M0.vs.M1.pdf" width="100%" height="600px" type="application/pdf">
