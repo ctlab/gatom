@@ -40,7 +40,6 @@ Loading input data:
 ```{r message=F}
 data("met.de.rawEx")
 data("gene.de.rawEx")
-
 ```
 
 Getting atom graph:
@@ -75,7 +74,7 @@ V(m)$label
 
 We can save the module to different formats (dot, xgmml, svg, pdf):
 
-```{r echo=-2, message=F, warning=F, out.height=550}
+```{r}
 saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=1)
-knitr::include_graphics("M0.vs.M1.pdf")
 ```
+<img src="https://github.com/ctlab/gatom/blob/master/inst/M0.vs.M1.pdf" heigth="550">

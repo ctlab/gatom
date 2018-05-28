@@ -1,17 +1,12 @@
 ---
 title: "Using gatom package"
-author: 
-- "Alexey A. Sergushichev"
-date: "2017-03-21"
-output: 
-    BiocStyle::html_document:
-        toc_float: true
-    pdf_document:
-        keep_tex: true
-vignette: >
-  %\VignetteIndexEntry{Using gatom package}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8} 
+author: "Alexey A. Sergushichev"
+date: '2017-03-21'
+output:
+  BiocStyle::html_document:
+    toc_float: yes
+vignette: "%\\VignetteIndexEntry{Using gatom package} %\\VignetteEngine{knitr::rmarkdown}
+  %\\VignetteEncoding{UTF-8} \n"
 ---
 
 This tutorial describes an R-package for finding active metabolic modules in atom transition network.
@@ -96,10 +91,12 @@ The module can also be saved to pdf format with a nice layout.
 You may vary the meaning of repel force and the number of iterations of repel algorithm for label layout. Note, that the larger your graph is the softer force you should use. 
 You may also change seed for different variants of edge layout.
 
-```{r echo=-2, message=F, warning=F, out.height=550}
+```{r eval=FALSE, echo=-2, message=F, warning=F, out.height=550}
 saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=1)
 knitr::include_graphics("M0.vs.M1.pdf")
 ```
+
+![M0.vs.M1.pdf](https://github.com/ctlab/gatom/blob/master/inst/M0.vs.M1.pdf)
 
 Next, reactions without highly changing genes but with high average 
 expression can be added.
@@ -110,7 +107,6 @@ saveModuleToDot(m.ext, file="M0.vs.M1.ext.dot", name="M0.vs.M1")
 system("neato -Tsvg M0.vs.M1.ext.dot > M0.vs.M1.ext.svg", ignore.stderr = T)
 knitr::include_graphics("M0.vs.M1.ext.svg")
 ```
-
 
 Sometimes, as in example above, the same metabolite can appear multiple 
 times in the module via different atoms. In such cases it is useful
