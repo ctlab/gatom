@@ -10,7 +10,7 @@ An R-package for finding active metabolic modules in atom transition network.
 
 Full vignette can be found [here](https://rawgit.com/ctlab/gatom/master/inst/Using_gatom_package.html).
 
-### Installation 
+### Installation
 
 ```{r}
 library(devtools)
@@ -45,10 +45,10 @@ data("gene.de.rawEx")
 Getting atom graph:
 
 ```{r}
-g <- makeAtomGraph(network=networkEx, 
-                   org.gatom.anno=org.Mm.eg.gatom.annoEx, 
+g <- makeAtomGraph(network=networkEx,
+                   org.gatom.anno=org.Mm.eg.gatom.annoEx,
                    gene.de=gene.de.rawEx,
-                   met.db=met.kegg.dbEx, 
+                   met.db=met.kegg.dbEx,
                    met.de=met.de.rawEx)
 print(g)
 ```
@@ -77,4 +77,5 @@ We can save the module to different formats (dot, xgmml, svg, pdf):
 ```{r}
 saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=1)
 ```
-<embed src="https://rawgit.com/ctlab/gatom/master/inst/M0.vs.M1.pdf" width="100%" height="600px" type="application/pdf">
+
+![Module](https://rawgit.com/ctlab/gatom/master/inst/M0.vs.M1.pdf.png)
