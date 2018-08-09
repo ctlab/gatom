@@ -144,6 +144,30 @@ test_that("scoreGraph shows warning on bad distribution", {
     expect_warning(gs <- scoreGraph(g, k.gene=NULL, k.met=25))
 })
 
+test_that("scoreGraph assigns vertex scores to 0 if its p-value distribution has an inappropriate type", {
+    g <- makeAtomGraph(network=networkEx,
+                       org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                       gene.de=gene.de.rawEx,
+                       met.db=met.kegg.dbEx,
+                       met.de=met.de.rawEx)
+
+    vertex_attr(g)$pval <- runif(n = length(vertex_attr(g)$pval))
+
+    expect_warning(gs <- scoreGraph(g, k.gene = 25, k.met = 25, show.warnings = F))
+})
+
+test_that("scoreGraph assigns edge scores to 0 if its p-value distribution has an inappropriate type", {
+    g <- makeAtomGraph(network=networkEx,
+                       org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                       gene.de=gene.de.rawEx,
+                       met.db=met.kegg.dbEx,
+                       met.de=met.de.rawEx)
+
+    edge_attr(g)$pval <- runif(n = length(edge_attr(g)$pval))
+
+    expect_warning(gs <- scoreGraph(g, k.gene = 25, k.met = 25, show.warnings = F))
+})
+
 test_that("makeAtomGraph works on already good DE tables", {
     gene.de <- data.table(gene.de.rawEx)
     gene.de <- convertPvalDT(gene.de, org.Mm.eg.gatom.annoEx$mapFrom$RefSeq)
@@ -168,3 +192,4 @@ test_that("makeAtomGraph notifies if none of the metabolites was masked", {
                                       met.de=met.de.rawEx,
                                       met.to.filter="abrakadabra"))
 })
+

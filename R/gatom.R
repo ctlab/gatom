@@ -147,46 +147,56 @@ scoreGraph <- function(g, k.gene, k.met,
         pvalsToFit <- vertex.table[!is.na(pval)][!duplicated(signal), setNames(pval, signal)]
 
         warnWrapper(vertex.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F))
+        if (vertex.bum$a > 0.5) {
+            V(g)$score <- 0
+            warning("Vertex scores have been assigned to 0 due to an inappropriate p-value distribution")
 
-
-        vertex.threshold <- if (k.met > length(pvalsToFit)) 1 else {
+        } else {
+            vertex.threshold <- if (k.met > length(pvalsToFit)) 1 else {
             sort(pvalsToFit)[k.met]
-        }
+                }
 
-        vertex.threshold <- min(vertex.threshold,
+            vertex.threshold <- min(vertex.threshold,
                                 BioNet::fdrThreshold(vertex.threshold.min, vertex.bum))
-        .messagef("Metabolite p-value threshold: %f", vertex.threshold)
-        .messagef("Metabolite BU alpha: %f", vertex.bum$a)
-        V(g)$score <- with(vertex.table,
-                           (vertex.bum$a - 1) *
+            .messagef("Metabolite p-value threshold: %f", vertex.threshold)
+            .messagef("Metabolite BU alpha: %f", vertex.bum$a)
+            V(g)$score <- with(vertex.table,
+                               (vertex.bum$a - 1) *
                                (log(.replaceNA(pval, 1)) - log(vertex.threshold)))
-        V(g)$score <- V(g)$score * met.score.coef
-    } else {
+            V(g)$score <- V(g)$score * met.score.coef
+            }
+        }
+    else {
         V(g)$score <- 0
-    }
+        }
 
     if (!is.null(k.gene)) {
         pvalsToFit <- edge.table[!is.na(pval)][!duplicated(signal), setNames(pval, signal)]
 
         warnWrapper(edge.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F))
+        if(edge.bum$a > 0.5) {
+            E(g)$score <- 0
+            warning("Edge scores have been assigned to 0 due to an inappropriate p-value distribution")
 
-        edge.threshold <- if (k.gene > length(pvalsToFit)) 1 else {
+        } else {
+            edge.threshold <- if (k.gene > length(pvalsToFit)) 1 else {
             sort(pvalsToFit)[k.gene]
-        }
+                }
 
-        edge.threshold <- min(edge.threshold,
+            edge.threshold <- min(edge.threshold,
                               BioNet::fdrThreshold(edge.threshold.min, edge.bum))
-        .messagef("Gene p-value threshold: %f", edge.threshold)
-        .messagef("Gene BU alpha: %f", edge.bum$a)
-        E(g)$score <- with(edge.table,
-                           (edge.bum$a - 1) *
+            .messagef("Gene p-value threshold: %f", edge.threshold)
+            .messagef("Gene BU alpha: %f", edge.bum$a)
+            E(g)$score <- with(edge.table,
+                               (edge.bum$a - 1) *
                                (log(.replaceNA(pval, 1)) - log(edge.threshold)))
-
-    } else {
-        E(g)$score <- 0
+        }
     }
+    else {
+        E(g)$score <- 0
+        }
     g
-}
+    }
 
 #' @export
 connectAtomsInsideMetabolite <- function(m) {

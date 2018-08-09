@@ -1,81 +1,82 @@
 ID	name
-C00001	"H2O; Water"
-C00002	"ATP; Adenosine 5'-triphosphate"
-C00003	"NAD+; NAD; Nicotinamide adenine dinucleotide; DPN; Diphosphopyridine nucleotide; Nadide"
-C00004	"NADH; DPNH; Reduced nicotinamide adenine dinucleotide"
-C00005	"NADPH; TPNH; Reduced nicotinamide adenine dinucleotide phosphate"
-C00006	"NADP+; NADP; Nicotinamide adenine dinucleotide phosphate; beta-Nicotinamide adenine dinucleotide phosphate; TPN; Triphosphopyridine nucleotide"
-C00007	"Oxygen; O2"
-C00008	"ADP; Adenosine 5'-diphosphate"
-C00009	"Orthophosphate; Phosphate; Phosphoric acid; Orthophosphoric acid"
-C00010	"CoA; Coenzyme A; CoA-SH"
-C00011	"CO2; Carbon dioxide"
-C00013	"Diphosphate; Diphosphoric acid; Pyrophosphate; Pyrophosphoric acid; PPi"
-C00014	"Ammonia; NH3"
-C00015	"UDP; Uridine 5'-diphosphate"
-C00020	"AMP; Adenosine 5'-monophosphate; Adenylic acid; Adenylate; 5'-AMP; 5'-Adenylic acid; 5'-Adenosine monophosphate; Adenosine 5'-phosphate"
-C00027	"Hydrogen peroxide; H2O2; Oxydol"
-C00028	"Acceptor; Hydrogen-acceptor; A; Oxidized donor"
-C00030	"Reduced acceptor; AH2; Hydrogen-donor; Donor"
-C00035	"GDP; Guanosine 5'-diphosphate; Guanosine diphosphate"
-C00044	"GTP; Guanosine 5'-triphosphate"
-C00055	"CMP; Cytidine-5'-monophosphate; Cytidylic acid"
-C00063	"CTP; Cytidine 5'-triphosphate; Cytidine triphosphate"
-C00067	"Formaldehyde; Methanal; Oxomethane; Oxomethylene; Methylene oxide; Formalin"
-C00075	"UTP; Uridine 5'-triphosphate; Uridine triphosphate"
-C00080	"H+; Hydron"
-C00081	"ITP; Inosine 5'-triphosphate; Inosine triphosphate; Inosine tripolyphosphate"
-C00104	"IDP; Inosine 5'-diphosphate; Inosine diphosphate"
-C00105	"UMP; Uridylic acid; Uridine monophosphate; Uridine 5'-monophosphate; 5'Uridylic acid"
-C00112	"CDP; Cytidine 5'-diphosphate; Cytidine diphosphate"
-C00130	"IMP; Inosinic acid; Inosine monophosphate; Inosine 5'-monophosphate; Inosine 5'-phosphate; 5'-Inosinate; 5'-Inosinic acid; 5'-Inosine monophosphate; 5'-IMP"
-C00131	"dATP; 2'-Deoxyadenosine 5'-triphosphate; Deoxyadenosine 5'-triphosphate; Deoxyadenosine triphosphate"
-C00144	"GMP; Guanosine 5'-phosphate; Guanosine monophosphate; Guanosine 5'-monophosphate; Guanylic acid"
-C00201	"Nucleoside triphosphate; NTP"
-C00206	"dADP; 2'-Deoxyadenosine 5'-diphosphate"
-C00239	"dCMP; Deoxycytidylic acid; Deoxycytidine monophosphate; Deoxycytidylate; 2'-Deoxycytidine 5'-monophosphate"
-C00286	"dGTP; 2'-Deoxyguanosine 5'-triphosphate; Deoxyguanosine 5'-triphosphate; Deoxyguanosine triphosphate"
-C00360	"dAMP; 2'-Deoxyadenosine 5'-phosphate; 2'-Deoxyadenosine 5'-monophosphate; Deoxyadenylic acid; Deoxyadenosine monophosphate"
-C00361	"dGDP; 2'-Deoxyguanosine 5'-diphosphate"
-C00362	"dGMP; 2'-Deoxyguanosine 5'-monophosphate; 2'-Deoxyguanosine 5'-phosphate; Deoxyguanylic acid; Deoxyguanosine monophosphate"
-C00363	"dTDP; Deoxythymidine 5'-diphosphate"
-C00364	"dTMP; Thymidine 5'-phosphate; Deoxythymidine 5'-phosphate; Thymidylic acid; 5'-Thymidylic acid; Thymidine monophosphate; Deoxythymidylic acid; Thymidylate"
-C00365	"dUMP; Deoxyuridylic acid; Deoxyuridine monophosphate; Deoxyuridine 5'-phosphate; 2'-Deoxyuridine 5'-phosphate"
-C00454	"NDP; Nucleoside diphosphate"
-C00458	"dCTP; Deoxycytidine 5'-triphosphate; Deoxycytidine triphosphate; 2'-Deoxycytidine 5'-triphosphate"
-C00459	"dTTP; Deoxythymidine triphosphate; Deoxythymidine 5'-triphosphate; TTP"
-C00460	"dUTP; 2'-Deoxyuridine 5'-triphosphate"
-C00496	"Ubiquitin"
-C00620	"alpha-D-Ribose 1-phosphate; Ribose 1-phosphate; D-Ribose 1-phosphate"
-C00655	"Xanthosine 5'-phosphate; Xanthylic acid; XMP; (9-D-Ribosylxanthine)-5'-phosphate"
-C00672	"2-Deoxy-D-ribose 1-phosphate; 2-Deoxy-alpha-D-ribose 1-phosphate"
-C00700	"XTP; Xanthosine 5'-triphosphate"
-C00705	"dCDP; 2'-Deoxycytidine diphosphate; 2'-Deoxycytidine 5'-diphosphate"
-C01081	"Thiamin monophosphate; Thiamine monophosphate; Thiamin phosphate; Thiamine phosphate; TMP"
-C01329	"Nucleoside phosphate; Nucleoside monophosphate; NMP"
-C01337	"XDP; Xanthosine 5'-pyrophosphate"
-C01344	"dIDP; 2'-Deoxyinosine-5'-diphosphate; 2'-Deoxyinosine 5'-diphosphate"
-C01345	"dITP; 2'-Deoxyinosine-5'-triphosphate; 2'-Deoxyinosine 5'-triphosphate"
-C01346	"dUDP; 2'-Deoxyuridine 5'-diphosphate"
-C01347	"dXDP"
-C01348	"dXTP"
-C00016	"FAD; Flavin adenine dinucleotide"
-C01352	"FADH2"
-C06196	"2'-Deoxyinosine 5'-phosphate; dIMP"
-C11122	"DTP; (2,4-Dichlorophenyl)(5-hydroxy-1,3-dimethyl-1H-pyrazol-4-yl)methanone; 4-(2,4-Dichlorobenzoyl)-1,3-dimethyl-5-hydroxypyrazole"
-G10619	"UDP; Uridine 5'-diphosphate"
-G10620	"GDP; Guanosine 5'-diphosphate; Guanosine diphosphate"
-G10621	"CMP; Cytidine 5'-monophosphate; Cytidylic acid"
-G11113	"ADP; Adenosine 5'-phosphate"
-C01335	"ROH"
-C15498	"ROOH; Hydroperoxide"
-C00069	"Alcohol"
-C01977	"tRNA guanine"
-C01978	"tRNA queuine"
-C00060	"Carboxylate; R-COOH; Monocarboxylate; Carboxylic acid"
-C00533	"Nitric oxide; NO; Nitrogen monoxide"
-C03245	"ADP-D-ribosyl-acceptor; (ADP-D-ribosyl)n-acceptor; (ADP-D-ribosyl)n+1-acceptor"
-C00161	"2-Oxo acid; 2-Oxocarboxylate"
-C00151	"L-Amino acid; L-2-Amino acid"
-C00405	"D-Amino acid"
-C05167	"alpha-Amino acid"
+C00001	H2O; Water
+C00002	ATP; Adenosine 5'-triphosphate
+C00003	NAD+; NAD; Nicotinamide adenine dinucleotide; DPN; Diphosphopyridine nucleotide; Nadide
+C00004	NADH; DPNH; Reduced nicotinamide adenine dinucleotide
+C00005	NADPH; TPNH; Reduced nicotinamide adenine dinucleotide phosphate
+C00006	NADP+; NADP; Nicotinamide adenine dinucleotide phosphate; beta-Nicotinamide adenine dinucleotide phosphate; TPN; Triphosphopyridine nucleotide
+C00007	Oxygen; O2
+C00008	ADP; Adenosine 5'-diphosphate
+C00009	Orthophosphate; Phosphate; Phosphoric acid; Orthophosphoric acid
+C00010	CoA; Coenzyme A; CoA-SH
+C00011	CO2; Carbon dioxide
+C00013	Diphosphate; Diphosphoric acid; Pyrophosphate; Pyrophosphoric acid; PPi
+C00014	Ammonia; NH3
+C00015	UDP; Uridine 5'-diphosphate
+C00020	AMP; Adenosine 5'-monophosphate; Adenylic acid; Adenylate; 5'-AMP; 5'-Adenylic acid; 5'-Adenosine monophosphate; Adenosine 5'-phosphate
+C00027	Hydrogen peroxide; H2O2; Oxydol
+C00028	Acceptor; Hydrogen-acceptor; A; Oxidized donor
+C00030	Reduced acceptor; AH2; Hydrogen-donor; Donor
+C00035	GDP; Guanosine 5'-diphosphate; Guanosine diphosphate
+C00044	GTP; Guanosine 5'-triphosphate
+C00055	CMP; Cytidine-5'-monophosphate; Cytidylic acid
+C00063	CTP; Cytidine 5'-triphosphate; Cytidine triphosphate
+C00067	Formaldehyde; Methanal; Oxomethane; Oxomethylene; Methylene oxide; Formalin
+C00075	UTP; Uridine 5'-triphosphate; Uridine triphosphate
+C00080	H+; Hydron
+C00081	ITP; Inosine 5'-triphosphate; Inosine triphosphate; Inosine tripolyphosphate
+C00104	IDP; Inosine 5'-diphosphate; Inosine diphosphate
+C00105	UMP; Uridylic acid; Uridine monophosphate; Uridine 5'-monophosphate; 5'Uridylic acid
+C00112	CDP; Cytidine 5'-diphosphate; Cytidine diphosphate
+C00130	IMP; Inosinic acid; Inosine monophosphate; Inosine 5'-monophosphate; Inosine 5'-phosphate; 5'-Inosinate; 5'-Inosinic acid; 5'-Inosine monophosphate; 5'-IMP
+C00131	dATP; 2'-Deoxyadenosine 5'-triphosphate; Deoxyadenosine 5'-triphosphate; Deoxyadenosine triphosphate
+C00144	GMP; Guanosine 5'-phosphate; Guanosine monophosphate; Guanosine 5'-monophosphate; Guanylic acid
+C00201	Nucleoside triphosphate; NTP
+C00206	dADP; 2'-Deoxyadenosine 5'-diphosphate
+C00239	dCMP; Deoxycytidylic acid; Deoxycytidine monophosphate; Deoxycytidylate; 2'-Deoxycytidine 5'-monophosphate
+C00286	dGTP; 2'-Deoxyguanosine 5'-triphosphate; Deoxyguanosine 5'-triphosphate; Deoxyguanosine triphosphate
+C00288	HCO3-; Hydrogencarbonate; Bicarbonate; Hydrogen carbonate; Acid carbonate
+C00360	dAMP; 2'-Deoxyadenosine 5'-phosphate; 2'-Deoxyadenosine 5'-monophosphate; Deoxyadenylic acid; Deoxyadenosine monophosphate
+C00361	dGDP; 2'-Deoxyguanosine 5'-diphosphate
+C00362	dGMP; 2'-Deoxyguanosine 5'-monophosphate; 2'-Deoxyguanosine 5'-phosphate; Deoxyguanylic acid; Deoxyguanosine monophosphate
+C00363	dTDP; Deoxythymidine 5'-diphosphate
+C00364	dTMP; Thymidine 5'-phosphate; Deoxythymidine 5'-phosphate; Thymidylic acid; 5'-Thymidylic acid; Thymidine monophosphate; Deoxythymidylic acid; Thymidylate
+C00365	dUMP; Deoxyuridylic acid; Deoxyuridine monophosphate; Deoxyuridine 5'-phosphate; 2'-Deoxyuridine 5'-phosphate
+C00454	NDP; Nucleoside diphosphate
+C00458	dCTP; Deoxycytidine 5'-triphosphate; Deoxycytidine triphosphate; 2'-Deoxycytidine 5'-triphosphate
+C00459	dTTP; Deoxythymidine triphosphate; Deoxythymidine 5'-triphosphate; TTP
+C00460	dUTP; 2'-Deoxyuridine 5'-triphosphate
+C00496	Ubiquitin
+C00620	alpha-D-Ribose 1-phosphate; Ribose 1-phosphate; D-Ribose 1-phosphate
+C00655	Xanthosine 5'-phosphate; Xanthylic acid; XMP; (9-D-Ribosylxanthine)-5'-phosphate
+C00672	2-Deoxy-D-ribose 1-phosphate; 2-Deoxy-alpha-D-ribose 1-phosphate
+C00700	XTP; Xanthosine 5'-triphosphate
+C00705	dCDP; 2'-Deoxycytidine diphosphate; 2'-Deoxycytidine 5'-diphosphate
+C01081	Thiamin monophosphate; Thiamine monophosphate; Thiamin phosphate; Thiamine phosphate; TMP
+C01329	Nucleoside phosphate; Nucleoside monophosphate; NMP
+C01337	XDP; Xanthosine 5'-pyrophosphate
+C01344	dIDP; 2'-Deoxyinosine-5'-diphosphate; 2'-Deoxyinosine 5'-diphosphate
+C01345	dITP; 2'-Deoxyinosine-5'-triphosphate; 2'-Deoxyinosine 5'-triphosphate
+C01346	dUDP; 2'-Deoxyuridine 5'-diphosphate
+C01347	dXDP
+C01348	dXTP
+C00016	FAD; Flavin adenine dinucleotide
+C01352	FADH2
+C06196	2'-Deoxyinosine 5'-phosphate; dIMP
+C11122	DTP; (2,4-Dichlorophenyl)(5-hydroxy-1,3-dimethyl-1H-pyrazol-4-yl)methanone; 4-(2,4-Dichlorobenzoyl)-1,3-dimethyl-5-hydroxypyrazole
+G10619	UDP; Uridine 5'-diphosphate
+G10620	GDP; Guanosine 5'-diphosphate; Guanosine diphosphate
+G10621	CMP; Cytidine 5'-monophosphate; Cytidylic acid
+G11113	ADP; Adenosine 5'-phosphate
+C01335	ROH
+C15498	ROOH; Hydroperoxide
+C00069	Alcohol
+C01977	tRNA guanine
+C01978	tRNA queuine
+C00060	Carboxylate; R-COOH; Monocarboxylate; Carboxylic acid
+C00533	Nitric oxide; NO; Nitrogen monoxide
+C03245	ADP-D-ribosyl-acceptor; (ADP-D-ribosyl)n-acceptor; (ADP-D-ribosyl)n+1-acceptor
+C00161	2-Oxo acid; 2-Oxocarboxylate
+C00151	L-Amino acid; L-2-Amino acid
+C00405	D-Amino acid
+C05167	alpha-Amino acid
