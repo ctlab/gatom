@@ -128,6 +128,11 @@ makeAtomGraph <- function(network,
     g
 }
 
+.reversefdrThreshold <- function(pt, fb){
+    pihat <- fb$lambda + (1 - fb$lambda) * fb$a
+    (pihat * pt) / (-fb$lambda * pt^fb$a + pt^fb$a + fb$lambda * pt)
+}
+
 #' @import BioNet
 #' @export
 scoreGraph <- function(g, k.gene, k.met,
@@ -158,8 +163,13 @@ scoreGraph <- function(g, k.gene, k.met,
 
             vertex.threshold <- min(vertex.threshold,
                                 BioNet::fdrThreshold(vertex.threshold.min, vertex.bum))
+
+            met.fdr <- .reversefdrThreshold(vertex.threshold, vertex.bum)
+
             .messagef("Metabolite p-value threshold: %f", vertex.threshold)
             .messagef("Metabolite BU alpha: %f", vertex.bum$a)
+            .messagef("FDR for metabolites: %f", met.fdr)
+
             V(g)$score <- with(vertex.table,
                                (vertex.bum$a - 1) *
                                (log(.replaceNA(pval, 1)) - log(vertex.threshold)))
@@ -185,8 +195,13 @@ scoreGraph <- function(g, k.gene, k.met,
 
             edge.threshold <- min(edge.threshold,
                               BioNet::fdrThreshold(edge.threshold.min, edge.bum))
+
+            gene.fdr <- .reversefdrThreshold(edge.threshold, edge.bum)
+
             .messagef("Gene p-value threshold: %f", edge.threshold)
             .messagef("Gene BU alpha: %f", edge.bum$a)
+            .messagef("FDR for genes: %f", gene.fdr)
+
             E(g)$score <- with(edge.table,
                                (edge.bum$a - 1) *
                                (log(.replaceNA(pval, 1)) - log(edge.threshold)))

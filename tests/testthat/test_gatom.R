@@ -153,7 +153,7 @@ test_that("scoreGraph assigns vertex scores to 0 if its p-value distribution has
 
     vertex_attr(g)$pval <- runif(n = length(vertex_attr(g)$pval))
 
-    expect_warning(gs <- scoreGraph(g, k.gene = 25, k.met = 25, show.warnings = F))
+    expect_warning(gs <- scoreGraph(g, k.gene = 25, k.met = 25, show.warnings = T))
 })
 
 test_that("scoreGraph assigns edge scores to 0 if its p-value distribution has an inappropriate type", {
@@ -165,7 +165,7 @@ test_that("scoreGraph assigns edge scores to 0 if its p-value distribution has a
 
     edge_attr(g)$pval <- runif(n = length(edge_attr(g)$pval))
 
-    expect_warning(gs <- scoreGraph(g, k.gene = 25, k.met = 25, show.warnings = F))
+    expect_warning(gs <- scoreGraph(g, k.gene = 25, k.met = 25, show.warnings = T))
 })
 
 test_that("makeAtomGraph works on already good DE tables", {
