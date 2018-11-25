@@ -15,6 +15,13 @@ convertPvalDT <- function(de.pvals, map) {
 
 prepareDEColumn <- function(gene.de, columnName, from) {
     if (is.character(from)) {
+        if (columnName %in% colnames(gene.de) && from != columnName) {
+            columnName1 <- columnName
+            while (columnName1 %in% colnames(gene.de)) {
+                columnName1 <- paste0(columnName1, "_")
+            }
+            setnames(gene.de, old=columnName, new=columnName1)
+        }
         setnames(gene.de, old=from, new=columnName)
     } else {
         gene.de[, (columnName) := eval(from, envir = gene.de)]
@@ -73,6 +80,7 @@ findColumn <- function(de, names) {
      return(colnames(de)[candidates[1]])
 }
 
+
 findIdColumn <- function(de, idsList,
                          sample.size=1000,
                          match.threshold=0.6,
@@ -101,9 +109,36 @@ findIdColumn <- function(de, idsList,
                     type=names(idsList)[1]))
     }
 
+
     z <- .pairwiseCompare(.intersectionSize,
-                         columnSamples,
-                         idsList)
+                          columnSamples,
+                          idsList)
+
+
+
+    # Check whether there is column called ID and it matches something
+    if ("id" %in% tolower(rownames(z))) {
+        z1 <- z[tolower(rownames(z)) == "id", , drop=FALSE]
+        if (max(z1) / nrow(de.sample) >= match.threshold) {
+            bestMatch <- which(z1 == max(z1), arr.ind = TRUE)[1,]
+            return(list(column=rownames(z1)[bestMatch["row"]],
+                        type=colnames(z1)[bestMatch["col"]]))
+        }
+    }
+
+    # No column named ID, but may be something with unique values
+
+    idCandidates <- colnames(de)[sapply(de,
+                                        pryr::compose(all, `!`, duplicated))]
+
+    z1 <- z[idCandidates, , drop=FALSE]
+    if (max(z1) / nrow(de.sample) >= match.threshold) {
+        bestMatch <- which(z1 == max(z1), arr.ind = TRUE)[1,]
+        return(list(column=rownames(z1)[bestMatch["row"]],
+                    type=colnames(z1)[bestMatch["col"]]))
+    }
+
+    # Whatever else matches best
 
     bestMatch <- which(z == max(z), arr.ind = TRUE)[1,]
     return(list(column=colnames(de)[bestMatch["row"]],

@@ -57,4 +57,39 @@ test_that("prepareDE works for NULL", {
     expect_is(de, "NULL")
 })
 
+test_that("prepareDEColumn renames conflicting names", {
+    de <- data.table(ID=c("a", "b"), symbol=c("x", "y"))
+    prepareDEColumn(de, "ID", "symbol")
+    expect_true(all(!duplicated(names(de))))
+})
 
+
+test_that("findIdColumns have order of preferences", {
+    de <- data.table(v1=c("a", "b", "c"),
+                     v2=c("x", "x", "y"),
+                     v3=c("qwdas", "as", "qq"),
+                     v4=c("2", "1", "3"))
+
+    idsList <- list(
+        "d"=c("1", "2", "3"),
+        "A"=c("a", "b", "c"),
+        "X"=c("x", "y", "z"))
+
+
+    de1 <- rename(de, c(v2="id"))
+
+    # if there is column with base IDs, we selecting it
+    expect_equal(findIdColumn(de1, idsList)$column, "v4")
+
+    de2 <- de1; de2$v4 <- NULL
+    # if there is ID column it's preferred when good enough
+    expect_equal(findIdColumn(de2, idsList)$column, "id")
+
+    # no ID, no base IDs, next priority is columns with unique values
+    de3 <- rename(de2, c(id="bla"))
+    expect_equal(findIdColumn(de3, idsList)$column, "v1")
+
+    de4 <- de3; de4$v1 <- NULL
+    # last call: whatever matches
+    expect_equal(findIdColumn(de4, idsList)$column, "bla")
+})

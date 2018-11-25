@@ -97,11 +97,17 @@ makeAtomGraph <- function(network,
                           met.de.meta=getMetDEMeta(met.de, met.db),
                           met.to.filter=fread(system.file("mets2mask.lst", package="gatom"))$ID) {
     if (!is.null(gene.de)) {
+        .messagef("Found DE table for genes with %s IDs", gene.de.meta$idType)
         gene.de <- prepareDE(gene.de, gene.de.meta)
         gene.de <- gene.de[signalRank <= gene.keep.top]
     }
 
+    if (!is.null(met.de)) {
+        .messagef("Found DE table for metabolites with %s IDs", met.de.meta$idType)
+    }
+
     met.de <- prepareDE(met.de, met.de.meta)
+
 
     edge.table <- .makeEdgeTable(network=network,
                                  org.gatom.anno=org.gatom.anno,
