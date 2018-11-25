@@ -17,7 +17,8 @@ Imports:
     network,
     GGally,
     grid,
-    ggplot2
+    ggplot2,
+    pryr
 Suggests:
     testthat,
     knitr,
@@ -30,7 +31,7 @@ Suggests:
 License: MIT + file LICENCE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 VignetteBuilder: knitr
 URL: https://github.com/ctlab/gatom/
 BugReports: https://github.com/ctlab/gatom/issues

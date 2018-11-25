@@ -80,7 +80,6 @@ findColumn <- function(de, names) {
      return(colnames(de)[candidates[1]])
 }
 
-
 findIdColumn <- function(de, idsList,
                          sample.size=1000,
                          match.threshold=0.6,
