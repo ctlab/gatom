@@ -140,12 +140,14 @@ makeAtomGraph <- function(network,
 }
 
 #' @import BioNet
+#' @importFrom mwcsr normalize_sgmwcs_instance
 #' @export
 scoreGraph <- function(g, k.gene, k.met,
                        vertex.threshold.min=0.1,
                        edge.threshold.min=0.1,
                        met.score.coef=1,
-                       show.warnings=TRUE) {
+                       show.warnings=TRUE,
+                       raw=FALSE) {
     if (show.warnings) {
         warnWrapper <- identity
     } else {
@@ -159,7 +161,7 @@ scoreGraph <- function(g, k.gene, k.met,
 
         warnWrapper(vertex.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F))
         if (vertex.bum$a > 0.5) {
-            V(g)$score <- 0
+            V(g)$weight <- 0
             warning("Vertex scores have been assigned to 0 due to an inappropriate p-value distribution")
 
         } else {
@@ -176,22 +178,24 @@ scoreGraph <- function(g, k.gene, k.met,
             .messagef("Metabolite BU alpha: %f", vertex.bum$a)
             .messagef("FDR for metabolites: %f", met.fdr)
 
-            V(g)$score <- with(vertex.table,
+            V(g)$weight <- with(vertex.table,
                                (vertex.bum$a - 1) *
                                (log(.replaceNA(pval, 1)) - log(vertex.threshold)))
-            V(g)$score <- V(g)$score * met.score.coef
+            V(g)$weight <- V(g)$weight * met.score.coef
             }
         }
     else {
-        V(g)$score <- 0
-        }
+        V(g)$weight <- 0
+        V(g)$signal <- ""
+
+    }
 
     if (!is.null(k.gene)) {
         pvalsToFit <- edge.table[!is.na(pval)][!duplicated(signal), setNames(pval, signal)]
 
         warnWrapper(edge.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F))
         if(edge.bum$a > 0.5) {
-            E(g)$score <- 0
+            E(g)$weight <- 0
             warning("Edge scores have been assigned to 0 due to an inappropriate p-value distribution")
 
         } else {
@@ -208,16 +212,28 @@ scoreGraph <- function(g, k.gene, k.met,
             .messagef("Gene BU alpha: %f", edge.bum$a)
             .messagef("FDR for genes: %f", gene.fdr)
 
-            E(g)$score <- with(edge.table,
+            E(g)$weight <- with(edge.table,
                                (edge.bum$a - 1) *
                                (log(.replaceNA(pval, 1)) - log(edge.threshold)))
         }
     }
     else {
-        E(g)$score <- 0
-        }
-    g
+        E(g)$weight <- 0
+        E(g)$signal <- ""
     }
+    g
+    if (raw) {
+        return(g)
+    }
+
+    res <- normalize_sgmwcs_instance(g,
+                                     nodes.weight.column = "weight",
+                                     edges.weight.column = "weight",
+                                     nodes.group.by = "signal",
+                                     edges.group.by = "signal",
+                                     group.only.positive = TRUE)
+    res
+}
 
 #' @export
 connectAtomsInsideMetabolite <- function(m) {
@@ -241,13 +257,13 @@ collapseAtomsIntoMetabolites <- function(m) {
 
     vertex.table.c <- copy(vertex.table)
     vertex.table.c[, name := atom2metabolite[name]]
-    vertex.table.c <- unique(vertex.table.c)
+    vertex.table.c <- vertex.table.c[!duplicated(name)]
 
     edge.table.c <- copy(edge.table)
     edge.table.c[, from :=  atom2metabolite[from]]
     edge.table.c[, to :=  atom2metabolite[to]]
     edge.table.c[from > to, c("from", "to") := list(to, from)]
-    edge.table.c <- unique(edge.table.c)
+    edge.table.c <- edge.table.c[!duplicated(edge.table.c[, list(from, to)])]
 
 
     res <- graph.data.frame(edge.table.c, directed=FALSE, vertices=vertex.table.c)

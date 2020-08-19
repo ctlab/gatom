@@ -5,10 +5,18 @@
 \title{Finds columns in gene differential expression table
 required for gatom analysis}
 \usage{
-getGeneDEMeta(gene.de.raw, org.gatom.anno, idColumn = NULL,
-  idType = NULL, pvalColumn = NULL, logPvalColumn = NULL,
-  log2FCColumn = NULL, baseMeanColumn = NULL, signalColumn = NULL,
-  signalRankColumn = NULL)
+getGeneDEMeta(
+  gene.de.raw,
+  org.gatom.anno,
+  idColumn = NULL,
+  idType = NULL,
+  pvalColumn = NULL,
+  logPvalColumn = NULL,
+  log2FCColumn = NULL,
+  baseMeanColumn = NULL,
+  signalColumn = NULL,
+  signalRankColumn = NULL
+)
 }
 \arguments{
 \item{gene.de.raw}{A table with differential expression results, an object

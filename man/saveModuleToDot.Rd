@@ -4,7 +4,13 @@
 \alias{saveModuleToDot}
 \title{Save module to a graphviz dot file}
 \usage{
-saveModuleToDot(module, file, name = NULL)
+saveModuleToDot(
+  module,
+  file,
+  name = NULL,
+  extra.node.attrs = NULL,
+  extra.edge.attrs = NULL
+)
 }
 \arguments{
 \item{module}{Module to save}
