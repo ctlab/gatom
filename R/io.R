@@ -322,22 +322,24 @@ getEdgeXmlStrings <- function(module, indent="") {
 #' @param file File to save to
 #' @param name Name of the module
 #' @export
-saveModuleToDot <- function(module, file, name=NULL) {
+saveModuleToDot <- function(module, file, name=NULL,
+                            extra.node.attrs=NULL, extra.edge.attrs=NULL) {
     if (is.null(name)) {
         name <- deparse(substitute(module))
     }
-    s <- getGraphDotString(module, name)
+    s <- getGraphDotString(module, name, extra.node.attrs, extra.edge.attrs)
     write(s, file)
 }
 
-getGraphDotString <- function(module, name) {
+getGraphDotString <- function(module, name,
+                              extra.node.attrs=NULL, extra.edge.attrs=NULL) {
     res <- c()
     res <- c(res, sprintf('graph "%s" {\n', name))
     res <- c(res, "outputorder=edgesfirst\n")
     res <- c(res, "bgcolor=transparent\n")
     res <- c(res, "pad=\"2,0.25\"\n")
-    res <- c(res, getEdgeDotStrings(module, indent="  "))
-    res <- c(res, getNodeDotStrings(module, indent="  "))
+    res <- c(res, getEdgeDotStrings(module, indent="  ", extra.attrs=extra.edge.attrs))
+    res <- c(res, getNodeDotStrings(module, indent="  ", extra.attrs=extra.node.attrs))
     res <- c(res, '}\n')
 
     paste(res, collapse="")
@@ -415,7 +417,7 @@ getDotTooltip <- function(attr.values) {
     apply(do.call("cbind", attr.strings), 1, paste0, collapse="&#10;")
 }
 
-getNodeDotStrings <- function(module, indent="") {
+getNodeDotStrings <- function(module, indent="", extra.attrs=NULL) {
     if (length(V(module)) == 0) {
         return(NULL)
     }
@@ -425,7 +427,14 @@ getNodeDotStrings <- function(module, indent="") {
     tooltip <- getDotTooltip(attr.values[, !colnames(attr.values) %in% c("pathway", "nodeType")])
     url <- attr.values$url
 
-    attr.dotStrings <- getAttrDotStrings(cbind(style.attr.values, tooltip=tooltip))
+    all.attrs <- cbind(style.attr.values, tooltip=tooltip)
+
+    if (!is.null(extra.attrs)) {
+        all.attrs <- cbind(all.attrs, extra.attrs)
+    }
+
+
+    attr.dotStrings <- getAttrDotStrings(all.attrs)
     if (length(url) != 0) {
         attr.dotStrings <- cbind(attr.dotStrings,
                                  getAttrDotStrings(data.frame(URL=url, target="_blank")))
@@ -445,7 +454,7 @@ getNodeDotStrings <- function(module, indent="") {
     nodeStrings
 }
 
-getEdgeDotStrings <- function(module, indent="") {
+getEdgeDotStrings <- function(module, indent="", extra.attrs=NULL) {
     if (length(E(module)) == 0) {
         return(NULL)
     }
@@ -461,8 +470,14 @@ getEdgeDotStrings <- function(module, indent="") {
 
     url <- attr.values$url
 
+    all.attrs <- cbind(style.attr.values,
+                       tooltip=tooltip,
+                       labeltooltip=tooltip)
+    if (!is.null(extra.attrs)) {
+        all.attrs <- cbind(all.attrs, extra.attrs)
+    }
 
-    attr.dotStrings <- getAttrDotStrings(cbind(style.attr.values, tooltip=tooltip, labeltooltip=tooltip))
+    attr.dotStrings <- getAttrDotStrings(all.attrs)
 
     if (length(url) != 0) {
         attr.dotStrings <- cbind(attr.dotStrings,

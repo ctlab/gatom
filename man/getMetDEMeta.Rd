@@ -5,10 +5,18 @@
 \title{Finds columns in differential expression table for metabolites
 required for gatom analysis}
 \usage{
-getMetDEMeta(met.de.raw, met.db, idColumn = NULL, idType = NULL,
-  pvalColumn = NULL, logPvalColumn = NULL, log2FCColumn = NULL,
-  baseMeanColumn = NULL, signalColumn = NULL,
-  signalRankColumn = NULL)
+getMetDEMeta(
+  met.de.raw,
+  met.db,
+  idColumn = NULL,
+  idType = NULL,
+  pvalColumn = NULL,
+  logPvalColumn = NULL,
+  log2FCColumn = NULL,
+  baseMeanColumn = NULL,
+  signalColumn = NULL,
+  signalRankColumn = NULL
+)
 }
 \description{
 Finds columns in differential expression table for metabolites
