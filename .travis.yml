@@ -6,7 +6,7 @@ warnings_are_errors: false # :ToDo: comment out
 sudo: false
 cache: packages
 
-dist: trusty
+dist: focal
 
 r_packages:
   - covr
