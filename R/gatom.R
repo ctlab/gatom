@@ -161,7 +161,7 @@ scoreGraph <- function(g, k.gene, k.met,
 
         warnWrapper(vertex.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F))
         if (vertex.bum$a > 0.5) {
-            V(g)$weight <- 0
+            V(g)$score <- 0
             warning("Vertex scores have been assigned to 0 due to an inappropriate p-value distribution")
 
         } else {
@@ -178,14 +178,14 @@ scoreGraph <- function(g, k.gene, k.met,
             .messagef("Metabolite BU alpha: %f", vertex.bum$a)
             .messagef("FDR for metabolites: %f", met.fdr)
 
-            V(g)$weight <- with(vertex.table,
+            V(g)$score <- with(vertex.table,
                                (vertex.bum$a - 1) *
                                (log(.replaceNA(pval, 1)) - log(vertex.threshold)))
-            V(g)$weight <- V(g)$weight * met.score.coef
+            V(g)$score <- V(g)$score * met.score.coef
             }
         }
     else {
-        V(g)$weight <- 0
+        V(g)$score <- 0
         V(g)$signal <- ""
 
     }
@@ -195,7 +195,7 @@ scoreGraph <- function(g, k.gene, k.met,
 
         warnWrapper(edge.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F))
         if(edge.bum$a > 0.5) {
-            E(g)$weight <- 0
+            E(g)$score <- 0
             warning("Edge scores have been assigned to 0 due to an inappropriate p-value distribution")
 
         } else {
@@ -212,13 +212,13 @@ scoreGraph <- function(g, k.gene, k.met,
             .messagef("Gene BU alpha: %f", edge.bum$a)
             .messagef("FDR for genes: %f", gene.fdr)
 
-            E(g)$weight <- with(edge.table,
+            E(g)$score <- with(edge.table,
                                (edge.bum$a - 1) *
                                (log(.replaceNA(pval, 1)) - log(edge.threshold)))
         }
     }
     else {
-        E(g)$weight <- 0
+        E(g)$score <- 0
         E(g)$signal <- ""
     }
     g
@@ -227,8 +227,8 @@ scoreGraph <- function(g, k.gene, k.met,
     }
 
     res <- normalize_sgmwcs_instance(g,
-                                     nodes.weight.column = "weight",
-                                     edges.weight.column = "weight",
+                                     nodes.weight.column = "score",
+                                     edges.weight.column = "score",
                                      nodes.group.by = "signal",
                                      edges.group.by = "signal",
                                      group.only.positive = TRUE)

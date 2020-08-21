@@ -26,8 +26,8 @@ test_that("overall pipeline works", {
     expect_true(E(gs)[match("Gapdh", label)]$score < 0)
 
 
-    set.seed(42)
-    m <- solveSgmwcsRandHeur(gs, max.iterations = 2000)
+    vhsoler <- mwcsr::virgo_solver(cplex_dir=NULL)
+    m <- solve_mwcsp(vhsolver, gs)$graph
 
     expect_true("Idh1" %in% E(m)$label)
 
@@ -68,8 +68,9 @@ test_that("overall pipeline works with data only for genes", {
     expect_true(E(gs)[match("Gapdh", label)]$score < 0)
 
 
-    set.seed(42)
-    m <- solveSgmwcsRandHeur(gs, max.iterations = 2000)
+    vhsoler <- mwcsr::virgo_solver(cplex_dir=NULL)
+    m <- solve_mwcsp(vhsolver, gs)$graph
+
 
     expect_true("Idh1" %in% E(m)$label)
 
@@ -100,8 +101,8 @@ test_that("overall pipeline works with data only for metabolites", {
     expect_true(V(gs)[match("Acetyl-CoA", label)]$score < 0)
 
 
-    set.seed(42)
-    m <- solveSgmwcsRandHeur(gs, max.iterations = 2000)
+    vhsoler <- mwcsr::virgo_solver(cplex_dir=NULL)
+    m <- solve_mwcsp(vhsolver, gs)$graph
 
     # expect_true("Idh1" %in% E(m)$label)
 
@@ -126,6 +127,7 @@ test_that(".makeVertexTable works with null DE", {
                            met.db=met.kegg.dbEx,
                            met.de=NULL,
                            met.de.meta=NULL)
+    expect_true(!is.null(vt))
 })
 
 test_that(".makeVertexTable works with null DE", {
@@ -133,6 +135,7 @@ test_that(".makeVertexTable works with null DE", {
                          org.gatom.anno=org.Mm.eg.gatom.annoEx,
                          gene.de=NULL,
                          gene.de.meta=NULL)
+    expect_true(!is.null(et))
 })
 
 test_that("scoreGraph shows warning on bad distribution", {
