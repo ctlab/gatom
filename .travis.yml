@@ -39,7 +39,7 @@ matrix:
     r: bioc-devel
 
 before_install:
-  - R -e "isntall.packages('devtools')"
+  - R -e "install.packages('devtools')"
   - R -e "devtools::install_github('ctlab/mwcsr')"  
 
 
