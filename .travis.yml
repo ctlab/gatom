@@ -40,6 +40,6 @@ matrix:
 
 before_install:
   - R -e "install.packages('devtools')"
-  - R -e "devtools::install_github('ctlab/mwcsr')"  
+  - R -e "devtools::install_github('ctlab/mwcsr', upgrade=FALSE)"  
 
 
