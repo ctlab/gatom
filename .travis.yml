@@ -38,7 +38,7 @@ matrix:
   - os: osx
     r: bioc-devel
 
-before_install:
+install:
   - R -e "devtools::install_github('ctlab/mwcsr')"  
 
 
