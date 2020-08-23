@@ -26,8 +26,8 @@ test_that("overall pipeline works", {
     expect_true(E(gs)[match("Gapdh", label)]$score < 0)
 
 
-    vhsoler <- mwcsr::virgo_solver(cplex_dir=NULL)
-    m <- solve_mwcsp(vhsolver, gs)$graph
+    vhsolver <- mwcsr::virgo_solver(cplex_dir=NULL)
+    m <- mwcsr::solve_mwcsp(vhsolver, gs)$graph
 
     expect_true("Idh1" %in% E(m)$label)
 
@@ -68,8 +68,8 @@ test_that("overall pipeline works with data only for genes", {
     expect_true(E(gs)[match("Gapdh", label)]$score < 0)
 
 
-    vhsoler <- mwcsr::virgo_solver(cplex_dir=NULL)
-    m <- solve_mwcsp(vhsolver, gs)$graph
+    vhsolver <- mwcsr::virgo_solver(cplex_dir=NULL)
+    m <- mwcsr::solve_mwcsp(vhsolver, gs)$graph
 
 
     expect_true("Idh1" %in% E(m)$label)
@@ -101,8 +101,8 @@ test_that("overall pipeline works with data only for metabolites", {
     expect_true(V(gs)[match("Acetyl-CoA", label)]$score < 0)
 
 
-    vhsoler <- mwcsr::virgo_solver(cplex_dir=NULL)
-    m <- solve_mwcsp(vhsolver, gs)$graph
+    vhsolver <- mwcsr::virgo_solver(cplex_dir=NULL)
+    m <- mwcsr::solve_mwcsp(vhsolver, gs)$graph
 
     # expect_true("Idh1" %in% E(m)$label)
 
