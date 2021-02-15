@@ -85,6 +85,17 @@
     vertex.table[]
 }
 
+#' Creates atom graph based on specified data
+#' @param network Network object
+#' @param org.gatom.anno Organism annotation object
+#' @param gene.de Table with the differential gene expression, set to NULL if absent
+#' @param gene.de.meta Annotation of `gene.de` table
+#' @param gene.keep.top Only the `gene.keep.top` of the most expressed genes will be kept for the network
+#' @param met.db Metabolite database
+#' @param met.de Table with the differential expression for metabolites, set to NULL if absent
+#' @param met.de.meta Annotation of `met.de` table
+#' @param met.to.filter List of metabolites to filter from the network
+#' @param largest.component If TRUE, only the largest connected component is returned
 #' @export
 #' @import igraph
 makeAtomGraph <- function(network,
@@ -95,7 +106,8 @@ makeAtomGraph <- function(network,
                           met.db,
                           met.de,
                           met.de.meta=getMetDEMeta(met.de, met.db),
-                          met.to.filter=fread(system.file("mets2mask.lst", package="gatom"))$ID) {
+                          met.to.filter=fread(system.file("mets2mask.lst", package="gatom"))$ID,
+                          largest.component=TRUE) {
     if (!is.null(gene.de)) {
         .messagef("Found DE table for genes with %s IDs", gene.de.meta$idType)
         gene.de <- prepareDE(gene.de, gene.de.meta)
@@ -120,8 +132,6 @@ makeAtomGraph <- function(network,
                                      met.de=met.de,
                                      met.de.meta=met.de.meta)
     g <- graph.data.frame(edge.table, directed=FALSE, vertices = vertex.table)
-    gc <- components(g)
-    g <- induced.subgraph(g, gc$membership == which.max(gc$csize))
 
     if (!is.null(met.to.filter)) {
         nodes.to.del <- V(g)[metabolite %in% met.to.filter]
@@ -131,6 +141,12 @@ makeAtomGraph <- function(network,
             g <- delete_vertices(g, v = V(g)[metabolite %in% met.to.filter])
         }
     }
+
+    if (largest.component) {
+        gc <- components(g)
+        g <- induced.subgraph(g, gc$membership == which.max(gc$csize))
+    }
+
     g
 }
 
