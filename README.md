@@ -48,16 +48,13 @@ data("gene.de.rawEx")
 Getting atom graph:
 
 ``` r
-g <- makeAtomGraph(network=networkEx,
-                   org.gatom.anno=org.Mm.eg.gatom.annoEx,
-                   gene.de=gene.de.rawEx,
-                   met.db=met.kegg.dbEx,
-                   met.de=met.de.rawEx)
+g <- makeMetabolicGraph(network=networkEx,
+                        topology = "atoms",
+                        org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                        gene.de=gene.de.rawEx,
+                        met.db=met.kegg.dbEx,
+                        met.de=met.de.rawEx)
 ```
-
-    ## Registered S3 method overwritten by 'pryr':
-    ##   method      from
-    ##   print.bytes Rcpp
 
     ## Found DE table for genes with RefSeq IDs
 
@@ -67,37 +64,38 @@ g <- makeAtomGraph(network=networkEx,
 print(g)
 ```
 
-    ## IGRAPH 710d1d9 UN-- 194 209 -- 
+    ## IGRAPH 8fd1632 UN-- 176 190 -- 
     ## + attr: name (v/c), metabolite (v/c), element (v/c), label (v/c), url
     ## | (v/c), pval (v/n), origin (v/n), HMDB (v/c), log2FC (v/n), baseMean
     ## | (v/n), logPval (v/n), signal (v/c), signalRank (v/n), label (e/c),
     ## | pval (e/n), origin (e/n), RefSeq (e/c), gene (e/c), enzyme (e/c),
     ## | reaction_name (e/c), reaction_equation (e/c), url (e/c), reaction
-    ## | (e/c), rpair (e/c), log2FC (e/n), baseMean (e/n), logPval (e/n),
-    ## | signal (e/c), signalRank (e/n)
-    ## + edges from 710d1d9 (vertex names):
-    ## [1] C00022_2--C00024_0 C00022_0--C00024_1 C00025_0--C00026_0 C00025_1--C00026_1
-    ## [5] C00025_2--C00026_2 C00025_4--C00026_4 C00025_7--C00026_7 C00024_1--C00033_0
+    ## | (e/c), log2FC (e/n), baseMean (e/n), logPval (e/n), signal (e/c),
+    ## | signalRank (e/n)
+    ## + edges from 8fd1632 (vertex names):
+    ## [1] C00025_-0.3248_2.8125--C00026_-0.3248_2.8125
+    ## [2] C00025_-1.6238_3.5625--C00026_-1.6238_3.5625
     ## + ... omitted several edges
 
-Scoring graph, obtaining an instance of SGMWCS (Signal Generalize
+Scoring graph, obtaining an instance of SGMWCS (Signal Generalized
 Maximum Weight Subgraph) problem instance:
 
 ``` r
-gs <- scoreGraph(g, k.gene = 25, k.met=25)
+gs <- scoreGraph(g, k.gene=25, k.met=25)
 ```
 
-Initialize an SMGWCS solver (an heuristic Virgo solver is used for
-simplicity, check out `mwcsr` package documentation for more options):
+Initialize an SMGWCS solver (a heuristic relax-and-cut solver
+`rnc_solver` is used for simplicity, check out `mwcsr` package
+documentation for more options):
 
 ``` r
-vhsolver <- virgo_solver(cplex_dir=NULL)
+solver <- rnc_solver()
 ```
 
 Finding a module:
 
 ``` r
-res <- solve_mwcsp(vhsolver, gs)
+res <- solve_mwcsp(solver, gs)
 m <- res$graph
 ```
 
@@ -105,37 +103,36 @@ m <- res$graph
 print(m)
 ```
 
-    ## IGRAPH eb68808 UNW- 103 102 -- 
+    ## IGRAPH 972ebf8 UN-- 37 36 -- 
     ## + attr: signals (g/n), name (v/c), metabolite (v/c), element (v/c),
     ## | label (v/c), url (v/c), pval (v/n), origin (v/n), HMDB (v/c), log2FC
     ## | (v/n), baseMean (v/n), logPval (v/n), signal (v/c), signalRank (v/n),
-    ## | weight (v/n), index (v/n), label (e/c), pval (e/n), origin (e/n),
-    ## | RefSeq (e/c), gene (e/c), enzyme (e/c), reaction_name (e/c),
-    ## | reaction_equation (e/c), url (e/c), reaction (e/c), rpair (e/c),
-    ## | log2FC (e/n), baseMean (e/n), logPval (e/n), signal (e/c), signalRank
-    ## | (e/n), weight (e/n), index (e/n)
-    ## + edges from eb68808 (vertex names):
-    ## [1] C00025_0--C00026_0 C00025_2--C00026_2 C00025_4--C00026_4 C00025_7--C00026_7
+    ## | score (v/n), label (e/c), pval (e/n), origin (e/n), RefSeq (e/c),
+    ## | gene (e/c), enzyme (e/c), reaction_name (e/c), reaction_equation
+    ## | (e/c), url (e/c), reaction (e/c), log2FC (e/n), baseMean (e/n),
+    ## | logPval (e/n), signal (e/c), signalRank (e/n), score (e/n)
+    ## + edges from 972ebf8 (vertex names):
+    ## [1] C00025_-2.9228_2.8125 --C00026_-2.9228_2.8125
+    ## [2] C00024_15.0644_27.8518--C00033_-1.6238_0.5625
     ## + ... omitted several edges
 
 ``` r
 head(E(m)$label)
 ```
 
-    ## [1] "Psat1" "Psat1" "Psat1" "Psat1" "Gpt2"  "Got2"
+    ## [1] "Psat1" "Acss2" "Gpt2"  "Got2"  "Pkm"   "Tpi1"
 
 ``` r
 head(V(m)$label)
 ```
 
-    ## [1] "Pyruvate"       "L-Glutamate"    "L-Glutamate"    "L-Glutamate"   
-    ## [5] "L-Glutamate"    "2-Oxoglutarate"
+    ## [1] "Pyruvate"       "Acetyl-CoA"     "L-Glutamate"    "2-Oxoglutarate"
+    ## [5] "Acetate"        "Oxaloacetate"
 
-We can save the module to different formats (dot, xgmml, svg,
-pdf):
+We can save the module to different formats (dot, xgmml, svg, pdf):
 
 ``` r
-saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=1)
+saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=10)
 ```
 
-![Module](https://rawgit.com/ctlab/gatom/master/inst/M0.vs.M1.pdf.png)
+![Module](https://rawgit.com/ctlab/gatom/master/inst/M0.vs.M1.png)

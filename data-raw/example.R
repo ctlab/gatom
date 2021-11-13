@@ -1,13 +1,15 @@
-library(readr)
+library(data.table)
 library(KEGGREST)
 library(devtools)
+library(mwcsr)
+load_all()
 
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rda"))
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rda"))
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rda"))
+network <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.kegg.rds"))
+org.Mm.eg.gatom.anno <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rds"))
+met.kegg.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rds"))
 
-met.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv.gz")
-gene.de.raw <- read_tsv("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv.gz")
+met.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv.gz")
+gene.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv.gz")
 
 reactionsEx <- c(gsub("^rn:", "", unname(keggLink("reaction", "rn01200"))),
                  "R02243")
@@ -15,10 +17,8 @@ reactionsEx <- c(gsub("^rn:", "", unname(keggLink("reaction", "rn01200"))),
 networkEx <- list()
 networkEx$reactions <- network$reactions[reaction %in% reactionsEx]
 networkEx$enzyme2reaction <- network$enzyme2reaction[reaction %in% reactionsEx]
-networkEx$reaction2rpair <- network$reaction2rpair[reaction %in% reactionsEx]
-networkEx$rpairs <- network$rpairs[rpair %in% networkEx$reaction2rpair$rpair]
-networkEx$rpair2align <- network$rpair2align[rpair %in% networkEx$reaction2rpair$rpair]
-networkEx$atoms <- network$atoms[atom %in% networkEx$rpair2align[, c(atom.x, atom.y)]]
+networkEx$reaction2align <- network$reaction2align[reaction %in% reactionsEx]
+networkEx$atoms <- network$atoms[atom %in% networkEx$reaction2align[, c(atom.x, atom.y)]]
 networkEx$metabolite2atom <- network$metabolite2atom[atom %in% networkEx$atoms$atom]
 
 org.Mm.eg.gatom.annoEx <- list()
@@ -37,8 +37,6 @@ met.kegg.dbEx$mapFrom <- lapply(met.kegg.db$mapFrom,
                                 function(t) t[metabolite %in% met.kegg.dbEx$metabolites$metabolite])
 
 
-use_data(networkEx, org.Mm.eg.gatom.annoEx, met.kegg.dbEx)
-
 genesEx <- union(intersect(org.Mm.eg.gatom.annoEx$mapFrom$RefSeq$RefSeq,
                            gene.de.raw$ID),
                  sample(gene.de.raw$ID, 500))
@@ -47,13 +45,18 @@ met.de.rawEx <- met.de.raw[met.de.raw$ID %in% met.kegg.dbEx$mapFrom$HMDB$HMDB, ]
 use_data(met.de.rawEx, gene.de.rawEx)
 
 
-gEx <- makeAtomGraph(network=networkEx,
-                   org.gatom.anno=org.Mm.eg.gatom.annoEx,
-                   gene.de=gene.de.rawEx,
-                   met.db=met.kegg.dbEx,
-                   met.de=met.de.rawEx)
+gEx <- makeMetabolicGraph(network=networkEx,
+                          topology = "atoms",
+                          org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                          gene.de=gene.de.rawEx,
+                          met.db=met.kegg.dbEx,
+                          met.de=met.de.rawEx)
 
 gsEx <- scoreGraph(gEx, k.gene=25, k.met=25)
+solver <- rnc_solver()
 set.seed(42)
-mEx <- solveSgmwcsRandHeur(gsEx, max.iterations = 2000)
+res <- solve_mwcsp(solver, gsEx)
+mEx <- res$graph
+
+use_data(networkEx, org.Mm.eg.gatom.annoEx, met.kegg.dbEx)
 use_data(gEx, gsEx, mEx)

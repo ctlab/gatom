@@ -24,10 +24,8 @@
     reaction.pvals <- convertPvalDT(enzyme.pvals,
                                     network$enzyme2reaction)
     reaction.pvals <- merge(reaction.pvals, network$reactions)
-    rpair.pvals <- convertPvalDT(reaction.pvals,
-                                 network$reaction2rpair)
 
-    align.pvals <- convertPvalDT(rpair.pvals, network$rpair2align)
+    align.pvals <- convertPvalDT(reaction.pvals, network$reaction2align)
 
     edge.table <- copy(align.pvals)
     if (!is.null(gene.de)) {
@@ -37,6 +35,11 @@
     setnames(edge.table, "symbol", "label")
     setnames(edge.table, "reaction_url", "url")
 
+
+    # if there are parallel edges select one with the best gene by p-value
+    edge.table[atom.x > atom.y, c("atom.x", "atom.y") := list(atom.y, atom.x)]
+    edge.table <- edge.table[order(pval),]
+    edge.table <- edge.table[!duplicated(edge.table[, list(atom.x, atom.y)]), ]
 
     edge.table[]
 }
@@ -87,6 +90,7 @@
 
 #' Creates atom graph based on specified data
 #' @param network Network object
+#' @param topology Way to determine network vertices
 #' @param org.gatom.anno Organism annotation object
 #' @param gene.de Table with the differential gene expression, set to NULL if absent
 #' @param gene.de.meta Annotation of `gene.de` table
@@ -98,7 +102,8 @@
 #' @param largest.component If TRUE, only the largest connected component is returned
 #' @export
 #' @import igraph
-makeAtomGraph <- function(network,
+makeMetabolicGraph <- function(network,
+                          topology=c("atoms", "metabolites"),
                           org.gatom.anno,
                           gene.de,
                           gene.de.meta=getGeneDEMeta(gene.de, org.gatom.anno),
@@ -108,6 +113,9 @@ makeAtomGraph <- function(network,
                           met.de.meta=getMetDEMeta(met.de, met.db),
                           met.to.filter=fread(system.file("mets2mask.lst", package="gatom"))$ID,
                           largest.component=TRUE) {
+
+    topology <- match.arg(topology)
+
     if (!is.null(gene.de)) {
         .messagef("Found DE table for genes with %s IDs", gene.de.meta$idType)
         gene.de <- prepareDE(gene.de, gene.de.meta)
@@ -126,11 +134,35 @@ makeAtomGraph <- function(network,
                                  gene.de=gene.de,
                                  gene.de.meta=gene.de.meta)
     all.atoms <- union(edge.table$atom.x, edge.table$atom.y)
+
+    if (topology == "metabolites"){
+
+        # This construction is used to keep metaboliteas as two FIRST columns
+        edge.table <- cbind(network$atoms$metabolite[match(edge.table$atom.x, network$atoms$atom)],
+                            network$atoms$metabolite[match(edge.table$atom.y, network$atoms$atom)],
+                            edge.table)
+        colnames(edge.table)[c(1,2)] <- c("metabolite.x", "metabolite.y")
+        edge.table[, atom.x := NULL]
+        edge.table[, atom.y := NULL]
+
+        # removing parallel edges by selecting only the best gene by p-value
+        stopifnot(!is.unsorted(edge.table$pval, na.rm = TRUE))
+        edge.table <- edge.table[!duplicated(edge.table[, list(metabolite.x, metabolite.y)]), ]
+    }
+
     vertex.table <- .makeVertexTable(network=network,
                                      atoms=all.atoms,
                                      met.db=met.db,
                                      met.de=met.de,
                                      met.de.meta=met.de.meta)
+
+    if (topology == "metabolites"){
+        # During conversion to graph, first column will be renamed to "name";
+        # we will still need the column called "metabolite" for further functions
+        vertex.table[, 1] <- vertex.table$metabolite
+        vertex.table <- vertex.table[!duplicated(vertex.table), ]
+    }
+
     g <- graph.data.frame(edge.table, directed=FALSE, vertices = vertex.table)
 
     if (!is.null(met.to.filter)) {
@@ -251,6 +283,8 @@ scoreGraph <- function(g, k.gene, k.met,
     res
 }
 
+#' Connect atoms belonging to the same metabolite with edges
+#' @param m Metabolic module
 #' @export
 connectAtomsInsideMetabolite <- function(m) {
     t <- data.frame(v=V(m)$name, met=V(m)$metabolite, stringsAsFactors=F)
@@ -264,6 +298,8 @@ connectAtomsInsideMetabolite <- function(m) {
     res
 }
 
+#' Collapse atoms belonging to the same metabolite into one vertex
+#' @param m Metabolic module
 #' @export
 collapseAtomsIntoMetabolites <- function(m) {
     vertex.table <- data.table(as_data_frame(m, what="vertices"))
@@ -286,6 +322,9 @@ collapseAtomsIntoMetabolites <- function(m) {
     res
 }
 
+#' Add reactions without highly changing genes but with high average expression
+#' @param m Metabolic module
+#' @param g Scored graph
 #' @import igraph
 #' @import plyr
 #' @export

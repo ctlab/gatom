@@ -31,7 +31,6 @@ This tutorial describes an R-package for finding active metabolic modules in ato
 In this example we will find an active metabolic module based on macrophage activation 
 gene expression data.
 
-
 ```{r message=FALSE}
 library(gatom)
 library(data.table)
@@ -56,33 +55,35 @@ data("met.de.rawEx")
 data("gene.de.rawEx")
 ```
 
-Getting atom graph:
+Getting metabolic graph (depending on `topology` parameter, the graph vertices can correspond to `atoms` or `metabolites`):
 
 ```{r}
-g <- makeAtomGraph(network=networkEx, 
-                   org.gatom.anno=org.Mm.eg.gatom.annoEx, 
-                   gene.de=gene.de.rawEx,
-                   met.db=met.kegg.dbEx, 
-                   met.de=met.de.rawEx)
+g <- makeMetabolicGraph(network=networkEx, 
+                        topology="atoms",
+                        org.gatom.anno=org.Mm.eg.gatom.annoEx, 
+                        gene.de=gene.de.rawEx,
+                        met.db=met.kegg.dbEx, 
+                        met.de=met.de.rawEx)
 print(g)
 ```
 
-Scoring graph, obtaining an instance of SGMWCS (Signal Generalize Maximum Weight Subgraph)
+Scoring graph, obtaining an instance of SGMWCS (Signal Generalized Maximum Weight Subgraph)
 problem instance:
 
 ```{r message=FALSE, warning=FALSE}
-gs <- scoreGraph(g, k.gene = 25, k.met=25)
+gs <- scoreGraph(g, k.gene=25, k.met=25)
 ```
 
-Initialize an SMGWCS solver (an heuristic Virgo solver is used for simplicity, check out `mwcsr` package documentation for more options):
+Initialize an SMGWCS solver (a heuristic relax-and-cut solver `rnc_solver` is used for simplicity, check out `mwcsr` package documentation for more options):
+
 ```{r}
-vhsolver <- virgo_solver(cplex_dir=NULL)
+solver <- rnc_solver()
 ```
 
 Finding a module:
 
 ```{r message=FALSE, warning=FALSE}
-res <- solve_mwcsp(vhsolver, gs)
+res <- solve_mwcsp(solver, gs)
 m <- res$graph
 ```
     
@@ -92,12 +93,11 @@ head(E(m)$label)
 head(V(m)$label)
 ```
 
-We can save the module to dot format to generate pdf or svg file using `neato`
-tool from graphviz suite.
+We can save the module to dot format to generate pdf or svg file using `neato` tool from graphviz suite.
 
 ```{r}
 saveModuleToDot(m, file="M0.vs.M1.dot", name="M0.vs.M1")
-system("neato -Tsvg M0.vs.M1.dot > M0.vs.M1.svg", ignore.stderr = T)
+system("neato -Tsvg M0.vs.M1.dot > M0.vs.M1.svg", ignore.stderr=T)
 ```
 
 ```{r echo=FALSE}
@@ -115,14 +115,14 @@ You may vary the meaning of repel force and the number of iterations of repel al
 You may also change seed for different variants of edge layout.
 
 ```{r results="hide", message=FALSE, warning=FALSE}
-saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=1)
+saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", n_iter=100, force=1e-5, seed=10)
 ```
 
 ```{r echo=FALSE, eval=FALSE, message=FALSE, warning=FALSE}
 knitr::include_graphics("M0.vs.M1.pdf")
 ```
 
-<img src="https://rawgit.com/ctlab/gatom/master/inst/M0.vs.M1.pdf.png"/>
+<img src="https://rawgit.com/ctlab/gatom/master/inst/M0.vs.M1.png"/>
 
 Next, reactions without highly changing genes but with high average 
 expression can be added.
@@ -166,40 +166,40 @@ knitr::include_graphics("M0.vs.M1.v2.svg")
 
 # Example on full data
 
-Pre-generated networks and annotations can be downloaded from http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/ 
+Pre-generated networks and annotations can be downloaded from http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/:
 
 ```{r eval=FALSE}
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rda"))
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rda"))
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Hs.eg.gatom.anno.rda"))
-load(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rda"))
+
+network <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.kegg.rds"))
+org.Mm.eg.gatom.anno <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rds"))
+org.Hs.eg.gatom.anno <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Hs.eg.gatom.anno.rds"))
+met.kegg.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rds"))
 ```
 
-Full dataset for example can be downloaded here:
+Full dataset for the example can be downloaded here:
 
 ```{r eval=FALSE}
 library(R.utils)
 library(data.table)
 met.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv.gz")
 
-
 gene.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv.gz")
-
 ```
 
 And run `gatom` on this dataset:
 
 ```{r eval=FALSE}
-g <- makeAtomGraph(network=network, 
-                   org.gatom.anno=org.Mm.eg.gatom.anno, 
-                   gene.de=gene.de.raw,
-                   met.db=met.kegg.db, 
-                   met.de=met.de.raw)
+g <- makeMetabolicGraph(network=network, 
+                        topology = "atoms",
+                        org.gatom.anno=org.Mm.eg.gatom.anno, 
+                        gene.de=gene.de.raw,
+                        met.db=met.kegg.db, 
+                        met.de=met.de.raw)
 
 gs <- scoreGraph(g, k.gene = 50, k.met = 50)
 
-vsolver <- virgo_solver(cplex_dir=Sys.getenv("CPLEX_HOME"), threads = 4, timelimit = 60)
-sol <- solve_mwcsp(vsolver, gs) 
+solver <- rnc_solver()
+sol <- solve_mwcsp(solver, gs) 
 m <- sol$graph
 ```
 
@@ -207,20 +207,20 @@ m <- sol$graph
 
 If there is no metabolite data in your experiment assign `met.de` and `k.met` to `NULL`:
 
-
 ```{r}
-g <- makeAtomGraph(network=networkEx, 
-                   org.gatom.anno=org.Mm.eg.gatom.annoEx, 
-                   gene.de=gene.de.rawEx,
-                   met.db=met.kegg.dbEx, 
-                   met.de=NULL)
+g <- makeMetabolicGraph(network=networkEx, 
+                        topology = "atoms",
+                        org.gatom.anno=org.Mm.eg.gatom.annoEx, 
+                        gene.de=gene.de.rawEx,
+                        met.db=met.kegg.dbEx, 
+                        met.de=NULL)
 gs <- scoreGraph(g, k.gene = 50, k.met = NULL)
 ```
 
-You may add edge penalties to minimizie the size of the solution and remove excessively repeated meaningless reactions.
+If you are using an exact Virgo solver from `mwcsr` package, you may add edge penalty to minimize the size of the solution and remove excessively repeated reactions.
 
 ```{r eval=FALSE}
-vpsolver <- virgo_solver(cplex_dir=Sys.getenv("CPLEX_HOME"), threads = 4, timelimit = 60, penalty=0.001)
+vpsolver <- virgo_solver(cplex_dir=Sys.getenv("CPLEX_HOME"), threads=4, timelimit=60, penalty=0.001)
 sol <- solve_mwcsp(vpsolver, gs) 
 m <- sol$graph
 ```

@@ -1,10 +1,10 @@
 #' Save module to a nice pdf file
 #' @param module Module to save
-#' @param layout Edge layout
-#' @param n_iter Number of repel algorithm iterations
-#' @param force Value of repel force
 #' @param file File to save to
 #' @param name Name of the module
+#' @param n_iter Number of repel algorithm iterations
+#' @param force Value of repel force
+#' @param seed Seed determining edge layout
 #' @export
 #' @import GGally
 #' @import igraph

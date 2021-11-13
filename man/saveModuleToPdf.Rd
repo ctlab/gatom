@@ -24,7 +24,7 @@ saveModuleToPdf(
 
 \item{force}{Value of repel force}
 
-\item{layout}{Edge layout}
+\item{seed}{Seed determining edge layout}
 }
 \description{
 Save module to a nice pdf file
