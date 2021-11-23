@@ -1,8 +1,10 @@
 library(gatom)
 library(org.Mm.eg.db)
 org.Mm.eg.gatom.anno <- makeOrgGatomAnnotation(org.Mm.eg.db)
+org.Mm.eg.gatom.anno <- addPathways2annotation(unique(org.Mm.eg.gatom.anno$genes$gene), "mmu")
 save(org.Mm.eg.gatom.anno, file="org.Mm.eg.gatom.anno.rda")
 
 library(org.Hs.eg.db)
 org.Hs.eg.gatom.anno <- makeOrgGatomAnnotation(org.Hs.eg.db)
+org.Hs.eg.gatom.anno <- addPathways2annotation(unique(org.Hs.eg.gatom.anno$genes$gene), "hsa")
 save(org.Hs.eg.gatom.anno, file="org.Hs.eg.gatom.anno.rda")

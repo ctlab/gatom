@@ -190,7 +190,7 @@ And run `gatom` on this dataset:
 
 ```{r eval=FALSE}
 g <- makeMetabolicGraph(network=network, 
-                        topology = "atoms",
+                        topology="atoms",
                         org.gatom.anno=org.Mm.eg.gatom.anno, 
                         gene.de=gene.de.raw,
                         met.db=met.kegg.db, 
@@ -209,7 +209,7 @@ If there is no metabolite data in your experiment assign `met.de` and `k.met` to
 
 ```{r}
 g <- makeMetabolicGraph(network=networkEx, 
-                        topology = "atoms",
+                        topology="atoms",
                         org.gatom.anno=org.Mm.eg.gatom.annoEx, 
                         gene.de=gene.de.rawEx,
                         met.db=met.kegg.dbEx, 
@@ -223,4 +223,11 @@ If you are using an exact Virgo solver from `mwcsr` package, you may add edge pe
 vpsolver <- virgo_solver(cplex_dir=Sys.getenv("CPLEX_HOME"), threads=4, timelimit=60, penalty=0.001)
 sol <- solve_mwcsp(vpsolver, gs) 
 m <- sol$graph
+```
+
+To get functional annotation of obtained modules by KEGG and Reactome canonical metabolic pathways, use the `fora()` function from `fgsea` package.
+```{r, eval=FALSE}
+foraRes <- fgsea::fora(pathways=org.Mm.eg.gatom.anno$pathways,
+                       genes=E(m)$gene,
+                       universe=E(g)$gene)
 ```
