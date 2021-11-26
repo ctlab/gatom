@@ -5,3 +5,4 @@
 ^inst/org\..*\.rda$
 .gz
 ^data-raw$
+^\.github$
