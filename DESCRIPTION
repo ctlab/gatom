@@ -28,6 +28,8 @@ Suggests:
     KEGGREST,
     AnnotationDbi,
     org.Mm.eg.db,
+    reactome.db,
+    fgsea,
     readr,
     BiocStyle
 License: MIT + file LICENCE

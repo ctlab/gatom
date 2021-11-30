@@ -70,14 +70,17 @@ makeOrgGatomAnnotation <- function(org.db,
     org.gatom.anno
 }
 
+#' Adds pathway list to organism annotation object
+#' @param org.gatom.anno Organism annotation object
+#' @param organism Which organism annotation object refers to (might be either mouse "mmu", either human "hsa")
 #' @export
-addPathways2annotation <- function(universe = unique(org.Mm.eg.gatom.anno$genes$gene),
-                                   organism = c("mmu", "hsa"),
-                                   keepKeggMetabolicOnly = TRUE){
+getPathways2annotation <- function(org.gatom.anno,
+                                   organism = c("mmu", "hsa")){
   org <- match.arg(organism)
   pattern <- ifelse(org == "mmu",
                     " - Mus musculus \\(mouse\\)",
                     " - Homo sapiens \\(human\\)")
+  universe <- unique(org.gatom.anno$genes$gene)
 
   reactomepath <- na.omit(AnnotationDbi::select(reactome.db::reactome.db, universe, "PATHID", "ENTREZID"))
   reactomepath <- split(reactomepath$ENTREZID, reactomepath$PATHID)
@@ -113,41 +116,28 @@ addPathways2annotation <- function(universe = unique(org.Mm.eg.gatom.anno$genes$
   reactomepathway2name[, PATHNAME := sub("^[^:]*: ", "", PATHNAME)]
 
   pathways <- c(reactomepath, keggmodule, keggpathway)
-  pathways <- pathways[sapply(pathways, length) >= 10]
+  pathways <- pathways[sapply(pathways, length) >= 1]
   pathway2name <- do.call("rbind", list(reactomepathway2name,
                                         keggmd2name,
                                         keggpath2name))
-
-  if(org == "mmu"){
-    pathways$`5991024` <- NULL # "Mus musculus: Metabolism"
-    pathways$`R-MMU-1430728` <- NULL # Metabolism
-    pathways$`mmu01100` <- NULL # Metabolic pathways
-    pathways$`mmu01110` <- NULL # Biosynthesis of secondary metabolites
-    pathways$`mmu01200` <- NULL # Carbon metabolism
-    pathways$`mmu01210` <- NULL # 2-Oxocarboxylic acid metabolism
-    pathways$`mmu01212` <- NULL # Fatty acid metabolism
-    pathways$`mmu01230` <- NULL # Biosynthesis of amino acids
-    pathways$`R-MMU-556833` <- NULL # Metabolism of lipids
-    pathways$`R-MMU-71387` <- NULL # Metabolism of carbohydrates
-    pathways[grep("mmu0[2-9]", names(pathways))] <- NULL # non-metabolic
-  }
-  if(org == "hsa"){
-    pathways$`R-HSA-1430728` <- NULL # Metabolism
-    pathways$`hsa01100` <- NULL # Metabolic pathways
-    pathways$`hsa01200` <- NULL # Carbon metabolism
-    pathways$`hsa01210` <- NULL # 2-Oxocarboxylic acid metabolism
-    pathways$`hsa01212` <- NULL # Fatty acid metabolism
-    pathways$`hsa01230` <- NULL # Biosynthesis of amino acids
-    pathways$`R-HSA-71387` <- NULL # Metabolism of carbohydrates
-    pathways$`R-HSA-556833` <- NULL # Metabolism of lipids
-    pathways[grep("hsa0[2-9]", names(pathways))] <- NULL # non-metabolic
-  }
+  pthws2exclude <- c("Metabolism",
+                     "Metabolic pathways",
+                     "Carbon metabolism",
+                     "Fatty acid metabolism",
+                     "Metabolism of lipids",
+                     "Metabolism of carbohydrates",
+                     "2-Oxocarboxylic acid metabolism",
+                     "Biosynthesis of amino acids")
+  ids2exclude <- which(names(pathways) %in%
+                           pathway2name$PATHID[match(pthws2exclude, pathway2name$PATHNAME)])
+  # adding non-metabolic KEGG pathways to ids2exclude:
+  ids2exclude <- c(ids2exclude, grep("(mmu|hsa)0[2-9]", names(pathways)))
+  pathways <- pathways[-ids2exclude]
 
   names(pathways) <- sapply(
-    seq_along(names(pathways)),
-    function(i) paste(names(pathways)[[i]],
-                      pathway2name$PATHNAME[match(names(pathways)[[i]], pathway2name$PATHID)],
-                      sep = ": "))
-
+      seq_along(names(pathways)),
+      function(i) paste(names(pathways)[[i]],
+                        pathway2name$PATHNAME[match(names(pathways)[[i]], pathway2name$PATHID)],
+                        sep = ": "))
   pathways
 }
