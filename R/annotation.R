@@ -67,46 +67,45 @@ makeOrgGatomAnnotation <- function(org.db,
         setkeyv(org.gatom.anno$mapFrom[[n]], n)
     }
 
+    org.gatom.anno$pathways <- getMetabolicPathways(org.gatom.anno$genes$gene, keggOrgCode)
+
     org.gatom.anno
 }
 
-#' Adds pathway list to organism annotation object
-#' @param org.gatom.anno Organism annotation object
-#' @param organism Which organism annotation object refers to (might be either mouse "mmu", either human "hsa")
-#' @export
-getPathways2annotation <- function(org.gatom.anno,
-                                   organism = c("mmu", "hsa")){
-  org <- match.arg(organism)
-  pattern <- ifelse(org == "mmu",
-                    " - Mus musculus \\(mouse\\)",
-                    " - Homo sapiens \\(human\\)")
-  universe <- unique(org.gatom.anno$genes$gene)
+#' Generate list of metabolic pathways from Reactome and KEGG databases
+#'
+#' @param universe list of gene
+#' @param keggOrgCode KEGG organism code, like mmu or hsa
+getMetabolicPathways <- function(universe,
+                                 keggOrgCode){
+
+
 
   reactomepath <- na.omit(AnnotationDbi::select(reactome.db::reactome.db, universe, "PATHID", "ENTREZID"))
   reactomepath <- split(reactomepath$ENTREZID, reactomepath$PATHID)
 
-  keggmodule <- KEGGREST::keggLink(org, "module")
-  keggmodule <- gsub(paste0(org, ":"), "", keggmodule)
+  keggmodule <- KEGGREST::keggLink(keggOrgCode, "module")
+  keggmodule <- gsub(paste0(keggOrgCode, ":"), "", keggmodule)
   names(keggmodule) <- gsub("md:", "", names(keggmodule))
   keggmodule <- split(keggmodule, names(keggmodule))
 
-  # keggmdnames <- KEGGREST::keggList("module", org) # 404 after September, 2019
+  # keggmdnames <- KEGGREST::keggList("module", keggOrgCode) # 404 after September, 2019
   keggmdnames <- KEGGREST::keggList("module")
   keggmd2name <- data.table::as.data.table(keggmdnames, keep.rownames=T)
   keggmd2name$rn <- gsub("md:", "", keggmd2name$rn)
   data.table::setnames(keggmd2name, c("rn","keggmdnames"), c("PATHID","PATHNAME"))
-  keggmd2name$PATHID <- paste0(org, "_", keggmd2name$PATHID)
+  keggmd2name$PATHID <- paste0(keggOrgCode, "_", keggmd2name$PATHID)
 
-  keggpathway <- KEGGREST::keggLink(org, "pathway")
-  keggpathway <- gsub(paste0(org, ":"), "", keggpathway)
+  keggpathway <- KEGGREST::keggLink(keggOrgCode, "pathway")
+  keggpathway <- gsub(paste0(keggOrgCode, ":"), "", keggpathway)
   names(keggpathway) <- gsub("path:", "", names(keggpathway))
   keggpathway <- split(keggpathway, names(keggpathway))
   keggpathway <- lapply(keggpathway, unname)
-  keggpathnames <- KEGGREST::keggList("pathway", org)
+  keggpathnames <- KEGGREST::keggList("pathway", keggOrgCode)
 
   keggpath2name <- data.table::as.data.table(keggpathnames, keep.rownames=T)
   keggpath2name$rn <- gsub("path:", "", keggpath2name$rn)
-  keggpath2name$keggpathnames <- gsub(pattern, "", keggpath2name$keggpathnames)
+  keggpath2name$keggpathnames <- gsub(" - [^-]*$", "", keggpath2name$keggpathnames)
   data.table::setnames(keggpath2name, c("rn","keggpathnames"), c("PATHID","PATHNAME"))
 
   reactomepathway2name <- data.table::as.data.table(na.omit(
@@ -116,7 +115,9 @@ getPathways2annotation <- function(org.gatom.anno,
   reactomepathway2name[, PATHNAME := sub("^[^:]*: ", "", PATHNAME)]
 
   pathways <- c(reactomepath, keggmodule, keggpathway)
-  pathways <- pathways[sapply(pathways, length) >= 1]
+  pathways <- lapply(pathways, intersect, y=universe)
+  pathways <- lapply(pathways, unique)
+  pathways <- pathways[lengths(pathways) >= 1]
   pathway2name <- do.call("rbind", list(reactomepathway2name,
                                         keggmd2name,
                                         keggpath2name))

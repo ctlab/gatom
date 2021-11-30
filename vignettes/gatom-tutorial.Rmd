@@ -172,7 +172,7 @@ Pre-generated networks and annotations can be downloaded from http://artyomovlab
 
 network <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.kegg.rds"))
 org.Mm.eg.gatom.anno <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rds"))
-org.Hs.eg.gatom.anno <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Hs.eg.gatom.anno.rds"))
+# org.Hs.eg.gatom.anno <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Hs.eg.gatom.anno.rds"))
 met.kegg.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rds"))
 ```
 
@@ -229,5 +229,6 @@ To get functional annotation of obtained modules by KEGG and Reactome canonical 
 ```{r, eval=FALSE}
 foraRes <- fgsea::fora(pathways=org.Mm.eg.gatom.anno$pathways,
                        genes=E(m)$gene,
-                       universe=E(g)$gene)
+                       universe=unique(E(g)$gene),
+                       minSize=5)
 ```
