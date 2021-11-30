@@ -67,7 +67,16 @@ makeOrgGatomAnnotation <- function(org.db,
         setkeyv(org.gatom.anno$mapFrom[[n]], n)
     }
 
-    org.gatom.anno$pathways <- getMetabolicPathways(org.gatom.anno$genes$gene, keggOrgCode)
+    pathways <- getMetabolicPathways(org.gatom.anno$genes$gene, keggOrgCode)
+
+    # keeping only pathways with at least half of enzymatic genes
+    pathwaysEnzymeRatio <-
+      lengths(lapply(pathways, intersect, y=unique(org.gatom.anno$gene2enzyme$gene)))/
+      lengths(pathways)
+    pathways <- pathways[pathwaysEnzymeRatio >= 0.5]
+
+    org.gatom.anno$pathways <- pathways
+
 
     org.gatom.anno
 }
