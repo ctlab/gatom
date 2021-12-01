@@ -1,7 +1,6 @@
 ---
 title: "Using gatom package"
-author: "Alexey A. Sergushichev"
-date: '2017-03-21'
+author: "Anstasiia Gainullina, Alexey Sergushichev"
 output:
   BiocStyle::html_document:
     toc_float: yes
@@ -74,7 +73,7 @@ problem instance:
 gs <- scoreGraph(g, k.gene=25, k.met=25)
 ```
 
-Initialize an SMGWCS solver (a heuristic relax-and-cut solver `rnc_solver` is used for simplicity, check out `mwcsr` package documentation for more options):
+Initialize an SMGWCS solver (a heuristic relax-and-cut solver `rnc_solver` is used for simplicity, check out `mwcsr` package documentation for more options, and see "Using exact solver" section for recommended way):
 
 ```{r}
 solver <- rnc_solver()
@@ -168,8 +167,7 @@ knitr::include_graphics("M0.vs.M1.v2.svg")
 
 Pre-generated networks and annotations can be downloaded from http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/:
 
-```{r eval=FALSE}
-
+```{r}
 network <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.kegg.rds"))
 org.Mm.eg.gatom.anno <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rds"))
 # org.Hs.eg.gatom.anno <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Hs.eg.gatom.anno.rds"))
@@ -178,7 +176,7 @@ met.kegg.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_mater
 
 Full dataset for the example can be downloaded here:
 
-```{r eval=FALSE}
+```{r message=FALSE}
 library(R.utils)
 library(data.table)
 met.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv.gz")
@@ -188,7 +186,7 @@ gene.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/G
 
 And run `gatom` on this dataset:
 
-```{r eval=FALSE}
+```{r}
 g <- makeMetabolicGraph(network=network, 
                         topology="atoms",
                         org.gatom.anno=org.Mm.eg.gatom.anno, 
@@ -199,11 +197,52 @@ g <- makeMetabolicGraph(network=network,
 gs <- scoreGraph(g, k.gene = 50, k.met = 50)
 
 solver <- rnc_solver()
+set.seed(42)
 sol <- solve_mwcsp(solver, gs) 
 m <- sol$graph
+m
 ```
 
 # Misc
+
+## Using exact solver
+
+For proper analysis quality we recommend to use exact SGMWCS solver `virgo_solver()`, which requires Java (version >= 11) and CPLEX (version >= 12.7) to be installed. If the requirements are met
+you can then find a module as following:
+
+```{r eval=FALSE}
+vsolver <- virgo_solver(cplex_dir=Sys.getenv("CPLEX_HOME"), threads=4, penalty=0.001)
+sol <- solve_mwcsp(vsolver, gs) 
+m <- sol$graph
+```
+
+Edge penalty option there is used to remove excessive redundancy in genes.
+
+## Pathway annotation
+
+To get functional annotation of obtained modules by KEGG and Reactome
+metabolic pathways, we can use hypergeometric test with `fora()` function from `fgsea` package.
+
+```{r}
+foraRes <- fgsea::fora(pathways=org.Mm.eg.gatom.anno$pathways,
+                       genes=E(m)$gene,
+                       universe=unique(E(g)$gene),
+                       minSize=5)
+foraRes[padj < 0.05]
+```
+
+Optionally, redundancy in pathways can be decreased with `collapsePathwaysORA()` function:
+
+```{r}
+mainPathways <- fgsea::collapsePathwaysORA(
+  foraRes[padj < 0.05],
+  pathways=org.Mm.eg.gatom.anno$pathways,
+  genes=E(m)$gene,
+  universe=unique(E(g)$gene))
+foraRes[pathway %in% mainPathways$mainPathways]
+```
+
+## Running with no metabolite data
 
 If there is no metabolite data in your experiment assign `met.de` and `k.met` to `NULL`:
 
@@ -217,18 +256,24 @@ g <- makeMetabolicGraph(network=networkEx,
 gs <- scoreGraph(g, k.gene = 50, k.met = NULL)
 ```
 
-If you are using an exact Virgo solver from `mwcsr` package, you may add edge penalty to minimize the size of the solution and remove excessively repeated reactions.
+## Using metabolite-level network
 
-```{r eval=FALSE}
-vpsolver <- virgo_solver(cplex_dir=Sys.getenv("CPLEX_HOME"), threads=4, timelimit=60, penalty=0.001)
-sol <- solve_mwcsp(vpsolver, gs) 
-m <- sol$graph
-```
+Sometime it could make sense to work with metabolite-metabolite topology of the network, not atom-atom one. Such network is less structured, but contain more genes.
 
-To get functional annotation of obtained modules by KEGG and Reactome canonical metabolic pathways, use the `fora()` function from `fgsea` package.
-```{r, eval=FALSE}
-foraRes <- fgsea::fora(pathways=org.Mm.eg.gatom.anno$pathways,
-                       genes=E(m)$gene,
-                       universe=unique(E(g)$gene),
-                       minSize=5)
+
+```{r}
+gm <- makeMetabolicGraph(network=network, 
+                        topology="metabolite",
+                        org.gatom.anno=org.Mm.eg.gatom.anno, 
+                        gene.de=gene.de.raw,
+                        met.db=met.kegg.db, 
+                        met.de=met.de.raw)
+
+gms <- scoreGraph(gm, k.gene = 50, k.met = 50)
+
+solver <- rnc_solver()
+set.seed(42)
+sol <- solve_mwcsp(solver, gms) 
+mm <- sol$graph
+mm
 ```
