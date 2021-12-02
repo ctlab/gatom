@@ -160,13 +160,68 @@ test_that(".makeVertexTable works with null DE", {
     expect_true(!is.null(vt))
 })
 
-test_that(".makeVertexTable works with null DE", {
+test_that(".makeEdgeTable works with null DE", {
     et <- .makeEdgeTable(network=networkEx,
                          org.gatom.anno=org.Mm.eg.gatom.annoEx,
                          gene.de=NULL,
                          gene.de.meta=NULL)
     expect_true(!is.null(et))
 })
+
+test_that(".makeEdgeTable properly handles non-enzymatic reactions and extra mappings", {
+    network <- networkEx
+    network$enzyme2reaction <- copy(networkEx$enzyme2reaction)
+    network$enzyme2reaction[reaction %in% c("R01859", "R00742"), enzyme := "-"]
+    setkey(network$enzyme2reaction, "enzyme")
+
+
+    et <- .makeEdgeTable(network=network,
+                         org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                         gene.de=NULL,
+                         gene.de.meta=NULL,
+                         keepReactionsWithoutEnzymes = FALSE)
+    expect_true(!"R00742" %in% et$reaction)
+
+    et <- .makeEdgeTable(network=network,
+                         org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                         gene.de=NULL,
+                         gene.de.meta=NULL,
+                         keepReactionsWithoutEnzymes = TRUE)
+    expect_true(et[, any(reaction == "R00742" & gene == "-")])
+
+    gene2reaction.extra <- data.table(gene=org.Mm.eg.gatom.annoEx$genes$gene[1], reaction="R00742")
+    et <- .makeEdgeTable(network=network,
+                         org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                         gene.de=NULL,
+                         gene.de.meta=NULL,
+                         keepReactionsWithoutEnzymes = FALSE,
+                         gene2reaction.extra = gene2reaction.extra)
+    expect_true(et[, any(reaction == "R00742" & gene == org.Mm.eg.gatom.annoEx$genes$gene[1])])
+    expect_true(!"R01859" %in% et$reaction)
+
+    et <- .makeEdgeTable(network=network,
+                         org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                         gene.de=NULL,
+                         gene.de.meta=NULL,
+                         keepReactionsWithoutEnzymes = TRUE,
+                         gene2reaction.extra = gene2reaction.extra)
+    expect_true(et[, any(reaction == "R00742" & gene == org.Mm.eg.gatom.annoEx$genes$gene[1])])
+    expect_true(et[, any(reaction == "R01859" & gene == "-")])
+
+    gene.de.rawEx.meta <- getGeneDEMeta(gene.de.rawEx, org.Mm.eg.gatom.annoEx)
+    et1 <- .makeEdgeTable(network=network,
+                         org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                         gene.de=prepareDE(gene.de.rawEx, gene.de.rawEx.meta),
+                         gene.de.meta=gene.de.rawEx.meta)
+    et2 <- .makeEdgeTable(network=network,
+                         org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                         gene.de=prepareDE(gene.de.rawEx, gene.de.rawEx.meta),
+                         gene.de.meta=gene.de.rawEx.meta,
+                         keepReactionsWithoutEnzymes = TRUE,
+                         gene2reaction.extra = gene2reaction.extra)
+    expect_true(length(setdiff(et1$gene, et2$gene)) == 0) # not losing any genes
+})
+
 
 test_that("scoreGraph shows warning on bad distribution", {
     g <- gEx

@@ -1,5 +1,7 @@
 #' @import data.table
-.makeEdgeTable <- function(network, org.gatom.anno, gene.de, gene.de.meta) {
+.makeEdgeTable <- function(network, org.gatom.anno, gene.de, gene.de.meta,
+                           gene2reaction.extra=NULL,
+                           keepReactionsWithoutEnzymes=FALSE) {
     if (is.null(gene.de)) {
         gene.pvals <- data.table(gene=org.gatom.anno$genes$gene,
                                  pval=NA)
@@ -21,8 +23,29 @@
 
     enzyme.pvals <- convertPvalDT(gene.pvals,
                                   org.gatom.anno$gene2enzyme)
+
+    if (keepReactionsWithoutEnzymes) {
+        enzyme.pvals <- rbind(enzyme.pvals, list(enzyme="-", symbol="-", gene="-"), fill=TRUE)
+    }
+
     reaction.pvals <- convertPvalDT(enzyme.pvals,
                                     network$enzyme2reaction)
+
+    if (!is.null(gene2reaction.extra)) {
+        stopifnot(c("gene", "reaction") %in% colnames(gene2reaction.extra))
+        if (!identical(key(gene2reaction.extra), "gene")) {
+            gene2reaction.extra <- as.data.table(gene2reaction.extra)
+            setkey(gene2reaction.extra, "gene")
+        }
+        reaction.pvals.extra <- convertPvalDT(gene.pvals,
+                                              gene2reaction.extra)
+        reaction.pvals.extra[, enzyme := "-"]
+
+        reaction.pvals <- rbind(reaction.pvals, reaction.pvals.extra)
+        reaction.pvals <- reaction.pvals[order(reaction, pval, gene == "-", enzyme == "-"), ]
+        reaction.pvals <- reaction.pvals[!duplicated(reaction), ]
+    }
+
     reaction.pvals <- merge(reaction.pvals, network$reactions)
 
     align.pvals <- convertPvalDT(reaction.pvals, network$reaction2align)
@@ -88,7 +111,7 @@
     vertex.table[]
 }
 
-#' Creates atom graph based on specified data
+#' Creates metabolic graph based on specified data
 #' @param network Network object
 #' @param topology Way to determine network vertices
 #' @param org.gatom.anno Organism annotation object
@@ -100,6 +123,9 @@
 #' @param met.de.meta Annotation of `met.de` table
 #' @param met.to.filter List of metabolites to filter from the network
 #' @param largest.component If TRUE, only the largest connected component is returned
+#' @param gene2reaction.extra Additional gene to reaction mappings. Should be a data.table with `gene` and `reaction` columns
+#' @param keepReactionsWithoutEnzymes If TRUE, keep reactions that have no annotated enzymes, thus expanding the network but
+#'                                    including some reactions which are not possible in the considered species.
 #' @export
 #' @import igraph
 makeMetabolicGraph <- function(network,
@@ -112,6 +138,8 @@ makeMetabolicGraph <- function(network,
                           met.de,
                           met.de.meta=getMetDEMeta(met.de, met.db),
                           met.to.filter=fread(system.file("mets2mask.lst", package="gatom"))$ID,
+                          gene2reaction.extra=NULL,
+                          keepReactionsWithoutEnzymes=FALSE,
                           largest.component=TRUE) {
 
     topology <- match.arg(topology)
@@ -132,7 +160,9 @@ makeMetabolicGraph <- function(network,
     edge.table <- .makeEdgeTable(network=network,
                                  org.gatom.anno=org.gatom.anno,
                                  gene.de=gene.de,
-                                 gene.de.meta=gene.de.meta)
+                                 gene.de.meta=gene.de.meta,
+                                 gene2reaction=gene2reaction,
+                                 keepReactionsWithoutEnzymes=keepReactionsWithoutEnzymes)
     all.atoms <- union(edge.table$atom.x, edge.table$atom.y)
 
     if (topology == "metabolites"){
