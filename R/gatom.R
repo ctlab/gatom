@@ -161,7 +161,7 @@ makeMetabolicGraph <- function(network,
                                  org.gatom.anno=org.gatom.anno,
                                  gene.de=gene.de,
                                  gene.de.meta=gene.de.meta,
-                                 gene2reaction=gene2reaction,
+                                 gene2reaction.extra=gene2reaction.extra,
                                  keepReactionsWithoutEnzymes=keepReactionsWithoutEnzymes)
     all.atoms <- union(edge.table$atom.x, edge.table$atom.y)
 
