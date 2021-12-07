@@ -2,7 +2,7 @@
 % Please edit documentation in R/gatom.R
 \name{makeMetabolicGraph}
 \alias{makeMetabolicGraph}
-\title{Creates atom graph based on specified data}
+\title{Creates metabolic graph based on specified data}
 \usage{
 makeMetabolicGraph(
   network,
@@ -15,6 +15,8 @@ makeMetabolicGraph(
   met.de,
   met.de.meta = getMetDEMeta(met.de, met.db),
   met.to.filter = fread(system.file("mets2mask.lst", package = "gatom"))$ID,
+  gene2reaction.extra = NULL,
+  keepReactionsWithoutEnzymes = FALSE,
   largest.component = TRUE
 )
 }
@@ -39,8 +41,13 @@ makeMetabolicGraph(
 
 \item{met.to.filter}{List of metabolites to filter from the network}
 
+\item{gene2reaction.extra}{Additional gene to reaction mappings. Should be a data.table with `gene` and `reaction` columns}
+
+\item{keepReactionsWithoutEnzymes}{If TRUE, keep reactions that have no annotated enzymes, thus expanding the network but
+including some reactions which are not possible in the considered species.}
+
 \item{largest.component}{If TRUE, only the largest connected component is returned}
 }
 \description{
-Creates atom graph based on specified data
+Creates metabolic graph based on specified data
 }
