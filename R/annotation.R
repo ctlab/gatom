@@ -1,3 +1,16 @@
+#' Create an organism annotation object for network analysis
+#'
+#' @param org.db Bioconductor org.db object, e.g. org.Mm.eg.db
+#' @param idColumns vector of column names from `org.db` object to cread ID mappings.
+#'                  First ID will be used as a base identifier, should be compatible
+#'                  with KEGG and Reactome databses.
+#' @param nameColumn column with a human readable gene symbol. Default to "SYMBOL".
+#' @param enzymeColumn column with an Enzyme Commission ID. Defatult to "ENZYME".
+#' @param appendEnzymesFromKegg if TRUE, KEGG databases will be sued to extend gene to
+#'     enzyme mappings obtained from org.db package.
+#' @param keggOrgCode KEGG organizm code, e.g. "mmu". If set to NULL, the code is determined
+#'     automatically.
+#'
 #' @export
 makeOrgGatomAnnotation <- function(org.db,
                                    idColumns=

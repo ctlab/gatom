@@ -10,6 +10,8 @@ addHighlyExpressedEdges(m, g, top = 3000)
 \item{m}{Metabolic module}
 
 \item{g}{Scored graph}
+
+\item{top}{Maximum rank value for the gene to be considered highly expressed}
 }
 \description{
 Add reactions without highly changing genes but with high average expression

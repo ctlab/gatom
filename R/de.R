@@ -42,7 +42,7 @@ prepareDEColumn <- function(gene.de, columnName, from) {
 #' based on metadata object
 #' @param de.raw Table with defferential expression results, an object
 #'        convertable to data.frame
-#' @param de.met Object with differential expression table metadata
+#' @param de.meta Object with differential expression table metadata
 #'        acquired with getGeneDEMeta or getMetDEMeta functions
 #' @return data.table object with converted differential expressiond table
 #' @export
@@ -170,10 +170,16 @@ idsListFromAnnotation <- function(org.gatom.anno) {
 #' @param pvalColumn Specifies column with p-values.
 #' @param logPvalColumn Specifies column with log p-values, if there is no such
 #'                      column one will be generated automatically.
-#' @param log2FCColumn Specifies coln with log2-fold changes.
-#' @param baseMeanColumn Spefies column with average axpression across samples.
-#' @param signalColumn could be NULL (automatic), character (coumn name)
-#'                     function (evaluated in a scope of original data frame)
+#' @param log2FCColumn Specifies column with log2-fold changes.
+#' @param baseMeanColumn Specifies column with average expression across samples.
+#' @param signalColumn Specifies column with identifier of the measured entity
+#'      (such as gene ID for RNA-seq and probe ID for microarrays).
+#'      Could be NULL (automatic, set from based on pval and log2FC columns),
+#'      character (column name), or function (evaluated in a scope of original data frame)
+#' @param signalRankColumn Specifies how the genes are ranked from highly to lowly expressed,
+#'      used in `addHighlyExpressedEdgues` function.
+#'      Could be NULL (automatic), character (column name)
+#'      function (evaluated in a scope of original data frame).
 #' @export
 #' @examples
 #' data("org.Mm.eg.gatom.annoEx")

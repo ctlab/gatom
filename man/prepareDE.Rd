@@ -12,7 +12,7 @@ prepareDE(de.raw, de.meta)
 \item{de.raw}{Table with defferential expression results, an object
 convertable to data.frame}
 
-\item{de.met}{Object with differential expression table metadata
+\item{de.meta}{Object with differential expression table metadata
 acquired with getGeneDEMeta or getMetDEMeta functions}
 }
 \value{

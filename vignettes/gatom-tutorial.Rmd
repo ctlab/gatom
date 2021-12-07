@@ -4,8 +4,10 @@ author: "Anstasiia Gainullina, Alexey Sergushichev"
 output:
   BiocStyle::html_document:
     toc_float: yes
-vignette: "%\\VignetteIndexEntry{Using gatom package} %\\VignetteEngine{knitr::rmarkdown}
-  %\\VignetteEncoding{UTF-8} \n"
+vignette: >
+  %\VignetteIndexEntry{Using gatom package}
+  %\VignetteEngine{knitr::rmarkdown}
+  \VignetteEncoding{UTF-8}"
 ---
 
 This tutorial describes an R-package for finding active metabolic modules in atom transition network.
