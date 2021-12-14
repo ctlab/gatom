@@ -217,6 +217,13 @@ makeMetabolicGraph <- function(network,
     (pihat * pt) / (-fb$lambda * pt^fb$a + pt^fb$a + fb$lambda * pt)
 }
 
+#' Score metabolic graph
+#'
+#' @param g Metabolic graph obtained with makeMetabolic graph function
+#' @param k.gene Number of gene signals to be scored positively, the higher is the number,
+#'     the larger will be the resulting module. If set to NULL, genes will not be used for scoring.
+#' @param k.met Number of metabolite signals to be scored positively, the higher is the number,
+#'     the larger will be the resulting module. If set to NULL, metabolites will not be used for scoring.
 #' @import BioNet
 #' @importFrom mwcsr normalize_sgmwcs_instance
 #' @export
@@ -355,6 +362,7 @@ collapseAtomsIntoMetabolites <- function(m) {
 #' Add reactions without highly changing genes but with high average expression
 #' @param m Metabolic module
 #' @param g Scored graph
+#' @param top Maximum rank value for the gene to be considered highly expressed
 #' @import igraph
 #' @import plyr
 #' @export

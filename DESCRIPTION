@@ -31,7 +31,8 @@ Suggests:
     reactome.db,
     fgsea,
     readr,
-    BiocStyle
+    BiocStyle,
+    R.utils
 License: MIT + file LICENCE
 Encoding: UTF-8
 LazyData: true

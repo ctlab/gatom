@@ -34,12 +34,19 @@ makeOrgGatomAnnotation function.}
 \item{logPvalColumn}{Specifies column with log p-values, if there is no such
 column one will be generated automatically.}
 
-\item{log2FCColumn}{Specifies coln with log2-fold changes.}
+\item{log2FCColumn}{Specifies column with log2-fold changes.}
 
-\item{baseMeanColumn}{Spefies column with average axpression across samples.}
+\item{baseMeanColumn}{Specifies column with average expression across samples.}
 
-\item{signalColumn}{could be NULL (automatic), character (coumn name)
-function (evaluated in a scope of original data frame)}
+\item{signalColumn}{Specifies column with identifier of the measured entity
+(such as gene ID for RNA-seq and probe ID for microarrays).
+Could be NULL (automatic, set from based on pval and log2FC columns),
+character (column name), or function (evaluated in a scope of original data frame)}
+
+\item{signalRankColumn}{Specifies how the genes are ranked from highly to lowly expressed,
+used in `addHighlyExpressedEdgues` function.
+Could be NULL (automatic), character (column name)
+function (evaluated in a scope of original data frame).}
 }
 \description{
 Default values for all columns are NULL which mean they are
