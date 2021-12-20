@@ -237,7 +237,7 @@ getGeneDEMeta <- function(gene.de.raw,
         signalColumn <- findColumn(gene.de.raw,
                                     c("signal", "probe"))
         if (is.na(signalColumn)) {
-            signalColumn <- quote(paste0(pval, "_", log2FC))
+            signalColumn <- quote(paste0("gs", as.integer(as.factor(paste0(pval, "_", log2FC)))))
         }
     }
 
@@ -326,7 +326,7 @@ getMetDEMeta <- function(met.de.raw, met.db,
         signalColumn <- findColumn(met.de.raw,
                                   c("signal", "ion"))
         if (is.na(signalColumn)) {
-            signalColumn <- quote(paste0(pval, "_", log2FC))
+            signalColumn <- quote(paste0("ms", as.integer(as.factor(paste0(pval, "_", log2FC)))))
         }
     }
 
