@@ -276,8 +276,7 @@ getMetDEMeta <- function(met.de.raw, met.db,
                          logPvalColumn=NULL,
                          log2FCColumn=NULL,
                          baseMeanColumn=NULL,
-                         signalColumn=NULL,
-                         signalRankColumn=NULL
+                         signalColumn=NULL
 ) {
     if (is.null(met.de.raw)) {
         return(NULL)
@@ -330,19 +329,6 @@ getMetDEMeta <- function(met.de.raw, met.db,
         }
     }
 
-    if (is.null(signalRankColumn)) {
-        signalRankColumn <- findColumn(met.de.raw,
-                                      c("signalRank", "rank"))
-        if (is.na(signalRankColumn)) {
-            signalRankColumn <- quote({
-                signalLevels <- setNames(baseMean, signal)[!duplicated(signal)]
-                signalRanks <- setNames(rank(-signalLevels), names(signalLevels))
-                signalRanks[signal]
-            })
-        }
-    }
-
-
     list(idType=idType,
          columns=list(
              ID=idColumn,
@@ -350,6 +336,5 @@ getMetDEMeta <- function(met.de.raw, met.db,
              logPval=logPvalColumn,
              log2FC=log2FCColumn,
              baseMean=baseMeanColumn,
-             signal=signalColumn,
-             signalRank=signalRankColumn))
+             signal=signalColumn))
 }
