@@ -46,10 +46,15 @@ makeOrgGatomAnnotation <- function(org.db,
     org.gatom.anno$gene2enzyme <- data.table(
         AnnotationDbi::select(org.db,
                               keys=org.gatom.anno$genes$gene,
-                              columns = c("ENZYME")))
+                              columns = c("ENZYME"),
+                              keytype=baseColumn))
     setnames(org.gatom.anno$gene2enzyme,
              c(baseColumn, enzymeColumn),
              c("gene", "enzyme"))
+
+    # sometime mapping is not direct (e.g. for Sc.sgd), keeping only gene & enzyme
+    org.gatom.anno$gene2enzyme <- org.gatom.anno$gene2enzyme[, list(gene, enzyme)]
+
     org.gatom.anno$gene2enzyme <- org.gatom.anno$gene2enzyme[!is.na(enzyme)]
 
     if (appendEnzymesFromKegg) {
@@ -80,7 +85,9 @@ makeOrgGatomAnnotation <- function(org.db,
         setkeyv(org.gatom.anno$mapFrom[[n]], n)
     }
 
-    pathways <- getMetabolicPathways(org.gatom.anno$genes$gene, keggOrgCode)
+    # todo: support reactome pathways for non-entrez base IDs
+    pathways <- getMetabolicPathways(org.gatom.anno$genes$gene, keggOrgCode,
+                                     includeReactome=(org.gatom.anno$baseId == "ENTREZID"))
 
     # keeping only pathways with at least half of enzymatic genes
     pathwaysEnzymeRatio <-
@@ -98,43 +105,59 @@ makeOrgGatomAnnotation <- function(org.db,
 #'
 #' @param universe list of gene
 #' @param keggOrgCode KEGG organism code, like mmu or hsa
+#' @param includeReactome whether to include Reactome pathways (only works for Entrez ID universe)
+#' @param includeKEGG wheter to include KEGG pahtways and modules
 getMetabolicPathways <- function(universe,
-                                 keggOrgCode){
+                                 keggOrgCode,
+                                 includeReactome=TRUE, includeKEGG=TRUE){
+
+  if (includeReactome) {
+    reactomepath <- na.omit(AnnotationDbi::select(reactome.db::reactome.db, universe, "PATHID", "ENTREZID"))
+    reactomepath <- split(reactomepath$ENTREZID, reactomepath$PATHID)
+
+    reactomepathway2name <- data.table::as.data.table(na.omit(
+      AnnotationDbi::select(reactome.db::reactome.db,
+                            names(reactomepath),
+                            c("PATHNAME"), 'PATHID')))
+    reactomepathway2name[, PATHNAME := sub("^[^:]*: ", "", PATHNAME)]
+
+  } else {
+    reactomepath <- NULL
+    reactomepathway2name <- data.table(PATHNAME=character(0), PATHID=character(0))
+  }
+
+  if (includeKEGG) {
+    keggmodule <- KEGGREST::keggLink(keggOrgCode, "module")
+    keggmodule <- gsub(paste0(keggOrgCode, ":"), "", keggmodule)
+    names(keggmodule) <- gsub("md:", "", names(keggmodule))
+    keggmodule <- split(keggmodule, names(keggmodule))
+
+    # keggmdnames <- KEGGREST::keggList("module", keggOrgCode) # 404 after September, 2019
+    keggmdnames <- KEGGREST::keggList("module")
+    keggmd2name <- data.table::as.data.table(keggmdnames, keep.rownames=T)
+    keggmd2name$rn <- gsub("md:", "", keggmd2name$rn)
+    data.table::setnames(keggmd2name, c("rn","keggmdnames"), c("PATHID","PATHNAME"))
+    keggmd2name$PATHID <- paste0(keggOrgCode, "_", keggmd2name$PATHID)
+
+    keggpathway <- KEGGREST::keggLink(keggOrgCode, "pathway")
+    keggpathway <- gsub(paste0(keggOrgCode, ":"), "", keggpathway)
+    names(keggpathway) <- gsub("path:", "", names(keggpathway))
+    keggpathway <- split(keggpathway, names(keggpathway))
+    keggpathway <- lapply(keggpathway, unname)
+    keggpathnames <- KEGGREST::keggList("pathway", keggOrgCode)
+
+    keggpath2name <- data.table::as.data.table(keggpathnames, keep.rownames=T)
+    keggpath2name$rn <- gsub("path:", "", keggpath2name$rn)
+    keggpath2name$keggpathnames <- gsub(" - [^-]*$", "", keggpath2name$keggpathnames)
+    data.table::setnames(keggpath2name, c("rn","keggpathnames"), c("PATHID","PATHNAME"))
+  } else {
+    keggmodule <- NULL
+    keggmdy2name <- data.table(PATHNAME=character(0), PATHID=character(0))
+    keggpathway <- NULL
+    keggpath2name <- data.table(PATHNAME=character(0), PATHID=character(0))
+  }
 
 
-
-  reactomepath <- na.omit(AnnotationDbi::select(reactome.db::reactome.db, universe, "PATHID", "ENTREZID"))
-  reactomepath <- split(reactomepath$ENTREZID, reactomepath$PATHID)
-
-  keggmodule <- KEGGREST::keggLink(keggOrgCode, "module")
-  keggmodule <- gsub(paste0(keggOrgCode, ":"), "", keggmodule)
-  names(keggmodule) <- gsub("md:", "", names(keggmodule))
-  keggmodule <- split(keggmodule, names(keggmodule))
-
-  # keggmdnames <- KEGGREST::keggList("module", keggOrgCode) # 404 after September, 2019
-  keggmdnames <- KEGGREST::keggList("module")
-  keggmd2name <- data.table::as.data.table(keggmdnames, keep.rownames=T)
-  keggmd2name$rn <- gsub("md:", "", keggmd2name$rn)
-  data.table::setnames(keggmd2name, c("rn","keggmdnames"), c("PATHID","PATHNAME"))
-  keggmd2name$PATHID <- paste0(keggOrgCode, "_", keggmd2name$PATHID)
-
-  keggpathway <- KEGGREST::keggLink(keggOrgCode, "pathway")
-  keggpathway <- gsub(paste0(keggOrgCode, ":"), "", keggpathway)
-  names(keggpathway) <- gsub("path:", "", names(keggpathway))
-  keggpathway <- split(keggpathway, names(keggpathway))
-  keggpathway <- lapply(keggpathway, unname)
-  keggpathnames <- KEGGREST::keggList("pathway", keggOrgCode)
-
-  keggpath2name <- data.table::as.data.table(keggpathnames, keep.rownames=T)
-  keggpath2name$rn <- gsub("path:", "", keggpath2name$rn)
-  keggpath2name$keggpathnames <- gsub(" - [^-]*$", "", keggpath2name$keggpathnames)
-  data.table::setnames(keggpath2name, c("rn","keggpathnames"), c("PATHID","PATHNAME"))
-
-  reactomepathway2name <- data.table::as.data.table(na.omit(
-    AnnotationDbi::select(reactome.db::reactome.db,
-                          names(reactomepath),
-                          c("PATHNAME"), 'PATHID')))
-  reactomepathway2name[, PATHNAME := sub("^[^:]*: ", "", PATHNAME)]
 
   pathways <- c(reactomepath, keggmodule, keggpathway)
   pathways <- lapply(pathways, intersect, y=universe)
