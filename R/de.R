@@ -28,11 +28,22 @@ prepareDEColumn <- function(gene.de, columnName, from) {
     } else {
         gene.de[, (columnName) := eval(from, envir = gene.de)]
     }
+
+    # :ToDo: add types in meta?
+    if (columnName == "ID") {
+        gene.de[, ID := as.character(ID)]
+    }
+
+    if (columnName %in% c("baseMean", "pval", "log2FC", "signalRank")) {
+        x <- gene.de[[columnName]]
+        gene.de[, (columnName) := as.numeric(x)]
+    }
+
     if (columnName == "pval") {
         if (any(gene.de$pval == 0, na.rm = T)) {
             mpval <- min(gene.de$pval[gene.de$pval != 0])
             gene.de[pval == 0, pval := mpval]
-            warning("Some of your p-values are equal to zero. Replaced it by the minimum p-value meaning.")
+            warning("Some of your p-values are equal to zero. Replaced it by the minimum non-zero p-value.")
         }
     }
 }
