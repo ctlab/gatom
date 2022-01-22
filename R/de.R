@@ -1,7 +1,32 @@
-convertPvalDT <- function(de.pvals, map, removeDuplicates=TRUE) {
+splitIds <- function(ids, split=" */// *") {
+    res <- strsplit(ids, split)
+    res[lengths(res) == 0] <- ids[lengths(res) == 0]
+    res
+}
+
+convertPvalDT <- function(de.pvals, map,
+                          idColumn=ifelse(haskey(de.pvals), key(de.pvals), "ID"),
+                          removeDuplicates=TRUE, removeGeneVersions=FALSE,
+                          split=" */// *") {
     from <- key(map)
     to <- setdiff(colnames(map), from)
-    res.pvals <- map[de.pvals, nomatch=0]
+
+    if (length(split) != 0) {
+        newIds <- splitIds(de.pvals[[idColumn]])
+
+        if (any(lengths(newIds) != 1)) {
+            de.pvals.new <- de.pvals[rep(seq_len(nrow(de.pvals)), lengths(newIds))]
+            de.pvals.new[, c(idColumn) := unlist(newIds)]
+            de.pvals <- de.pvals.new
+        }
+    }
+
+    if (removeGeneVersions) {
+        de.pvals <- copy(de.pvals)
+        de.pvals[, c(idColumn) := sub(pattern="\\.\\d*$", replacement="", x=de.pvals[[idColumn]]) ]
+    }
+
+    res.pvals <- merge.data.table(map, de.pvals, by.x=key(map), by.y=idColumn)
     # setnames(res.pvals, c("ID", to), c(from, "ID"))
     res.pvals <- res.pvals[order(pval)]
     if (removeDuplicates) {
@@ -32,6 +57,7 @@ prepareDEColumn <- function(gene.de, columnName, from) {
     # :ToDo: add types in meta?
     if (columnName == "ID") {
         gene.de[, ID := as.character(ID)]
+        setkey(gene.de, ID)
     }
 
     if (columnName %in% c("baseMean", "pval", "log2FC", "signalRank")) {
@@ -96,7 +122,8 @@ findColumn <- function(de, names) {
 findIdColumn <- function(de, idsList,
                          sample.size=1000,
                          match.threshold=0.6,
-                         remove.ensembl.revisions=TRUE) {
+                         remove.gene.versions=TRUE,
+                         split=" */// *") {
     # first looking for column with base IDs
     de.sample <- if (nrow(de) < sample.size) {
         copy(de)
@@ -105,11 +132,14 @@ findIdColumn <- function(de, idsList,
     }
     columnSamples <- lapply(de.sample, as.character)
 
+    if (length(split) != 0) {
+        columnSamples <- lapply(columnSamples, function(ids) unlist(splitIds(ids, split=split)))
+    }
 
-    if (remove.ensembl.revisions) {
+    if (remove.gene.versions) {
         columnSamples <- lapply(columnSamples, gsub,
-                                pattern="(ENS\\w*\\d*)\\.\\d*",
-                                replacement="\\1")
+                                pattern="\\.\\d*$",
+                                replacement="")
     }
 
     ss <- sapply(columnSamples,
@@ -222,7 +252,7 @@ getGeneDEMeta <- function(gene.de.raw,
 
     if (is.null(pvalColumn)) {
         pvalColumn <- findColumn(gene.de.raw,
-                                 c("pval", "p.value", "pvalue"))
+                                 c("pval", "p.value", "pvalue", "p-value"))
     }
 
     if (is.null(logPvalColumn)) {
@@ -310,7 +340,7 @@ getMetDEMeta <- function(met.de.raw, met.db,
 
     if (is.null(pvalColumn)) {
         pvalColumn <- findColumn(met.de.raw,
-                                 c("pval", "p.value", "pvalue"))
+                                 c("pval", "p.value", "pvalue", "p-value"))
     }
 
     if (is.null(logPvalColumn)) {
@@ -324,7 +354,7 @@ getMetDEMeta <- function(met.de.raw, met.db,
     if (is.null(log2FCColumn)) {
         log2FCColumn <- findColumn(met.de.raw,
                                    c("log2FC", "log2foldchange",
-                                     "logfc"))
+                                     "logfc", "log2(fc)", "log(fc)"))
     }
 
     if (is.null(baseMeanColumn)) {
@@ -334,7 +364,8 @@ getMetDEMeta <- function(met.de.raw, met.db,
 
     if (is.null(signalColumn)) {
         signalColumn <- findColumn(met.de.raw,
-                                  c("signal", "ion"))
+                                  c("signal", "ionIdx", "ion"))
+        # :TODO: add check for (pval, log2FC) uniqueness for found signal column
         if (is.na(signalColumn)) {
             signalColumn <- quote(paste0("ms", as.integer(as.factor(paste0(pval, "_", log2FC)))))
         }

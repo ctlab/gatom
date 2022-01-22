@@ -297,3 +297,20 @@ test_that("makeMetabolicGraph fails if topology is misspelled", {
                                          met.db=met.kegg.dbEx,
                                          met.de=met.de.rawEx))
 })
+
+test_that("makeMetabolicGraph handles 'name' column in met.de", {
+    met.de <- data.table(met.de.rawEx)
+    met.de[, name := "my_metabolite"]
+    g <- makeMetabolicGraph(network=networkEx,
+                            topology="atoms",
+                            org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                            gene.de=NULL,
+                            met.db=met.kegg.dbEx,
+                            met.de=met.de)
+
+    gs <- scoreGraph(g, k.gene=NULL, k.met=25, show.warnings = FALSE)
+
+    vhsolver <- mwcsr::rnc_solver()
+    m <- mwcsr::solve_mwcsp(vhsolver, gs)$graph
+
+})

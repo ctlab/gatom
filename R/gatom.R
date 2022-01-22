@@ -13,7 +13,8 @@
 
         if (gene.de.meta$idType != org.gatom.anno$baseId) {
             gene.pvals <- convertPvalDT(gene.pvals,
-                                        org.gatom.anno$mapFrom[[gene.de.meta$idType]])
+                                        org.gatom.anno$mapFrom[[gene.de.meta$idType]],
+                                        removeGeneVersions = TRUE)
         } else {
             setnames(gene.pvals, "ID", "gene")
         }
@@ -26,6 +27,7 @@
 
     if (keepReactionsWithoutEnzymes) {
         enzyme.pvals <- rbind(enzyme.pvals, list(enzyme="-", symbol="-", gene="-"), fill=TRUE)
+        setkeyv(enzyme.pvals, "enzyme")
     }
 
     reaction.pvals <- convertPvalDT(enzyme.pvals,
@@ -71,6 +73,7 @@
 .makeVertexTable <- function(network, atoms, met.db, met.de, met.de.meta) {
     if (is.null(met.de)) {
         metabolite.pvals <- data.table(metabolite=character(0), pval=numeric(0), origin=integer(0))
+        setkeyv(metabolite.pvals, "metabolite")
     } else {
         metabolite.pvals <- met.de[, list(ID=ID, pval=pval, origin=seq_len(nrow(met.de)))]
         if (met.de.meta$idType != met.db$baseId) {
@@ -80,6 +83,7 @@
             setnames(metabolite.pvals, "ID", "metabolite")
         }
     }
+
 
 
     # Extending p-values to anomers
@@ -191,6 +195,10 @@ makeMetabolicGraph <- function(network,
         # we will still need the column called "metabolite" for further functions
         vertex.table[, 1] <- vertex.table$metabolite
         vertex.table <- vertex.table[!duplicated(vertex.table), ]
+    }
+
+    if ("name" %in% colnames(vertex.table)) {
+        setnames(vertex.table, "name", "name.orig")
     }
 
     g <- graph.data.frame(edge.table, directed=FALSE, vertices = vertex.table)

@@ -43,7 +43,7 @@ test_that("prepareDE works", {
 
     de <- prepareDE(de.raw, de.meta)
 
-    expect_equal(de$logPval, log(de.raw$pval))
+    expect_equal(sort(de$logPval), sort(log(de.raw$pval)))
 })
 
 
@@ -92,4 +92,67 @@ test_that("findIdColumns have order of preferences", {
     de4 <- de3; de4$v1 <- NULL
     # last call: whatever matches
     expect_equal(findIdColumn(de4, idsList)$column, "bla")
+})
+
+test_that("converPvalDT handles different ID positions", {
+    de.raw <- data.table(rev(gene.de.rawEx))
+    de.meta <- getGeneDEMeta(de.raw, org.gatom.anno = org.Mm.eg.gatom.annoEx)
+    expect_equal(de.meta$idType, "RefSeq")
+
+    de.conv <- convertPvalDT(prepareDE(de.raw, de.meta),
+                  map = org.Mm.eg.gatom.annoEx$mapFrom$RefSeq)
+    expect_true("gene" %in% colnames(de.conv))
+
+})
+
+test_that("gene versions handled correctly", {
+    de.raw <- data.table(gene.de.rawEx)
+    de.raw[, ID := paste0(ID, ".1")]
+
+    de.meta <- getGeneDEMeta(de.raw, org.gatom.anno = org.Mm.eg.gatom.annoEx)
+    expect_equal(de.meta$idType, "RefSeq")
+
+
+    de.pvals <- prepareDE(de.raw, de.meta)
+
+    convertPvalDT(prepareDE(de.raw, de.meta),
+                  map = org.Mm.eg.gatom.annoEx$mapFrom$RefSeq,
+                  removeGeneVersions = TRUE)
+
+    g <- makeMetabolicGraph(network=networkEx,
+                            topology="atoms",
+                            org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                            gene.de=de.raw,
+                            met.db=met.kegg.dbEx,
+                            met.de=NULL)
+
+})
+
+test_that("multiannotations are split", {
+    map <- data.table("gene"=c("1", "2", "4"),
+                      "ens"=c("ENS123", "ENS124", "ENS456"))
+    setkey(map, ens)
+    de <- data.table(ID=c("ENS123 /// ENS124", "ENS456", ""), pval=c(1, 1, 1))
+
+    de.conv <- convertPvalDT(de=de, map = map)
+    expect_true("2" %in% de.conv$gene)
+
+    gene.de.raw <- data.table(gene.de.rawEx)
+    gene.de.raw[, ID := paste0(ID, " /// NM_123")]
+
+    de.meta <- getGeneDEMeta(gene.de.raw, org.gatom.anno = org.Mm.eg.gatom.annoEx)
+    expect_equal(de.meta$idType, "RefSeq")
+
+
+    met.de.raw <- data.table(met.de.rawEx)
+    met.de.raw[, ID := paste0(ID, " /// HMDB123")]
+
+    g <- makeMetabolicGraph(network=networkEx,
+                            topology="atoms",
+                            org.gatom.anno=org.Mm.eg.gatom.annoEx,
+                            gene.de=gene.de.raw,
+                            met.db=met.kegg.dbEx,
+                            met.de=met.de.raw)
+    expect_is(g, "igraph")
+    expect_true("Idh1" %in% E(g)$label)
 })
