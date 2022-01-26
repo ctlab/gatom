@@ -42,6 +42,7 @@ makeOrgGatomAnnotation <- function(org.db,
     org.gatom.anno$genes[, symbol := AnnotationDbi::mapIds(org.db, keys=gene,
                                             keytype = baseColumn,
                                             column = nameColumn)]
+    org.gatom.anno$genes[is.na(symbol), symbol := gene]
     org.gatom.anno$baseId <- names(baseColumn)
     org.gatom.anno$gene2enzyme <- data.table(
         AnnotationDbi::select(org.db,
