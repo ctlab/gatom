@@ -184,6 +184,10 @@ makeMetabolicGraph <- function(network,
         edge.table <- edge.table[!duplicated(edge.table[, list(metabolite.x, metabolite.y)]), ]
     }
 
+    if (nrow(edge.table) == 0) {
+        stop("No edges in the graph!")
+    }
+
     vertex.table <- .makeVertexTable(network=network,
                                      atoms=all.atoms,
                                      met.db=met.db,
