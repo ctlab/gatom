@@ -312,5 +312,5 @@ test_that("makeMetabolicGraph handles 'name' column in met.de", {
 
     vhsolver <- mwcsr::rnc_solver()
     m <- mwcsr::solve_mwcsp(vhsolver, gs)$graph
-
+    expect_true(!is.null(m))
 })
