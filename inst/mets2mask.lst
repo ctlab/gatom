@@ -35,7 +35,6 @@ C00201	Nucleoside triphosphate; NTP
 C00206	dADP; 2'-Deoxyadenosine 5'-diphosphate
 C00239	dCMP; Deoxycytidylic acid; Deoxycytidine monophosphate; Deoxycytidylate; 2'-Deoxycytidine 5'-monophosphate
 C00286	dGTP; 2'-Deoxyguanosine 5'-triphosphate; Deoxyguanosine 5'-triphosphate; Deoxyguanosine triphosphate
-C00288	HCO3-; Hydrogencarbonate; Bicarbonate; Hydrogen carbonate; Acid carbonate
 C00360	dAMP; 2'-Deoxyadenosine 5'-phosphate; 2'-Deoxyadenosine 5'-monophosphate; Deoxyadenylic acid; Deoxyadenosine monophosphate
 C00361	dGDP; 2'-Deoxyguanosine 5'-diphosphate
 C00362	dGMP; 2'-Deoxyguanosine 5'-monophosphate; 2'-Deoxyguanosine 5'-phosphate; Deoxyguanylic acid; Deoxyguanosine monophosphate
@@ -80,3 +79,147 @@ C00161	2-Oxo acid; 2-Oxocarboxylate
 C00151	L-Amino acid; L-2-Amino acid
 C00405	D-Amino acid
 C05167	alpha-Amino acid
+CHEBI:15377	H2O; Water
+CHEBI:15422	ATP; Adenosine 5'-triphosphate
+CHEBI:15846	NAD+; NAD; Nicotinamide adenine dinucleotide; DPN; Diphosphopyridine nucleotide; Nadide
+CHEBI:16908	NADH; DPNH; Reduced nicotinamide adenine dinucleotide
+CHEBI:16474	NADPH; TPNH; Reduced nicotinamide adenine dinucleotide phosphate
+CHEBI:18009	NADP+; NADP; Nicotinamide adenine dinucleotide phosphate; beta-Nicotinamide adenine dinucleotide phosphate; TPN; Triphosphopyridine nucleotide
+CHEBI:15379	Oxygen; O2
+CHEBI:25805	Oxygen; O2
+CHEBI:16761	ADP; Adenosine 5'-diphosphate
+CHEBI:18367	Orthophosphate; Phosphate; Phosphoric acid; Orthophosphoric acid
+CHEBI:26078	Orthophosphate; Phosphate; Phosphoric acid; Orthophosphoric acid
+CHEBI:15346	CoA; Coenzyme A; CoA-SH
+CHEBI:16526	CO2; Carbon dioxide
+CHEBI:18361	Diphosphate; Diphosphoric acid; Pyrophosphate; Pyrophosphoric acid; PPi
+CHEBI:29888	Diphosphate; Diphosphoric acid; Pyrophosphate; Pyrophosphoric acid; PPi
+CHEBI:16134	Ammonia; NH3
+CHEBI:17659	UDP; Uridine 5'-diphosphate
+CHEBI:16027	AMP; Adenosine 5'-monophosphate; Adenylic acid; Adenylate; 5'-AMP; 5'-Adenylic acid; 5'-Adenosine monophosphate; Adenosine 5'-phosphate
+CHEBI:16240	Hydrogen peroxide; H2O2; Oxydol
+CHEBI:15339	Acceptor; Hydrogen-acceptor; A; Oxidized donor
+CHEBI:17499	Reduced acceptor; AH2; Hydrogen-donor; Donor
+CHEBI:17552	GDP; Guanosine 5'-diphosphate; Guanosine diphosphate
+CHEBI:15996	GTP; Guanosine 5'-triphosphate
+CHEBI:17361	CMP; Cytidine-5'-monophosphate; Cytidylic acid
+CHEBI:17677	CTP; Cytidine 5'-triphosphate; Cytidine triphosphate
+CHEBI:16842	Formaldehyde; Methanal; Oxomethane; Oxomethylene; Methylene oxide; Formalin
+CHEBI:15713	UTP; Uridine 5'-triphosphate; Uridine triphosphate
+CHEBI:15378	H+; Hydron
+CHEBI:24636	H+; Hydron
+CHEBI:16039	ITP; Inosine 5'-triphosphate; Inosine triphosphate; Inosine tripolyphosphate
+CHEBI:17808	IDP; Inosine 5'-diphosphate; Inosine diphosphate
+CHEBI:16695	UMP; Uridylic acid; Uridine monophosphate; Uridine 5'-monophosphate; 5'Uridylic acid
+CHEBI:17239	CDP; Cytidine 5'-diphosphate; Cytidine diphosphate
+CHEBI:17202	IMP; Inosinic acid; Inosine monophosphate; Inosine 5'-monophosphate; Inosine 5'-phosphate; 5'-Inosinate; 5'-Inosinic acid; 5'-Inosine monophosphate; 5'-IMP
+CHEBI:16284	dATP; 2'-Deoxyadenosine 5'-triphosphate; Deoxyadenosine 5'-triphosphate; Deoxyadenosine triphosphate
+CHEBI:165823	GMP; Guanosine 5'-phosphate; Guanosine monophosphate; Guanosine 5'-monophosphate; Guanylic acid
+CHEBI:17345	GMP; Guanosine 5'-phosphate; Guanosine monophosphate; Guanosine 5'-monophosphate; Guanylic acid
+CHEBI:17326	Nucleoside triphosphate; NTP
+CHEBI:16174	dADP; 2'-Deoxyadenosine 5'-diphosphate
+CHEBI:15918	dCMP; Deoxycytidylic acid; Deoxycytidine monophosphate; Deoxycytidylate; 2'-Deoxycytidine 5'-monophosphate
+CHEBI:16497	dGTP; 2'-Deoxyguanosine 5'-triphosphate; Deoxyguanosine 5'-triphosphate; Deoxyguanosine triphosphate
+CHEBI:17713	dAMP; 2'-Deoxyadenosine 5'-phosphate; 2'-Deoxyadenosine 5'-monophosphate; Deoxyadenylic acid; Deoxyadenosine monophosphate
+CHEBI:28862	dGDP; 2'-Deoxyguanosine 5'-diphosphate
+CHEBI:16192	dGMP; 2'-Deoxyguanosine 5'-monophosphate; 2'-Deoxyguanosine 5'-phosphate; Deoxyguanylic acid; Deoxyguanosine monophosphate
+CHEBI:18075	dTDP; Deoxythymidine 5'-diphosphate
+CHEBI:17013	dTMP; Thymidine 5'-phosphate; Deoxythymidine 5'-phosphate; Thymidylic acid; 5'-Thymidylic acid; Thymidine monophosphate; Deoxythymidylic acid; Thymidylate
+CHEBI:17622	dUMP; Deoxyuridylic acid; Deoxyuridine monophosphate; Deoxyuridine 5'-phosphate; 2'-Deoxyuridine 5'-phosphate
+CHEBI:16862	NDP; Nucleoside diphosphate
+CHEBI:16311	dCTP; Deoxycytidine 5'-triphosphate; Deoxycytidine triphosphate; 2'-Deoxycytidine 5'-triphosphate
+CHEBI:18077	dTTP; Deoxythymidine triphosphate; Deoxythymidine 5'-triphosphate; TTP
+CHEBI:17625	dUTP; 2'-Deoxyuridine 5'-triphosphate
+CHEBI:16300	alpha-D-Ribose 1-phosphate; Ribose 1-phosphate; D-Ribose 1-phosphate
+CHEBI:15652	Xanthosine 5'-phosphate; Xanthylic acid; XMP; (9-D-Ribosylxanthine)-5'-phosphate
+CHEBI:11563	2-Deoxy-D-ribose 1-phosphate; 2-Deoxy-alpha-D-ribose 1-phosphate
+CHEBI:28542	2-Deoxy-D-ribose 1-phosphate; 2-Deoxy-alpha-D-ribose 1-phosphate
+CHEBI:10049	XTP; Xanthosine 5'-triphosphate
+CHEBI:28846	dCDP; 2'-Deoxycytidine diphosphate; 2'-Deoxycytidine 5'-diphosphate
+CHEBI:9533	Thiamin monophosphate; Thiamine monophosphate; Thiamin phosphate; Thiamine phosphate; TMP
+CHEBI:17188	Nucleoside phosphate; Nucleoside monophosphate; NMP
+CHEBI:25608	Nucleoside phosphate; Nucleoside monophosphate; NMP
+CHEBI:28823	dIDP; 2'-Deoxyinosine-5'-diphosphate; 2'-Deoxyinosine 5'-diphosphate
+CHEBI:28807	dITP; 2'-Deoxyinosine-5'-triphosphate; 2'-Deoxyinosine 5'-triphosphate
+CHEBI:28850	dUDP; 2'-Deoxyuridine 5'-diphosphate
+CHEBI:10534	dXDP
+CHEBI:10535	dXTP
+CHEBI:16238	FAD; Flavin adenine dinucleotide
+CHEBI:17877	FADH2
+CHEBI:28806	2'-Deoxyinosine 5'-phosphate; dIMP
+CHEBI:4302	DTP; (2,4-Dichlorophenyl)(5-hydroxy-1,3-dimethyl-1H-pyrazol-4-yl)methanone; 4-(2,4-Dichlorobenzoyl)-1,3-dimethyl-5-hydroxypyrazole
+CHEBI:79974	ROOH; Hydroperoxide
+CHEBI:30879	Alcohol
+CHEBI:35757	Carboxylate; R-COOH; Monocarboxylate; Carboxylic acid
+CHEBI:16480	Nitric oxide; NO; Nitrogen monoxide
+CHEBI:35910	2-Oxo acid; 2-Oxocarboxylate
+CHEBI:15705	L-Amino acid; L-2-Amino acid
+CHEBI:16733	D-Amino acid
+CHEBI:33704	alpha-Amino acid
+CHEBI:17891	Donor
+CHEBI:35425	D-Ribose 1-phosphate
+CHEBI:17654	Oxidized donor
+CHEBI:13193	A
+CHEBI:16977	A
+CHEBI:16708	A
+CHEBI:46217	A
+CHEBI:18284	TTP
+CHEBI:7307	NMP
+CHEBI:44409	TPN
+CHEBI:44215	DPN
+CHEBI:35782	PPi
+CHEBI:3611	CDP
+CHEBI:46324	TMP
+CHEBI:28971	AMP
+CHEBI:57945	NADH
+CHEBI:57667	dADP
+CHEBI:57287	CoA
+CHEBI:58069	CDP
+CHEBI:58115	GMP
+CHEBI:60377	CMP
+CHEBI:57566	dCMP
+CHEBI:58189	GDP
+CHEBI:58053	IMP
+CHEBI:58223	UDP
+CHEBI:58245	dAMP
+CHEBI:58280	IDP
+CHEBI:58307	FADH2
+CHEBI:57464	XMP
+CHEBI:58349	NADP(+)
+CHEBI:58369	dTDP
+CHEBI:57540	NAD(+)
+CHEBI:57673	dGMP
+CHEBI:57692	FAD
+CHEBI:58593	dCDP
+CHEBI:57783	NADPH
+CHEBI:58595	dGDP
+CHEBI:57865	UMP
+CHEBI:63528	dTMP
+CHEBI:456215	AMP
+CHEBI:30616	ATP
+CHEBI:37565	GTP
+CHEBI:37568	dTTP
+CHEBI:46398	UTP
+CHEBI:61404	dATP
+CHEBI:61194	dIMP
+CHEBI:61429	dGTP
+CHEBI:61481	dCTP
+CHEBI:62286	dIDP
+CHEBI:456216	ADP
+CHEBI:61314	XTP
+CHEBI:61402	ITP
+CHEBI:61382	dITP
+CHEBI:61555	dUTP
+CHEBI:37563	CTP
+CHEBI:246422	dUMP
+CHEBI:59884	XDP
+CHEBI:60471	dUDP
+CHEBI:62885	A
+CHEBI:63527	TTP
+CHEBI:16449	A
+CHEBI:73342	ADP
+CHEBI:73627	FAD
+CHEBI:3639	TPN
+CHEBI:16998	DPN
+CHEBI:133246	TMP
+CHEBI:9534	TTP
