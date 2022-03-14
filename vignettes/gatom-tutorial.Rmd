@@ -268,7 +268,7 @@ gm <- makeMetabolicGraph(network=network,
                         topology="metabolite",
                         org.gatom.anno=org.Mm.eg.gatom.anno, 
                         gene.de=gene.de.raw,
-                        met.db=met.kegg.db, 
+                        met.db=met.db, 
                         met.de=met.de.raw)
 
 gms <- scoreGraph(gm, k.gene = 50, k.met = 50)
