@@ -316,7 +316,6 @@ getMetDEMeta <- function(met.de.raw, met.db,
                          pvalColumn=NULL,
                          logPvalColumn=NULL,
                          log2FCColumn=NULL,
-                         baseMeanColumn=NULL,
                          signalColumn=NULL
 ) {
     if (is.null(met.de.raw)) {
@@ -357,11 +356,6 @@ getMetDEMeta <- function(met.de.raw, met.db,
                                      "logfc", "log2(fc)", "log(fc)"))
     }
 
-    if (is.null(baseMeanColumn)) {
-        baseMeanColumn <- findColumn(met.de.raw,
-                                     c("baseMean", "aveexpr"))
-    }
-
     if (is.null(signalColumn)) {
         signalColumn <- findColumn(met.de.raw,
                                   c("signal", "ionIdx", "ion"))
@@ -377,6 +371,5 @@ getMetDEMeta <- function(met.de.raw, met.db,
              pval=pvalColumn,
              logPval=logPvalColumn,
              log2FC=log2FCColumn,
-             baseMean=baseMeanColumn,
              signal=signalColumn))
 }
