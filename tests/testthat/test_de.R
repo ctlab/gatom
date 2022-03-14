@@ -156,3 +156,10 @@ test_that("multiannotations are split", {
     expect_is(g, "igraph")
     expect_true("Idh1" %in% E(g)$label)
 })
+
+test_that("convertPvalDT works with empty table", {
+    de.empty <- data.table(ID=character(0), pval=numeric(0))
+    setkey(de.empty, ID)
+    res <- convertPvalDT(de.empty, org.Mm.eg.gatom.annoEx$mapFrom$Symbol)
+    expect_true(!is.null(res))
+})
