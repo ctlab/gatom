@@ -24,6 +24,19 @@ test_that("findIdColumn works with sampling", {
     expect_true(idColumn$type == "RefSeq")
 })
 
+test_that("findIdColumn removeVersion ignores numbers", {
+    de <- gene.de.rawEx
+    de <- head(de, nrow(org.Mm.eg.gatom.annoEx$gene2enzyme))
+
+    de$baseMean <- as.numeric(head(org.Mm.eg.gatom.annoEx$gene2enzyme$gene,
+                                   nrow(de)))+0.12
+    idsList <- idsListFromAnnotation(org.gatom.anno = org.Mm.eg.gatom.annoEx)
+
+    idColumn <- findIdColumn(de, idsList, sample.size=100)
+    expect_true(idColumn$column == "ID")
+    expect_true(idColumn$type == "RefSeq")
+})
+
 
 test_that("getGeneDeMeta works", {
     de <- gene.de.rawEx

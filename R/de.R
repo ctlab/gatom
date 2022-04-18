@@ -138,8 +138,8 @@ findIdColumn <- function(de, idsList,
 
     if (remove.gene.versions) {
         columnSamples <- lapply(columnSamples, gsub,
-                                pattern="\\.\\d*$",
-                                replacement="")
+                                pattern="^(.*[a-zA-Z].*)\\.\\d+$", # numerics like 123.45 should be ignored
+                                replacement="\\1")
     }
 
     ss <- sapply(columnSamples,
