@@ -35,6 +35,7 @@ C00201	Nucleoside triphosphate; NTP
 C00206	dADP; 2'-Deoxyadenosine 5'-diphosphate
 C00239	dCMP; Deoxycytidylic acid; Deoxycytidine monophosphate; Deoxycytidylate; 2'-Deoxycytidine 5'-monophosphate
 C00286	dGTP; 2'-Deoxyguanosine 5'-triphosphate; Deoxyguanosine 5'-triphosphate; Deoxyguanosine triphosphate
+C00288	HCO3-; Hydrogencarbonate; Bicarbonate; Hydrogen carbonate; Acid carbonate
 C00360	dAMP; 2'-Deoxyadenosine 5'-phosphate; 2'-Deoxyadenosine 5'-monophosphate; Deoxyadenylic acid; Deoxyadenosine monophosphate
 C00361	dGDP; 2'-Deoxyguanosine 5'-diphosphate
 C00362	dGMP; 2'-Deoxyguanosine 5'-monophosphate; 2'-Deoxyguanosine 5'-phosphate; Deoxyguanylic acid; Deoxyguanosine monophosphate
@@ -223,3 +224,4 @@ CHEBI:3639	TPN
 CHEBI:16998	DPN
 CHEBI:133246	TMP
 CHEBI:9534	TTP
+CHEBI:17544	HCO3-; Hydrogencarbonate; Bicarbonate; Hydrogen carbonate; Acid carbonate
