@@ -60,7 +60,7 @@ prepareDEColumn <- function(gene.de, columnName, from) {
         setkey(gene.de, ID)
     }
 
-    if (columnName %in% c("baseMean", "pval", "log2FC", "signalRank")) {
+    if (columnName %in% c("baseMean", "pval", "log2FC", "signalRank", "logPval")) {
         x <- gene.de[[columnName]]
         gene.de[, (columnName) := as.numeric(x)]
     }
