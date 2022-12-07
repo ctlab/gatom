@@ -13,9 +13,7 @@ getMetDEMeta(
   pvalColumn = NULL,
   logPvalColumn = NULL,
   log2FCColumn = NULL,
-  baseMeanColumn = NULL,
-  signalColumn = NULL,
-  signalRankColumn = NULL
+  signalColumn = NULL
 )
 }
 \description{

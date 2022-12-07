@@ -8,6 +8,7 @@
 #' @param enzymeColumn column with an Enzyme Commission ID. Defatult to "ENZYME".
 #' @param appendEnzymesFromKegg if TRUE, KEGG databases will be sued to extend gene to
 #'     enzyme mappings obtained from org.db package.
+#' @param threshold threshold for Fisher test to filter out non-metabolic pathways
 #' @param keggOrgCode KEGG organizm code, e.g. "mmu". If set to NULL, the code is determined
 #'     automatically.
 #'
@@ -21,6 +22,7 @@ makeOrgGatomAnnotation <- function(org.db,
                                    nameColumn="SYMBOL",
                                    enzymeColumn="ENZYME",
                                    appendEnzymesFromKegg=TRUE,
+                                   threshold=0.01,
                                    keggOrgCode=NULL) {
 
     stopifnot(requireNamespace("AnnotationDbi"))
@@ -90,11 +92,26 @@ makeOrgGatomAnnotation <- function(org.db,
     pathways <- getMetabolicPathways(org.gatom.anno$genes$gene, keggOrgCode,
                                      includeReactome=(org.gatom.anno$baseId == "ENTREZID"))
 
-    # keeping only pathways with at least half of enzymatic genes
-    pathwaysEnzymeRatio <-
-      lengths(lapply(pathways, intersect, y=unique(org.gatom.anno$gene2enzyme$gene)))/
-      lengths(pathways)
-    pathways <- pathways[pathwaysEnzymeRatio >= 0.5]
+    # keeping only pathways with enough metabolic genes enrichment:
+    doFisher <- function(universe, genes, pathway) {
+      genes <- intersect(genes, universe)
+      pathway <- intersect(pathway, universe)
+      
+      q <- length(intersect(pathway, genes))
+      m <- length(pathway)
+      n <- length(universe)-length(pathway)
+      k <- length(genes)
+      
+      phyper(q-1, m, n, k, lower.tail = FALSE)
+    }
+    
+    pathways_score_vector <- sapply(pathways, function(x)
+      doFisher(universe = org.gatom.anno$genes$gene,
+               pathway = unique(org.gatom.anno$gene2enzyme$gene),
+               genes = x))
+    
+    pathways <- pathways[which(pathways_score_vector < treshold)]
+    
 
     org.gatom.anno$pathways <- pathways
 
@@ -107,7 +124,7 @@ makeOrgGatomAnnotation <- function(org.db,
 #' @param universe list of gene
 #' @param keggOrgCode KEGG organism code, like mmu or hsa
 #' @param includeReactome whether to include Reactome pathways (only works for Entrez ID universe)
-#' @param includeKEGG wheter to include KEGG pahtways and modules
+#' @param includeKEGG whether to include KEGG pathways and modules
 getMetabolicPathways <- function(universe,
                                  keggOrgCode,
                                  includeReactome=TRUE, includeKEGG=TRUE){
