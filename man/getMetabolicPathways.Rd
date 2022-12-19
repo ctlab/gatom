@@ -18,7 +18,7 @@ getMetabolicPathways(
 
 \item{includeReactome}{whether to include Reactome pathways (only works for Entrez ID universe)}
 
-\item{includeKEGG}{wheter to include KEGG pahtways and modules}
+\item{includeKEGG}{whether to include KEGG pathways and modules}
 }
 \description{
 Generate list of metabolic pathways from Reactome and KEGG databases

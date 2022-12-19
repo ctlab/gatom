@@ -168,3 +168,17 @@ unit_vector <- function(c1, c2){
 }
 
 .intersectionSize <- function(...) { length(intersect(...))}
+
+dfs_traverse <- function(df, id) {
+    traversed <- c()
+    dfs_traverse_recursive <- function(id) {
+        children <- df[df$id == id, "child"]
+        traversed <<- c(traversed, children)
+        for (child in children) {
+            dfs_traverse_recursive(child)
+        }
+    }
+    dfs_traverse_recursive(id)
+    return(traversed)
+}
+
