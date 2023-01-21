@@ -6,15 +6,21 @@
 \usage{
 getMetabolicPathways(
   universe,
+  metGenes,
   keggOrgCode,
+  threshold = 0.01,
   includeReactome = TRUE,
   includeKEGG = TRUE
 )
 }
 \arguments{
-\item{universe}{list of gene}
+\item{universe}{list of genes}
+
+\item{metGenes}{list of metabolic genes}
 
 \item{keggOrgCode}{KEGG organism code, like mmu or hsa}
+
+\item{threshold}{threshold for Fisher test to filter out non-metabolic pathways}
 
 \item{includeReactome}{whether to include Reactome pathways (only works for Entrez ID universe)}
 

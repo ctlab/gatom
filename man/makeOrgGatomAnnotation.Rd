@@ -11,7 +11,6 @@ makeOrgGatomAnnotation(
   nameColumn = "SYMBOL",
   enzymeColumn = "ENZYME",
   appendEnzymesFromKegg = TRUE,
-  threshold = 0.01,
   keggOrgCode = NULL
 )
 }
@@ -28,8 +27,6 @@ with KEGG and Reactome databses.}
 
 \item{appendEnzymesFromKegg}{if TRUE, KEGG databases will be sued to extend gene to
 enzyme mappings obtained from org.db package.}
-
-\item{threshold}{threshold for Fisher test to filter out non-metabolic pathways}
 
 \item{keggOrgCode}{KEGG organizm code, e.g. "mmu". If set to NULL, the code is determined
 automatically.}

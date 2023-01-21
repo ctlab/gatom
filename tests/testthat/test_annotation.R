@@ -14,7 +14,10 @@ test_that("getMetabolicPathways works", {
     require("org.Mm.eg.db")
 
     universe <- keys(org.Mm.eg.db, "ENTREZID")
-    pathways <- getMetabolicPathways(universe, keggOrgCode="mmu")
+    metGenes <- mappedkeys(org.Mm.egENZYME)
+    pathways <- getMetabolicPathways(universe,
+                                     metGenes,
+                                     keggOrgCode="mmu")
 
     expect_true("mmu00010: Glycolysis / Gluconeogenesis" %in% names(pathways))
 })
