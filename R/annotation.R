@@ -40,8 +40,8 @@ makeOrgGatomAnnotation <- function(org.db,
     org.gatom.anno$genes <- data.table(gene=keys(org.db, keytype = baseColumn))
     setkey(org.gatom.anno$genes, gene)
     org.gatom.anno$genes[, symbol := AnnotationDbi::mapIds(org.db, keys=gene,
-                                            keytype = baseColumn,
-                                            column = nameColumn)]
+                                                           keytype = baseColumn,
+                                                           column = nameColumn)]
     org.gatom.anno$genes[is.na(symbol), symbol := gene]
     org.gatom.anno$baseId <- names(baseColumn)
     org.gatom.anno$gene2enzyme <- data.table(
@@ -87,30 +87,28 @@ makeOrgGatomAnnotation <- function(org.db,
     }
 
     # todo: support reactome pathways for non-entrez base IDs
-    pathways <- getMetabolicPathways(org.gatom.anno$genes$gene, keggOrgCode,
-                                     includeReactome=(org.gatom.anno$baseId == "ENTREZID"))
-
-    # keeping only pathways with at least half of enzymatic genes
-    pathwaysEnzymeRatio <-
-      lengths(lapply(pathways, intersect, y=unique(org.gatom.anno$gene2enzyme$gene)))/
-      lengths(pathways)
-    pathways <- pathways[pathwaysEnzymeRatio >= 0.5]
-
-    org.gatom.anno$pathways <- pathways
-
+    org.gatom.anno$pathways <- getMetabolicPathways(universe=org.gatom.anno$genes$gene,
+                                                    metGenes=unique(org.gatom.anno$gene2enzyme$gene),
+                                                    keggOrgCode=keggOrgCode,
+                                                    includeReactome=(org.gatom.anno$baseId == "Entrez"))
 
     org.gatom.anno
 }
 
 #' Generate list of metabolic pathways from Reactome and KEGG databases
 #'
-#' @param universe list of gene
+#' @param universe list of genes
+#' @param metGenes list of metabolic genes
 #' @param keggOrgCode KEGG organism code, like mmu or hsa
+#' @param threshold threshold for Fisher test to filter out non-metabolic pathways
 #' @param includeReactome whether to include Reactome pathways (only works for Entrez ID universe)
-#' @param includeKEGG wheter to include KEGG pahtways and modules
+#' @param includeKEGG whether to include KEGG pathways and modules
 getMetabolicPathways <- function(universe,
+                                 metGenes,
                                  keggOrgCode,
+                                 threshold=0.01,
                                  includeReactome=TRUE, includeKEGG=TRUE){
+
 
   if (includeReactome) {
     reactomepath <- na.omit(AnnotationDbi::select(reactome.db::reactome.db, universe, "PATHID", "ENTREZID"))
@@ -122,6 +120,18 @@ getMetabolicPathways <- function(universe,
                             c("PATHNAME"), 'PATHID')))
     reactomepathway2name[, PATHNAME := sub("^[^:]*: ", "", PATHNAME)]
 
+    # keeping only metabolic pathways (by Reactome tree and metabolic genes enrichment):
+    ids.reactome.relation <- read.table("https://reactome.org/download/current/ReactomePathwaysRelation.txt")
+    colnames(ids.reactome.relation) <- c("from", "to")
+
+    g <- igraph::graph_from_data_frame(ids.reactome.relation, directed=TRUE)
+    ids <- reactomepathway2name$PATHID[which(reactomepathway2name$PATHNAME %in% c(
+        "Metabolism"))]
+
+    res <- igraph::bfs(g, root=ids, mode="out", unreachable=FALSE, dist=TRUE)
+    ids.reactome.Metabolism <- names(which(res$dist > 0))
+
+    reactomepath <- reactomepath[ids.reactome.Metabolism]
   } else {
     reactomepath <- NULL
     reactomepathway2name <- data.table(PATHNAME=character(0), PATHID=character(0))
@@ -167,6 +177,8 @@ getMetabolicPathways <- function(universe,
   pathway2name <- do.call("rbind", list(reactomepathway2name,
                                         keggmd2name,
                                         keggpath2name))
+
+
   pthws2exclude <- c("Metabolism",
                      "Metabolic pathways",
                      "Carbon metabolism",
