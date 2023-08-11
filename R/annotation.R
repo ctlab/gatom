@@ -21,6 +21,8 @@ makeOrgGatomAnnotation <- function(org.db,
                                    nameColumn="SYMBOL",
                                    enzymeColumn="ENZYME",
                                    appendEnzymesFromKegg=TRUE,
+                                   appendOrthologiesFromKegg=TRUE,
+                                   filterNonSpecificEnzymes=TRUE,
                                    keggOrgCode=NULL) {
 
     stopifnot(requireNamespace("AnnotationDbi"))
@@ -69,7 +71,22 @@ makeOrgGatomAnnotation <- function(org.db,
         org.gatom.anno$gene2enzyme <- unique(org.gatom.anno$gene2enzyme)
         setkey(org.gatom.anno$gene2enzyme, gene)
     }
-
+    
+    if (appendOrthologiesFromKegg) {
+        kegg.gene2orthology <- KEGGREST::keggLink("orthology", keggOrgCode)
+        kegg.gene2orthology <- data.table(gene=gsub(paste0(keggOrgCode, ":"), "",
+                                                    names(kegg.gene2orthology)),
+                                          enzyme=gsub("ko:", "", kegg.gene2orthology))
+        
+        org.gatom.anno$gene2enzyme <- rbind(org.gatom.anno$gene2enzyme,
+                                            kegg.gene2orthology)
+        org.gatom.anno$gene2enzyme <- unique(org.gatom.anno$gene2enzyme)
+        setkey(org.gatom.anno$gene2enzyme, gene)
+    }
+    
+    if (filterNonSpecificEnzymes) {
+        org.gatom.anno$gene2enzyme <- org.gatom.anno$gene2enzyme[!(like(enzyme, "-"))]
+    }
 
     org.gatom.anno$mapFrom <- list()
     for (i in tail(seq_along(idColumns), -1)) {
