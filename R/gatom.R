@@ -26,7 +26,7 @@
                                   org.gatom.anno$gene2enzyme)
 
     if (keepReactionsWithoutEnzymes) {
-        enzyme.pvals <- rbind(enzyme.pvals, list(enzyme="-", symbol="-", gene="-"), fill=TRUE)
+        enzyme.pvals <- rbind(enzyme.pvals, list(enzyme="non-enzymatic", symbol="-", gene="-"), fill=TRUE)
         setkeyv(enzyme.pvals, "enzyme")
     }
 
@@ -41,10 +41,10 @@
         }
         reaction.pvals.extra <- convertPvalDT(gene.pvals,
                                               gene2reaction.extra)
-        reaction.pvals.extra[, enzyme := "-"]
+        reaction.pvals.extra[, enzyme := "-.-.-.-"]
 
         reaction.pvals <- rbind(reaction.pvals, reaction.pvals.extra)
-        reaction.pvals <- reaction.pvals[order(reaction, pval, gene == "-", enzyme == "-"), ]
+        reaction.pvals <- reaction.pvals[order(reaction, pval, gene == "-", enzyme == "-.-.-.-"), ]
         reaction.pvals <- reaction.pvals[!duplicated(reaction), ]
     }
 

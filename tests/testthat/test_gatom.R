@@ -171,7 +171,7 @@ test_that(".makeEdgeTable works with null DE", {
 test_that(".makeEdgeTable properly handles non-enzymatic reactions and extra mappings", {
     network <- networkEx
     network$enzyme2reaction <- copy(networkEx$enzyme2reaction)
-    network$enzyme2reaction[reaction %in% c("R01859", "R00742"), enzyme := "-"]
+    network$enzyme2reaction[reaction %in% c("R01859", "R00742"), enzyme := "non-enzymatic"]
     setkey(network$enzyme2reaction, "enzyme")
 
 
