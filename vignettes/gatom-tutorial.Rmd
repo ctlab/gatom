@@ -262,7 +262,6 @@ gs <- scoreGraph(g, k.gene = 50, k.met = NULL)
 
 Sometime it could make sense to work with metabolite-metabolite topology of the network, not atom-atom one. Such network is less structured, but contain more genes.
 
-
 ```{r}
 gm <- makeMetabolicGraph(network=network, 
                         topology="metabolite",
@@ -278,4 +277,43 @@ set.seed(42)
 sol <- solve_mwcsp(solver, gms) 
 mm <- sol$graph
 mm
+```
+
+## Supplementary gene files
+
+For combined and lipidomic networks we provide supplementary files with genes 
+that either come from proteome or are not linked to a specific enzyme. 
+These files are organism-specific and are also available at 
+http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/.
+
+```{r}
+network <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.combined.rds"))
+met.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.combined.db.rds"))
+gene2reaction.extra <- fread(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/gene2reaction.combined.mmu.eg.tsv"), colClasses="character")
+
+gg <- makeMetabolicGraph(network=network, 
+                         topology="atoms",
+                         org.gatom.anno=org.Mm.eg.gatom.anno, 
+                         gene.de=gene.de.raw,
+                         met.db=met.db, 
+                         met.de=met.de.raw, 
+                         gene2reaction.extra = gene2reaction.extra)
+gg
+```
+
+## Non-enzymatic reactions
+
+Optionally, we can also preserve non-enzymatic reactions that are found in the network. 
+This can be done by setting `keepReactionsWithoutEnzymes` to `TRUE`:
+
+```{r}
+ge <- makeMetabolicGraph(network=network, 
+                         topology="atoms",
+                         org.gatom.anno=org.Mm.eg.gatom.anno, 
+                         gene.de=gene.de.raw,
+                         met.db=met.db, 
+                         met.de=met.de.raw, 
+                         gene2reaction.extra = gene2reaction.extra, 
+                         keepReactionsWithoutEnzymes = TRUE)
+ge
 ```
