@@ -213,7 +213,7 @@ For proper analysis quality we recommend to use exact SGMWCS solver `virgo_solve
 you can then find a module as following:
 
 ```{r eval=FALSE}
-vsolver <- virgo_solver(cplex_dir=Sys.getenv("CPLEX_HOME"), threads=4, penalty=0.001)
+vsolver <- virgo_solver(cplex_dir=Sys.getenv("CPLEX_HOME"), threads=4, penalty=0.001, log=1)
 sol <- solve_mwcsp(vsolver, gs) 
 m <- sol$graph
 ```
@@ -289,7 +289,7 @@ http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/.
 ```{r}
 network <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.combined.rds"))
 met.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.combined.db.rds"))
-gene2reaction.extra <- fread(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/gene2reaction.combined.mmu.eg.tsv"), colClasses="character")
+gene2reaction.extra <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/gene2reaction.combined.mmu.eg.tsv", colClasses="character")
 
 gg <- makeMetabolicGraph(network=network, 
                          topology="atoms",
