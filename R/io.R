@@ -496,3 +496,136 @@ getEdgeDotStrings <- function(module, indent="", extra.attrs=NULL) {
                            edge.attrs)
     edgeStrings
 }
+
+#' Save module to a html widget
+#' @param module Module to save
+#' @param file File to save to
+#' @param name Name of the module
+#' @export
+#' @import htmlwidgets
+saveModuleToHtml <- function(module, file, name="",
+                             sizingPolicy = htmlwidgets::sizingPolicy(defaultWidth = "100%",
+                                                                      defaultHeight = "90vh",
+                                                                      padding = 10),
+                             ...) {
+    hw <- createShinyCyJSWidget(module,
+                                sizingPolicy = sizingPolicy,
+                                ...)
+    hw <- prependContent(hw, htmltools::tags$h2(name))
+    saveWidget(hw, file=file, title=name)
+}
+
+#' Creates shinyCyJS widget from module
+#' @export
+#' @import shinyCyJS
+createShinyCyJSWidget <- function(module,
+                                  layout = list(name="cose-bilkent",
+                                                animate=FALSE,
+                                                randomize=FALSE,
+                                                nodeDimensionsIncludeLabels=TRUE),
+                                  ...){
+    if (is.null(module)) {
+        return(NULL)
+    }
+
+    vertex.table <- as_data_frame(module, what="vertices")
+    edge.table <- as_data_frame(module, what="edges")
+
+    nodes <- getJsNodeStyleAttributes(vertex.table)
+
+    set.seed(42)
+    positions <- layout.graphopt(module)
+    nodes$position.x <- positions[, 1]
+    nodes$position.y <- positions[, 2]
+
+    nodes = buildElems(nodes, type = 'Node')
+
+    if (dim(edge.table)[1] != 0) {
+        edges <- getJsEdgeStyleAttributes(edge.table)
+        edges = buildElems(edges, type = 'Edge')
+        elements <- c(nodes, edges)
+    } else {
+        elements <- nodes
+    }
+
+    hw = shinyCyJS(elements, layout = layout, ...)
+    hw <- styleWidget(hw, "background-color: #eee;")
+    hw
+}
+
+getJsNodeStyleAttributes <- function(attrs) {
+    logPval <- if (!is.null(attrs$logPval)) attrs$logPval else 1
+    with(attrs, data.frame(
+        width=sapply(logPval, getDotSize) * 60,
+        height=sapply(logPval, getDotSize) * 60,
+        label=if (!is.null(attrs$label)) label else "",
+        id=attrs$name,
+        shape=if (!is.null(attrs$nodeType)) nodeShapeMap[nodeType] else "ellipse",
+        fontSize= getFontSizeJs(logPval),
+        bgColor=if (!is.null(attrs$log2FC)) sapply(log2FC, getDotColor) else "#7777ff",
+        borderWidth=4,
+        borderColor="#eee",
+        labelColor="black",
+        tooltip=getJsTooltip(attrs)
+    ))
+}
+
+getFontSizeJs <- function(val) {
+    if (!is.null(val)) {
+        val <- as.numeric(val)
+    }
+    val <- sapply(val, getDotSize) * 40
+    val <- replace(val, val < 15, 15)
+    val
+}
+
+getJsTooltip <- function(attr.values) {
+    attr.strings <- list()
+    attr.names <- names(attr.values)
+    for(i in seq_along(attr.values)) {
+        attr.strings[[i]] <- sprintf("<b>%s:</b> %s", attr.names[i], attr.values[[i]])
+    }
+    names(attr.strings) <- attr.names
+    apply(do.call("cbind", attr.strings), 1, paste0, collapse="<br>")
+}
+
+getJsEdgeStyleAttributes <- function(attrs) {
+    logPval <- if (!is.null(attrs$logPval)) attrs$logPval else 1
+    with(attrs, data.frame(
+        source=attrs$from,
+        target=attrs$to,
+        label=if (!is.null(attrs$label)) label else if (!is.null(attrs$gene)) gene else "",
+        lineStyle="solid",
+        fontSize= getFontSizeJs(logPval),
+        lineColor=if (!is.null(attrs$log2FC)) sapply(as.numeric(log2FC), getDotColor) else "grey",
+        tooltip=getJsTooltip(attrs)
+    ))
+}
+
+#' code adopted from https://github.com/ramnathv/htmlwidgets/issues/231
+#' @import htmlwidgets
+#' @import htmltools
+styleWidget <- function(hw, style="", addl_selector="", elementId=NULL) {
+    stopifnot(!is.null(hw), inherits(hw, "htmlwidget"))
+
+    elementId <- hw$elementId
+    if(is.null(elementId)) {
+        elementId <- sprintf(
+            'htmlwidget-%s',
+            htmlwidgets:::createWidgetId()
+        )
+        hw$elementId <- elementId
+    }
+
+    prependContent(
+        hw,
+        tags$style(
+            sprintf(
+                "#%s %s {%s}",
+                elementId,
+                addl_selector,
+                style
+            )
+        )
+    )
+}

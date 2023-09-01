@@ -20,7 +20,10 @@ Imports:
     grid,
     ggplot2,
     mwcsr,
-    pryr
+    pryr,
+    htmlwidgets,
+    htmltools,
+    shinyCyJS
 Suggests:
     testthat,
     knitr,
