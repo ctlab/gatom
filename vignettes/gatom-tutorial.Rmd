@@ -4,7 +4,8 @@ author: "Anstasiia Gainullina, Alexey Sergushichev, Mariia Emelianova"
 date: "August 2023"
 output:
   BiocStyle::html_document:
-    toc_float: yes
+    toc: true
+    toc_float: false
     self_contained: false
 vignette: >
   %\VignetteIndexEntry{Using gatom package}
@@ -99,7 +100,7 @@ head(V(m)$label)
 The module can be plotted in R Viewer with `createShinyCyJSWidget()`:
 
 ```{r}
-widgetframe::frameWidget(createShinyCyJSWidget(m))
+createShinyCyJSWidget(m)
 ```
 
 Next, reactions without highly changing genes but with high average 
@@ -107,7 +108,7 @@ expression can be added.
 
 ```{r message=FALSE, warning=FALSE}
 m.ext <- addHighlyExpressedEdges(m, gs)
-widgetframe::frameWidget(createShinyCyJSWidget(m.ext))
+createShinyCyJSWidget(m.ext)
 ```
 
 Sometimes, as in example above, the same metabolite can appear multiple 
@@ -117,14 +118,14 @@ with `connectAtomsInsideMetabolite` function.
 
 ```{r message=FALSE, warning=FALSE}
 m1 <- connectAtomsInsideMetabolite(m.ext)
-widgetframe::frameWidget(createShinyCyJSWidget(m1))
+createShinyCyJSWidget(m1)
 ```
 
 The other way is to collapse them into one vertex with `collapseAtomsIntoMetabolites`:
 
 ```{r message=FALSE, warning=FALSE}
 m2 <- collapseAtomsIntoMetabolites(m.ext)
-widgetframe::frameWidget(createShinyCyJSWidget(m2))
+createShinyCyJSWidget(m2)
 ```
 
 
@@ -213,7 +214,7 @@ cm
 ```
 
 ```{r message=FALSE, warning=FALSE}
-widgetframe::frameWidget(createShinyCyJSWidget(cm))
+createShinyCyJSWidget(cm)
 ```
 
 # Networks {#networks}
@@ -255,7 +256,7 @@ km
 ```
 
 ```{r message=FALSE, warning=FALSE}
-widgetframe::frameWidget(createShinyCyJSWidget(km))
+createShinyCyJSWidget(km)
 ```
 
 ## Rhea
@@ -290,7 +291,7 @@ rm
 ```
 
 ```{r message=FALSE, warning=FALSE}
-widgetframe::frameWidget(createShinyCyJSWidget(rm))
+createShinyCyJSWidget(rm)
 ```
 
 ## Combined network
@@ -304,7 +305,8 @@ This means that reactions in such network have either KEGG or Rhea or BIGG IDs, 
 Rhea lipid subnetwork is subset of Rhea reactions that involve lipids, and it consists of `network.rhea.lipids.rds` & `met.rhea.lipids.db.rds` files. 
 
 ```{r}
-network.lipids <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rhea.lipids.rds"))
+network.lipids <- readRDS("/home/masha/Research/RCode/data/network.rhea.lipids.rds")
+# network.lipids <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rhea.lipids.rds"))
 met.lipids.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.lipids.db.rds"))
 ```
 
@@ -341,7 +343,15 @@ lm
 ```
 
 ```{r message=FALSE, warning=FALSE}
-widgetframe::frameWidget(createShinyCyJSWidget(lm))
+createShinyCyJSWidget(lm)
+```
+
+If IDs for DE table for metabolites are of type `Species` we can process metabolite labels into more readable ones:
+
+```{r message=FALSE, warning=FALSE}
+lm1 <- abbreviateLabels(lm, orig.names = T, abbrev.names = T)
+
+createShinyCyJSWidget(lm1)
 ```
 
 
@@ -458,8 +468,8 @@ metabolic pathways, we can use hypergeometric test with `fora()` function from `
 
 ```{r}
 foraRes <- fgsea::fora(pathways=org.Mm.eg.gatom.anno$pathways,
-                       genes=E(m)$gene,
-                       universe=unique(E(g)$gene),
+                       genes=E(km)$gene,
+                       universe=unique(E(kg)$gene),
                        minSize=5)
 foraRes[padj < 0.05]
 ```
@@ -470,8 +480,8 @@ Optionally, redundancy in pathways can be decreased with `collapsePathwaysORA()`
 mainPathways <- fgsea::collapsePathwaysORA(
   foraRes[padj < 0.05],
   pathways=org.Mm.eg.gatom.anno$pathways,
-  genes=E(m)$gene,
-  universe=unique(E(g)$gene))
+  genes=E(km)$gene,
+  universe=unique(E(kg)$gene))
 foraRes[pathway %in% mainPathways$mainPathways]
 ```
 

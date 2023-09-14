@@ -11,6 +11,8 @@ makeOrgGatomAnnotation(
   nameColumn = "SYMBOL",
   enzymeColumn = "ENZYME",
   appendEnzymesFromKegg = TRUE,
+  appendOrthologiesFromKegg = TRUE,
+  filterNonSpecificEnzymes = TRUE,
   keggOrgCode = NULL
 )
 }

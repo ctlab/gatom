@@ -16,9 +16,9 @@ saveRDS(org.At.tair.gatom.anno, file="org.At.tair.gatom.anno.rds")
 
 library(org.Sc.sgd.db)
 org.Sc.sgd.gatom.anno <- makeOrgGatomAnnotation(org.Sc.sgd.db, idColumns = c("Orf"="ORF",
-                                                                               "Entrez"="ENTREZID",
-                                                                               "Symbol"="GENENAME",
-                                                                               "Ensembl"="ENSEMBL",
-                                                                               "Entrez"="ENTREZID"),
+                                                                             "Entrez"="ENTREZID",
+                                                                             "Symbol"="GENENAME",
+                                                                             "Ensembl"="ENSEMBL",
+                                                                             "Entrez"="ENTREZID"),
                                                 nameColumn="GENENAME")
 saveRDS(org.Sc.sgd.gatom.anno, file="org.Sc.sgd.gatom.anno.rds")

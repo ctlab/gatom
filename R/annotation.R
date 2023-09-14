@@ -71,19 +71,19 @@ makeOrgGatomAnnotation <- function(org.db,
         org.gatom.anno$gene2enzyme <- unique(org.gatom.anno$gene2enzyme)
         setkey(org.gatom.anno$gene2enzyme, gene)
     }
-    
+
     if (appendOrthologiesFromKegg) {
         kegg.gene2orthology <- KEGGREST::keggLink("orthology", keggOrgCode)
         kegg.gene2orthology <- data.table(gene=gsub(paste0(keggOrgCode, ":"), "",
                                                     names(kegg.gene2orthology)),
                                           enzyme=gsub("ko:", "", kegg.gene2orthology))
-        
+
         org.gatom.anno$gene2enzyme <- rbind(org.gatom.anno$gene2enzyme,
                                             kegg.gene2orthology)
         org.gatom.anno$gene2enzyme <- unique(org.gatom.anno$gene2enzyme)
         setkey(org.gatom.anno$gene2enzyme, gene)
     }
-    
+
     if (filterNonSpecificEnzymes) {
         org.gatom.anno$gene2enzyme <- org.gatom.anno$gene2enzyme[!(like(enzyme, "-"))]
     }
@@ -216,4 +216,50 @@ getMetabolicPathways <- function(universe,
                         pathway2name$PATHNAME[match(names(pathways)[[i]], pathway2name$PATHID)],
                         sep = ": "))
   pathways
+}
+
+#' Prepare lipid labels for lipid module
+#'
+#' @param module Module to prepare
+#' @param orig.names whether to use original names from the dataset
+#' @param abbrev.names whether to use abbreviated names for all lipids
+#'
+#' @export
+abbreviateLabels <- function(module,
+                             orig.names,
+                             abbrev.names){
+    if (is.null(module)) {
+        return(NULL)
+    }
+
+    if (abbrev.names) {
+        if (orig.names) {
+            V(module)$tmp <- V(module)$label
+            V(module)$SpecialSpeciesLabelColumn <- V(module)$Species
+            V(module)$label <- V(module)$SpecialSpeciesLabelColumn
+            V(module)$SpecialSpeciesLabelColumn <- V(module)$tmp
+            module <- delete_vertex_attr(module, "tmp")
+
+            V(module)$label[is.na(V(module)$label)] <- V(module)$Abbreviation_LipidMaps[is.na(V(module)$label)]
+        } else {
+            V(module)$SpecialSpeciesLabelColumn <- V(module)$label
+            V(module)$label <- V(module)$Abbreviation_LipidMaps
+        }
+        V(module)$label[is.na(V(module)$label)] <- V(module)$Abbreviation_SwissLipids[is.na(V(module)$label)]
+        V(module)$label[V(module)$label == "-"] <- V(module)$Abbreviation_SwissLipids[V(module)$label == "-"]
+        V(module)$label[is.na(V(module)$label)] <- V(module)$SpecialSpeciesLabelColumn[is.na(V(module)$label)]
+        V(module)$label[V(module)$label == "-"] <- V(module)$SpecialSpeciesLabelColumn[V(module)$label == "-"]
+        module <- delete_vertex_attr(module, "SpecialSpeciesLabelColumn")
+    } else if (orig.names) {
+        V(module)$tmp <- V(module)$label
+        V(module)$SpecialSpeciesLabelColumn <- V(module)$Species
+        V(module)$label <- V(module)$SpecialSpeciesLabelColumn
+        V(module)$SpecialSpeciesLabelColumn <- V(module)$tmp
+        module <- delete_vertex_attr(module, "tmp")
+        V(module)$label[is.na(V(module)$label)] <- V(module)$SpecialSpeciesLabelColumn[is.na(V(module)$label)]
+        V(module)$label[V(module)$label == "-"] <- V(module)$SpecialSpeciesLabelColumn[V(module)$label == "-"]
+        module <- delete_vertex_attr(module, "SpecialSpeciesLabelColumn")
+    }
+
+    module
 }
