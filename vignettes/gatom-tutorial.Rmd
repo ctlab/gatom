@@ -6,7 +6,7 @@ output:
   BiocStyle::html_document:
     toc: true
     toc_float: false
-    self_contained: false
+    self_contained: true
 vignette: >
   %\VignetteIndexEntry{Using gatom package}
   %\VignetteEngine{knitr::rmarkdown}
@@ -305,8 +305,7 @@ This means that reactions in such network have either KEGG or Rhea or BIGG IDs, 
 Rhea lipid subnetwork is subset of Rhea reactions that involve lipids, and it consists of `network.rhea.lipids.rds` & `met.rhea.lipids.db.rds` files. 
 
 ```{r}
-network.lipids <- readRDS("/home/masha/Research/RCode/data/network.rhea.lipids.rds")
-# network.lipids <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rhea.lipids.rds"))
+network.lipids <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rhea.lipids.rds"))
 met.lipids.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.lipids.db.rds"))
 ```
 
