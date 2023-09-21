@@ -1,11 +1,11 @@
 Package: gatom
 Title: Finding an Active Metabolic Module in Atom Transition Network
-Version: 0.0.0.9000
+Version: 0.99.0
 Authors@R: person("Alexey", "Sergushichev", email = "alsergbox@gmail.com", role = c("aut", "cre"))
 Description: An package for finding active metabolic modules in atom transition network.
 biocViews: GeneExpression, DifferentialExpression, Pathways
 Depends:
-    R (>= 3.5.0)
+    R (>= 4.3.0)
 Imports:
     data.table,
     igraph,

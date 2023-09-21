@@ -162,7 +162,7 @@ getMetabolicPathways <- function(universe,
 
     # keggmdnames <- KEGGREST::keggList("module", keggOrgCode) # 404 after September, 2019
     keggmdnames <- KEGGREST::keggList("module")
-    keggmd2name <- data.table::as.data.table(keggmdnames, keep.rownames=T)
+    keggmd2name <- data.table::as.data.table(keggmdnames, keep.rownames=TRUE)
     keggmd2name$rn <- gsub("md:", "", keggmd2name$rn)
     data.table::setnames(keggmd2name, c("rn","keggmdnames"), c("PATHID","PATHNAME"))
     keggmd2name$PATHID <- paste0(keggOrgCode, "_", keggmd2name$PATHID)
@@ -174,7 +174,7 @@ getMetabolicPathways <- function(universe,
     keggpathway <- lapply(keggpathway, unname)
     keggpathnames <- KEGGREST::keggList("pathway", keggOrgCode)
 
-    keggpath2name <- data.table::as.data.table(keggpathnames, keep.rownames=T)
+    keggpath2name <- data.table::as.data.table(keggpathnames, keep.rownames=TRUE)
     keggpath2name$rn <- gsub("path:", "", keggpath2name$rn)
     keggpath2name$keggpathnames <- gsub(" - [^-]*$", "", keggpath2name$keggpathnames)
     data.table::setnames(keggpath2name, c("rn","keggpathnames"), c("PATHID","PATHNAME"))

@@ -29,7 +29,7 @@ force_alg <- function(layout1,
         inter_matrix1 <- outer(seq_len(nrow(nlabel_boxes)), seq_len(nrow(nlabel_boxes)),
                                function(i,j) { intersect_box(nlabel_boxes[i,], nlabel_boxes[j,]) })
         diag(inter_matrix1) <- FALSE
-        inters <- which(inter_matrix1, arr.ind=T)
+        inters <- which(inter_matrix1, arr.ind=TRUE)
 
         if(length(inters)!=0){
             intersection <- TRUE
@@ -48,7 +48,7 @@ force_alg <- function(layout1,
         # ...and edges
         inter_matrix2 <- outer(seq_len(nrow(nlabel_boxes)), seq_len(nrow(elabel_boxes)),
                                function(i,j) { intersect_box(nlabel_boxes[i,], elabel_boxes[j,]) })
-        inters2 <- which(inter_matrix2, arr.ind=T)
+        inters2 <- which(inter_matrix2, arr.ind=TRUE)
 
         if(length(inters2)!=0){
             intersection <- TRUE
@@ -69,7 +69,7 @@ force_alg <- function(layout1,
         inter_matrix3 <- outer(seq_len(nrow(elabel_boxes)), seq_len(nrow(elabel_boxes)),
                                function(i,j) { intersect_box(elabel_boxes[i,], elabel_boxes[j,]) })
         diag(inter_matrix3) <- FALSE
-        inters3 <- which(inter_matrix3, arr.ind=T)
+        inters3 <- which(inter_matrix3, arr.ind=TRUE)
 
         if(length(inters3)!=0){
             intersection <- TRUE

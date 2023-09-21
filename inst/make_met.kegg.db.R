@@ -3,7 +3,7 @@ library(data.table)
 
 metabolites <- keggList("compound")
 metabolites <- data.table(
-        metabolite=gsub("cpd:", "", names(metabolites), fixed = T),
+        metabolite=gsub("cpd:", "", names(metabolites), fixed = TRUE),
         metabolite_name=gsub(";.*$", "", metabolites))
 metabolites[, metabolite_url := sprintf("http://www.kegg.jp/entry/%s", metabolite)]
 setkey(metabolites, metabolite)

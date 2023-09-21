@@ -4,12 +4,12 @@ library(data.table)
 
 reaction2enzyme <- keggLink("enzyme", "reaction")
 reaction2enzyme <- data.table(
-    reaction=gsub("rn:", "", names(reaction2enzyme), fixed = T),
-    enzyme=gsub("ec:", "", reaction2enzyme, fixed = T))
+    reaction=gsub("rn:", "", names(reaction2enzyme), fixed = TRUE),
+    enzyme=gsub("ec:", "", reaction2enzyme, fixed = TRUE))
 
 reactions <- keggList("reaction")
 reactions <- data.table(
-        reaction=gsub("rn:", "", names(reactions), fixed = T),
+        reaction=gsub("rn:", "", names(reactions), fixed = TRUE),
         reaction_name=gsub(";.*$", "", reactions),
         reaction_equation=gsub("^.*; ", "", reactions))
 

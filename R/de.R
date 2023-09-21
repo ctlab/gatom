@@ -30,7 +30,7 @@ convertPvalDT <- function(de.pvals, map,
     # setnames(res.pvals, c("ID", to), c(from, "ID"))
     res.pvals <- res.pvals[order(pval)]
     if (removeDuplicates) {
-        res.pvals <- res.pvals[!duplicated(res.pvals[, to, with=F])]
+        res.pvals <- res.pvals[!duplicated(res.pvals[, to, with=FALSE])]
     }
     setkeyv(res.pvals, to)
     setcolorder(res.pvals, c(to,
@@ -66,7 +66,7 @@ prepareDEColumn <- function(gene.de, columnName, from) {
     }
 
     if (columnName == "pval") {
-        if (any(gene.de$pval == 0, na.rm = T)) {
+        if (any(gene.de$pval == 0, na.rm = TRUE)) {
             mpval <- min(gene.de$pval[gene.de$pval != 0])
             gene.de[pval == 0, pval := mpval]
             warning("Some of your p-values are equal to zero. Replaced it by the minimum non-zero p-value.")

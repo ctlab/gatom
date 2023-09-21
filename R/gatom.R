@@ -103,7 +103,7 @@
                           met.db$metabolites,
                           by="metabolite",
                           all.x=TRUE)
-    vertex.table <- merge(vertex.table, metabolite.pvals, all.x=T)
+    vertex.table <- merge(vertex.table, metabolite.pvals, all.x=TRUE)
     if (!is.null(met.de)) {
         vertex.table[, colnames(met.de) := met.de[origin]]
         vertex.table[, ID := NULL]
@@ -256,7 +256,7 @@ scoreGraph <- function(g, k.gene, k.met,
     if (!is.null(k.met)) {
         pvalsToFit <- vertex.table[!is.na(pval)][!duplicated(signal), setNames(pval, signal)]
 
-        warnWrapper(vertex.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F))
+        warnWrapper(vertex.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = FALSE))
         if (vertex.bum$a > 0.5) {
             V(g)$score <- 0
             warning("Vertex scores have been assigned to 0 due to an inappropriate p-value distribution")
@@ -290,7 +290,7 @@ scoreGraph <- function(g, k.gene, k.met,
     if (!is.null(k.gene)) {
         pvalsToFit <- edge.table[!is.na(pval)][!duplicated(signal), setNames(pval, signal)]
 
-        warnWrapper(edge.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = F))
+        warnWrapper(edge.bum <- BioNet::fitBumModel(pvalsToFit[pvalsToFit > 0], plot = FALSE))
         if(edge.bum$a > 0.5) {
             E(g)$score <- 0
             warning("Edge scores have been assigned to 0 due to an inappropriate p-value distribution")
@@ -336,13 +336,13 @@ scoreGraph <- function(g, k.gene, k.met,
 #' @param m Metabolic module
 #' @export
 connectAtomsInsideMetabolite <- function(m) {
-    t <- data.frame(v=V(m)$name, met=V(m)$metabolite, stringsAsFactors=F)
+    t <- data.frame(v=V(m)$name, met=V(m)$metabolite, stringsAsFactors=FALSE)
     toCollapse <- merge(t, t, by="met")
     toCollapse <- toCollapse[(toCollapse$v.x < toCollapse$v.y), ]
 
     z <- matrix(c(toCollapse$v.x, toCollapse$v.y),
                 nrow=2,
-                byrow=T)
+                byrow=TRUE)
     res <- igraph::add.edges(m, t(as.matrix(toCollapse[, c("v.x", "v.y")])))
     res
 }

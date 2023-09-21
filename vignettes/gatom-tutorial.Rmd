@@ -6,7 +6,7 @@ output:
   BiocStyle::html_document:
     toc: true
     toc_float: false
-    self_contained: true
+    self_contained: false
 vignette: >
   %\VignetteIndexEntry{Using gatom package}
   %\VignetteEngine{knitr::rmarkdown}
@@ -100,6 +100,7 @@ head(V(m)$label)
 The module can be plotted in R Viewer with `createShinyCyJSWidget()`:
 
 ```{r}
+set.seed(42)
 createShinyCyJSWidget(m)
 ```
 
@@ -152,7 +153,7 @@ Alternatively, we can save the module to dot format to generate pdf or svg file 
 
 ```{r}
 saveModuleToDot(m, file="M0.vs.M1.dot", name="M0.vs.M1")
-system("neato -Tsvg M0.vs.M1.dot > M0.vs.M1.svg", ignore.stderr=T)
+system("neato -Tsvg M0.vs.M1.dot > M0.vs.M1.svg", ignore.stderr=TRUE)
 ```
 
 
@@ -305,7 +306,8 @@ This means that reactions in such network have either KEGG or Rhea or BIGG IDs, 
 Rhea lipid subnetwork is subset of Rhea reactions that involve lipids, and it consists of `network.rhea.lipids.rds` & `met.rhea.lipids.db.rds` files. 
 
 ```{r}
-network.lipids <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rhea.lipids.rds"))
+network.lipids <- readRDS("/home/masha/Research/RCode/data/network.rhea.lipids.rds")
+# network.lipids <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rhea.lipids.rds"))
 met.lipids.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.lipids.db.rds"))
 ```
 
@@ -348,7 +350,7 @@ createShinyCyJSWidget(lm)
 If IDs for DE table for metabolites are of type `Species` we can process metabolite labels into more readable ones:
 
 ```{r message=FALSE, warning=FALSE}
-lm1 <- abbreviateLabels(lm, orig.names = T, abbrev.names = T)
+lm1 <- abbreviateLabels(lm, orig.names = TRUE, abbrev.names = TRUE)
 
 createShinyCyJSWidget(lm1)
 ```
@@ -484,3 +486,7 @@ mainPathways <- fgsea::collapsePathwaysORA(
 foraRes[pathway %in% mainPathways$mainPathways]
 ```
 
+
+```{r}
+sessionInfo()
+```

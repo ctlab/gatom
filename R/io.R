@@ -4,13 +4,12 @@
 #' @param name Name of the module
 #' @param n_iter Number of repel algorithm iterations
 #' @param force Value of repel force
-#' @param seed Seed determining edge layout
 #' @export
 #' @import GGally
 #' @import igraph
-saveModuleToPdf <- function(module, file, name=NULL, n_iter=100, force=1e-5, seed=1) {
+saveModuleToPdf <- function(module, file, name=NULL, n_iter=100, force=1e-5) {
 
-    pdflayout <- getModulePdfLayout(module, n_iter, force, seed)
+    pdflayout <- getModulePdfLayout(module, n_iter, force)
     layout2 <- pdflayout$layout2
     node_attrs <- getPdfModuleAttrs(module)$produce_node_attrs
     edge_attrs <- getPdfModuleAttrs(module)$produce_edge_attrs
@@ -51,9 +50,9 @@ getPdfModuleAttrs <- function(module) {
 
 
 #' @import grid
-getModulePdfLayout <- function(module, n_iter, force, seed) {
+getModulePdfLayout <- function(module, n_iter, force) {
 
-    layout1 <- make_layout(module, seed)
+    layout1 <- make_layout(module)
 
     # produce labels' grobs on canvas of a particular size
     # by modifying geom_text_repel algorithm (see function force_alg)
@@ -533,7 +532,6 @@ createShinyCyJSWidget <- function(module,
 
     nodes <- getJsNodeStyleAttributes(vertex.table)
 
-    set.seed(42)
     positions <- layout.graphopt(module)
     nodes$position.x <- positions[, 1]
     nodes$position.y <- positions[, 2]

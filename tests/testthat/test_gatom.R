@@ -259,7 +259,7 @@ test_that("scoreGraph assigns edge scores to 0 if its p-value distribution has a
     edge_attr(g)$pval <- rbeta(n = length(edge_attr(g)$pval),
                                shape1 = 2, shape2 = 1)
 
-    expect_warning(gs <- scoreGraph(g, k.gene = 25, k.met = 25, show.warnings = T))
+    expect_warning(gs <- scoreGraph(g, k.gene = 25, k.met = 25, show.warnings = TRUE))
 })
 
 test_that("makeMetabolicGraph works on already good DE tables", {

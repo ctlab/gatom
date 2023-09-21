@@ -1,9 +1,7 @@
-make_layout <- function(m, seed){
+make_layout <- function(m){
     start_layouts <- list()
     start_layout_inters <- 1
     n <- 1
-
-    set.seed(seed)
 
     while (start_layout_inters[length(start_layout_inters)] != 0 & n < 10) {
         net <- intergraph::asNetwork(m)
@@ -89,10 +87,10 @@ n_intersect_segm <- function(lines_to_check){
                                          (as.character(lines_to_check$IDend[i])==as.character(lines_to_check$IDend[j])) |
                                          (as.character(lines_to_check$IDstart[i])==as.character(lines_to_check$IDend[j])) |
                                          (as.character(lines_to_check$IDend[i])==as.character(lines_to_check$IDstart[j])),
-                                     F, intersect_segm(lines_to_check[i, 1:4], lines_to_check[j, 1:4]))
+                                     FALSE, intersect_segm(lines_to_check[i, 1:4], lines_to_check[j, 1:4]))
                           })
     inter_matrix_ltri_vector <- inter_matrix[lower.tri(inter_matrix)]
-    return(length(inter_matrix[inter_matrix_ltri_vector==T]))
+    return(length(inter_matrix[inter_matrix_ltri_vector==TRUE]))
 }
 
 # grobs params production
