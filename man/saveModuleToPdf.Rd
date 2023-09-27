@@ -17,6 +17,9 @@ saveModuleToPdf(module, file, name = NULL, n_iter = 100, force = 1e-05)
 
 \item{force}{Value of repel force}
 }
+\value{
+Returns NULL
+}
 \description{
 Save module to a nice pdf file
 }

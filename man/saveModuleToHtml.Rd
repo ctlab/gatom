@@ -24,6 +24,9 @@ saveModuleToHtml(
 
 \item{...}{Other parameters}
 }
+\value{
+Returns NULL
+}
 \description{
 Save module to a html widget
 }

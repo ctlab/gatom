@@ -40,7 +40,7 @@ weights. Default values is 1.}
 \item{raw}{whether to return raw scored graph, not a SGMWCS instance. Default to FALSE.}
 }
 \value{
-scored igraph object
+SGMWCS instance or scored igraph object
 }
 \description{
 Score metabolic graph

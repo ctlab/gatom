@@ -1,7 +1,11 @@
 Package: gatom
 Title: Finding an Active Metabolic Module in Atom Transition Network
 Version: 0.99.0
-Authors@R: person("Alexey", "Sergushichev", email = "alsergbox@gmail.com", role = c("aut", "cre"))
+Authors@R: 
+    c(
+    person("Anastasiia", "Gainullina", role = c("aut")),
+    person("Mariia", "Emelianova", role = c("aut")),
+    person("Alexey", "Sergushichev", email = "alsergbox@gmail.com", role = c("aut", "cre")))
 Description: This package implements a metabolic network analysis pipeline to 
     identify an active metabolic module based on high throughput data. 
     The pipeline takes as input transcriptional and/or metabolic data 

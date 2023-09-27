@@ -13,6 +13,9 @@ saveModuleToXgmml(module, file, name = NULL)
 
 \item{name}{Name of the module}
 }
+\value{
+Returns NULL
+}
 \description{
 Save module to an XGMML file
 }

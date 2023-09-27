@@ -265,7 +265,7 @@ makeMetabolicGraph <- function(network,
 #' @import BioNet
 #' @importFrom mwcsr normalize_sgmwcs_instance
 #'
-#' @return scored igraph object
+#' @return SGMWCS instance or scored igraph object
 #'
 #' @examples
 #' data("gEx")

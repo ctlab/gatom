@@ -23,6 +23,9 @@ saveModuleToDot(
 
 \item{extra.edge.attrs}{Table with additional edge attributes to be written to the dot file as is}
 }
+\value{
+Returns NULL
+}
 \description{
 Save module to a graphviz dot file
 }

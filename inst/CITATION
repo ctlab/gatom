@@ -1,0 +1,21 @@
+citHeader("To cite gatom in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "Shiny GATOM: omics-based identification of regulated metabolic modules in atom transition networks",
+  author   =     c(
+    person("Mariia", "Emelianova"),
+    person("Anastasiia", "Gainullina"),
+    person("Nikolay", "Poperechnyi"),
+    person("Alexander", "Loboda"),
+    person("Maxim", "Artyomov"),
+    person("Alexey", "Sergushichev")),
+  journal  = "Nucleic Acids Research",
+  year     = "2022",
+  volume   = "50",
+  number   =  "W1",
+  pages    =  "W690-W696",
+  url      = "https://doi.org/10.1093/nar/gkac427",
+  textVersion = paste("Mariia Emelianova, Anastasiia Gainullina, Nikolay Poperechnyi, Alexander Loboda, Maxim Artyomov, Alexey Sergushichev, Shiny GATOM: omics-based identification of regulated metabolic modules in atom transition networks, Nucleic Acids Research, Volume 50, Issue W1, 5 July 2022, Pages W690-W696, https://doi.org/10.1093/nar/gkac427"
+  )
+)

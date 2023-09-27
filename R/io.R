@@ -5,7 +5,7 @@
 #' @param n_iter Number of repel algorithm iterations
 #' @param force Value of repel force
 #'
-#' @return NULL
+#' @return Returns NULL
 #'
 #' @examples
 #' data(mEx)
@@ -197,7 +197,7 @@ sanitizeForXml <- function (string) {
 #' @param file File to save to
 #' @param name Name of the module
 #'
-#' @return NULL
+#' @return Returns NULL
 #'
 #' @examples
 #' data(mEx)
@@ -340,7 +340,7 @@ getEdgeXmlStrings <- function(module, indent="") {
 #' @param extra.node.attrs Table with additional node attributes to be written to the dot file as is
 #' @param extra.edge.attrs Table with additional edge attributes to be written to the dot file as is
 #'
-#' @return NULL
+#' @return Returns NULL
 #'
 #' @examples
 #' data(mEx)
@@ -530,7 +530,7 @@ getEdgeDotStrings <- function(module, indent="", extra.attrs=NULL) {
 #' @param sizingPolicy A widget sizing policy
 #' @param ... Other parameters
 #'
-#' @return NULL
+#' @return Returns NULL
 #'
 #' @examples
 #' data(mEx)
