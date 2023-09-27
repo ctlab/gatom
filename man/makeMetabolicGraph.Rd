@@ -48,6 +48,21 @@ including some reactions which are not possible in the considered species.}
 
 \item{largest.component}{If TRUE, only the largest connected component is returned}
 }
+\value{
+igraph object created from input data
+}
 \description{
 Creates metabolic graph based on specified data
+}
+\examples{
+data("gene.de.rawEx")
+data("met.de.rawEx")
+data("met.kegg.dbEx")
+data("networkEx")
+data("org.Mm.eg.gatom.annoEx")
+g <- makeMetabolicGraph(network = networkEx, topology = "atoms",
+                   org.gatom.anno = org.Mm.eg.gatom.annoEx,
+                   gene.de = gene.de.rawEx, met.db = met.kegg.dbEx,
+                   met.de = met.de.rawEx)
+
 }

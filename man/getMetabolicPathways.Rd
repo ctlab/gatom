@@ -26,6 +26,9 @@ getMetabolicPathways(
 
 \item{includeKEGG}{whether to include KEGG pathways and modules}
 }
+\value{
+list of metabolic pathways for given organism and list of genes
+}
 \description{
 Generate list of metabolic pathways from Reactome and KEGG databases
 }

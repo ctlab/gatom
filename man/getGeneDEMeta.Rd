@@ -48,6 +48,9 @@ used in `addHighlyExpressedEdgues` function.
 Could be NULL (automatic), character (column name)
 function (evaluated in a scope of original data frame).}
 }
+\value{
+object with prepared columns for the analysis for gene data
+}
 \description{
 Default values for all columns are NULL which mean they are
 determined automatically.
@@ -56,5 +59,5 @@ determined automatically.
 data("org.Mm.eg.gatom.annoEx")
 data("gene.de.rawEx")
 de.meta <- getGeneDEMeta(gene.de.rawEx, org.gatom.anno = org.Mm.eg.gatom.annoEx)
-de <- prepareDE(gene.de.rawEx, de.meta)
+
 }

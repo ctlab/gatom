@@ -130,7 +130,22 @@
 #' @param gene2reaction.extra Additional gene to reaction mappings. Should be a data.table with `gene` and `reaction` columns
 #' @param keepReactionsWithoutEnzymes If TRUE, keep reactions that have no annotated enzymes, thus expanding the network but
 #'                                    including some reactions which are not possible in the considered species.
+
+#' @return igraph object created from input data
+#'
+#' @examples
+#' data("gene.de.rawEx")
+#' data("met.de.rawEx")
+#' data("met.kegg.dbEx")
+#' data("networkEx")
+#' data("org.Mm.eg.gatom.annoEx")
+#' g <- makeMetabolicGraph(network = networkEx, topology = "atoms",
+#'                    org.gatom.anno = org.Mm.eg.gatom.annoEx,
+#'                    gene.de = gene.de.rawEx, met.db = met.kegg.dbEx,
+#'                    met.de = met.de.rawEx)
+#'
 #' @export
+#'
 #' @import igraph
 makeMetabolicGraph <- function(network,
                           topology=c("atoms", "metabolites"),
@@ -236,8 +251,26 @@ makeMetabolicGraph <- function(network,
 #'     the larger will be the resulting module. If set to NULL, genes will not be used for scoring.
 #' @param k.met Number of metabolite signals to be scored positively, the higher is the number,
 #'     the larger will be the resulting module. If set to NULL, metabolites will not be used for scoring.
+#' @param vertex.threshold.min The worst acceptable estimated FDR for vertices.
+#'     If necessary number of positive metabolite signals will be decreased from `k.met` to reach this threshold.
+#'     Default value is 0.1.
+#' @param edge.threshold.min The worst acceptable estimated FDR for vertices.
+#'     If necessary number of positive metabolite signals will be decreased from `k.gene` to reach this threshold.
+#'     Default value is 0.1.
+#' @param met.score.coef Coefficient on which all vertex weights are multiplied. Can be used to balance vertex and edge
+#'     weights. Default values is 1.
+#' @param show.warnings whether to show warnings
+#' @param raw whether to return raw scored graph, not a SGMWCS instance. Default to FALSE.
+#'
 #' @import BioNet
 #' @importFrom mwcsr normalize_sgmwcs_instance
+#'
+#' @return scored igraph object
+#'
+#' @examples
+#' data("gEx")
+#' gs <- scoreGraph(g = gEx, k.gene = 25, k.met = 25)
+#'
 #' @export
 scoreGraph <- function(g, k.gene, k.met,
                        vertex.threshold.min=0.1,
@@ -334,6 +367,13 @@ scoreGraph <- function(g, k.gene, k.met,
 
 #' Connect atoms belonging to the same metabolite with edges
 #' @param m Metabolic module
+#'
+#' @return module in which atoms of the same metabolite are connected
+#'
+#' @examples
+#' data(mEx)
+#' m <- connectAtomsInsideMetabolite(m = mEx)
+#'
 #' @export
 connectAtomsInsideMetabolite <- function(m) {
     t <- data.frame(v=V(m)$name, met=V(m)$metabolite, stringsAsFactors=FALSE)
@@ -349,6 +389,13 @@ connectAtomsInsideMetabolite <- function(m) {
 
 #' Collapse atoms belonging to the same metabolite into one vertex
 #' @param m Metabolic module
+#'
+#' @return module in which atoms of the same metabolite are collapsed into one
+#'
+#' @examples
+#' data(mEx)
+#' m <- collapseAtomsIntoMetabolites(m = mEx)
+#'
 #' @export
 collapseAtomsIntoMetabolites <- function(m) {
     vertex.table <- data.table(as_data_frame(m, what="vertices"))
@@ -375,8 +422,17 @@ collapseAtomsIntoMetabolites <- function(m) {
 #' @param m Metabolic module
 #' @param g Scored graph
 #' @param top Maximum rank value for the gene to be considered highly expressed
+#'
 #' @import igraph
 #' @import plyr
+#'
+#' @return module with added edges that correspond to high average expression
+#'
+#' @examples
+#' data(mEx)
+#' data(gEx)
+#' m <- addHighlyExpressedEdges(m = mEx, g = gEx)
+#'
 #' @export
 addHighlyExpressedEdges <- function(m, g, top=3000) {
     if (!"signalRank" %in% list.edge.attributes(g)) {

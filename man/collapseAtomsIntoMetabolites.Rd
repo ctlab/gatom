@@ -9,6 +9,14 @@ collapseAtomsIntoMetabolites(m)
 \arguments{
 \item{m}{Metabolic module}
 }
+\value{
+module in which atoms of the same metabolite are collapsed into one
+}
 \description{
 Collapse atoms belonging to the same metabolite into one vertex
+}
+\examples{
+data(mEx)
+m <- collapseAtomsIntoMetabolites(m = mEx)
+
 }

@@ -19,7 +19,16 @@ saveModuleToHtml(
 \item{file}{File to save to}
 
 \item{name}{Name of the module}
+
+\item{sizingPolicy}{A widget sizing policy}
+
+\item{...}{Other parameters}
 }
 \description{
 Save module to a html widget
+}
+\examples{
+data(mEx)
+saveModuleToHtml(module = mEx, file = "module.html")
+
 }

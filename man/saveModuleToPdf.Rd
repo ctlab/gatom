@@ -4,14 +4,7 @@
 \alias{saveModuleToPdf}
 \title{Save module to a nice pdf file}
 \usage{
-saveModuleToPdf(
-  module,
-  file,
-  name = NULL,
-  n_iter = 100,
-  force = 1e-05,
-  seed = 1
-)
+saveModuleToPdf(module, file, name = NULL, n_iter = 100, force = 1e-05)
 }
 \arguments{
 \item{module}{Module to save}
@@ -23,9 +16,12 @@ saveModuleToPdf(
 \item{n_iter}{Number of repel algorithm iterations}
 
 \item{force}{Value of repel force}
-
-\item{seed}{Seed determining edge layout}
 }
 \description{
 Save module to a nice pdf file
+}
+\examples{
+data(mEx)
+saveModuleToPdf(module = mEx, file = "module.pdf")
+
 }

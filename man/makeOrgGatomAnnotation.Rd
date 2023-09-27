@@ -19,20 +19,34 @@ makeOrgGatomAnnotation(
 \arguments{
 \item{org.db}{Bioconductor org.db object, e.g. org.Mm.eg.db}
 
-\item{idColumns}{vector of column names from `org.db` object to cread ID mappings.
+\item{idColumns}{vector of column names from `org.db` object to creat ID mappings.
 First ID will be used as a base identifier, should be compatible
-with KEGG and Reactome databses.}
+with KEGG and Reactome databases.}
 
 \item{nameColumn}{column with a human readable gene symbol. Default to "SYMBOL".}
 
-\item{enzymeColumn}{column with an Enzyme Commission ID. Defatult to "ENZYME".}
+\item{enzymeColumn}{column with an Enzyme Commission ID. Default to "ENZYME".}
 
 \item{appendEnzymesFromKegg}{if TRUE, KEGG databases will be sued to extend gene to
 enzyme mappings obtained from org.db package.}
 
-\item{keggOrgCode}{KEGG organizm code, e.g. "mmu". If set to NULL, the code is determined
+\item{appendOrthologiesFromKegg}{if TRUE, KEGG database will be sued to extend gene to
+orthology mappings obtained from org.db package}
+
+\item{filterNonSpecificEnzymes}{if TRUE, will filter out non-specific enzymes from
+gene to enzyme mappings obtained from org.db package}
+
+\item{keggOrgCode}{KEGG organism code, e.g. "mmu". If set to NULL, the code is determined
 automatically.}
+}
+\value{
+organism annotation object that will be used for network analysis
 }
 \description{
 Create an organism annotation object for network analysis
+}
+\examples{
+library(org.Mm.eg.db)
+org.Mm.eg.gatom.anno <- makeOrgGatomAnnotation(org.db = org.Mm.eg.db)
+
 }

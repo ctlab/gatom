@@ -15,7 +15,7 @@ test_that("saveModuleToDot works", {
 
 test_that("saveModuleToPdf works", {
     f <- tempfile()
-    saveModuleToPdf(mEx, f, n_iter=100, force=1e-5, seed=1)
+    saveModuleToPdf(mEx, f, n_iter=100, force=1e-5)
     expect_true(file.exists(f))
 })
 

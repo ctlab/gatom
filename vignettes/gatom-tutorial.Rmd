@@ -1,7 +1,7 @@
 ---
 title: "Using gatom package"
-author: "Anstasiia Gainullina, Alexey Sergushichev, Mariia Emelianova"
-date: "August 2023"
+author: "Anstasiia Gainullina, Mariia Emelianova, Alexey Sergushichev"
+date: "September 2023"
 output:
   BiocStyle::html_document:
     toc: true
@@ -13,27 +13,24 @@ vignette: >
   \VignetteEncoding{UTF-8}"
 ---
 
-This tutorial describes an R-package for finding active metabolic modules in atom transition network.
+This tutorial describes an R-package for finding active metabolic modules in 
+atom transition network.
 
 # Installation
 
-* You can install **gatom** package via `devtools`:
+* You can install **gatom** via `BiocManager`:
 ```{R eval = FALSE}
-    #install.packages("devtools")
-    # devtools::install_github("ctlab/gatom")
-```
-
- * **gatom** package requires `shinyCyJS` for plotting graphs. It can be installed with `devtools`:
-```{R eval = FALSE}
-    #install.packages("devtools")
-    # devtools::install_github("ctlab/shinyCyJS")
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+# 
+# BiocManager::install("gatom")
 ```
 
 
 # Example workfow
 
-In this example we will find an active metabolic module based on macrophage activation 
-gene expression data.
+In this example we will find an active metabolic module based on macrophage 
+activation gene expression data.
 
 ```{r message=FALSE}
 library(gatom)
@@ -42,9 +39,8 @@ library(igraph)
 library(mwcsr)
 ```
 
-First let's load data with atom mappings (`network` object),
-enzyme annotations for mouse (`org.Mm.eg.gatom`)
-and metabolite annotations (`met.kegg.db.rda`):
+First let's load data with atom mappings (`network` object), enzyme annotations 
+for mouse (`org.Mm.eg.gatom`) and metabolite annotations (`met.kegg.db.rda`):
 
 ```{r}
 data("networkEx")
@@ -59,7 +55,8 @@ data("met.de.rawEx")
 data("gene.de.rawEx")
 ```
 
-Getting metabolic graph (depending on `topology` parameter, the graph vertices can correspond to `atoms` or `metabolites`):
+Getting metabolic graph (depending on `topology` parameter, the graph vertices 
+can correspond to `atoms` or `metabolites`):
 
 ```{r}
 g <- makeMetabolicGraph(network=networkEx, 
@@ -71,14 +68,16 @@ g <- makeMetabolicGraph(network=networkEx,
 print(g)
 ```
 
-Scoring graph, obtaining an instance of SGMWCS (Signal Generalized Maximum Weight Subgraph)
-problem instance:
+Scoring graph, obtaining an instance of SGMWCS (Signal Generalized Maximum 
+Weight Subgraph) problem instance:
 
 ```{r message=FALSE, warning=FALSE}
 gs <- scoreGraph(g, k.gene=25, k.met=25)
 ```
 
-Initialize an SMGWCS solver (a heuristic relax-and-cut solver `rnc_solver` is used for simplicity, check out `mwcsr` package documentation for more options, and see "Using exact solver" section for recommended way):
+Initialize an SMGWCS solver (a heuristic relax-and-cut solver `rnc_solver` 
+is used for simplicity, check out `mwcsr` package documentation for more options, 
+and see [Using exact solver](#exact-solver) section for recommended way):
 
 ```{r}
 solver <- rnc_solver()
@@ -112,17 +111,19 @@ m.ext <- addHighlyExpressedEdges(m, gs)
 createShinyCyJSWidget(m.ext)
 ```
 
-Sometimes, as in example above, the same metabolite can appear multiple 
-times in the module via different atoms. In such cases it is useful
-to either connect atoms belonging to the same metabolite with edges
-with `connectAtomsInsideMetabolite` function.
+Sometimes, as in example above, the same metabolite can appear multiple times 
+in the module via different atoms. In such cases it is useful
+to either connect atoms belonging to the same metabolite with edges 
+or to collapse them into one vertex.
+
+To connect atoms use `connectAtomsInsideMetabolite` function:
 
 ```{r message=FALSE, warning=FALSE}
 m1 <- connectAtomsInsideMetabolite(m.ext)
 createShinyCyJSWidget(m1)
 ```
 
-The other way is to collapse them into one vertex with `collapseAtomsIntoMetabolites`:
+And to collapse them into one vertex use `collapseAtomsIntoMetabolites`:
 
 ```{r message=FALSE, warning=FALSE}
 m2 <- collapseAtomsIntoMetabolites(m.ext)
@@ -149,21 +150,30 @@ htmltools::includeHTML("M0.vs.M1.html")
 ```
 
 
-Alternatively, we can save the module to dot format to generate pdf or svg file using `neato` tool from graphviz suite.
+Or we can save the module to dot format:
 
 ```{r}
 saveModuleToDot(m, file="M0.vs.M1.dot", name="M0.vs.M1")
+```
+
+Such dot file can be further used to generate svg file using `neato` tool 
+from graphviz suite:
+
+```{r eval=FALSE}
 system("neato -Tsvg M0.vs.M1.dot > M0.vs.M1.svg", ignore.stderr=TRUE)
 ```
 
 
-The module can also be saved to pdf format with a nice layout.
-You may vary the meaning of repel force and the number of iterations of repel algorithm for label layout. Note, that the larger your graph is the softer force you should use. 
-You may also change seed for different variants of edge layout.
+Alternatively, the module can be saved to pdf format with a nice layout. 
+You may vary the meaning of repel force and the number of iterations of 
+repel algorithm for label layout. 
+Note, that the larger your graph is the softer force you should use. 
+You may also set different seed for different variants of edge layout.
 
 ```{r results="hide", message=FALSE, warning=FALSE}
+set.seed(42)
 saveModuleToPdf(m, file="M0.vs.M1.pdf", name="M0.vs.M1", 
-                n_iter=100, force=1e-5, seed=10)
+                n_iter=100, force=1e-5)
 ```
 
 
@@ -179,7 +189,8 @@ met.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GA
 gene.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv.gz")
 ```
 
-Full pre-generated combined network (ref. [Networks](#networks) for details) and enzyme annotation can be downloaded from  [http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/](http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/):
+Full pre-generated combined network (ref. [Networks](#networks) for details) 
+and enzyme annotation can be downloaded from  [http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/](http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/):
 
 ```{r}
 network.combined <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.combined.rds"))
@@ -188,7 +199,8 @@ met.combined.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_m
 org.Mm.eg.gatom.anno <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rds"))
 ```
 
-For better work of the combined network we highly recommend using additional supplementary gene files (ref. [Supplementary Genes](#suppl-genes))
+For better work of the combined network we highly recommend using additional 
+supplementary gene files (ref. [Supplementary Genes](#suppl-genes))
 
 ```{r}
 gene2reaction.extra <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/gene2reaction.combined.mmu.eg.tsv", colClasses="character")
@@ -229,7 +241,9 @@ We provide four types of networks that can be used for analysis:
 
 ## KEGG
 
-KEGG network consists of `network.kegg.rds` & `met.kegg.db.rds` files and is based on [KEGG database](https://www.genome.jp/kegg/kegg1.html). 
+KEGG network consists of `network.kegg.rds` & `met.kegg.db.rds` files and is 
+based on [KEGG database](https://www.genome.jp/kegg/kegg1.html). 
+
 Both metabolites and reactions have KEGG IDs.
 
 ```{r}
@@ -237,7 +251,7 @@ network <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials
 met.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rds"))
 ```
 
-And run `gatom` on this dataset:
+Running `gatom` on this dataset:
 
 ```{r}
 kg <- makeMetabolicGraph(network=network, 
@@ -262,14 +276,24 @@ createShinyCyJSWidget(km)
 
 ## Rhea
 
-Rhea network consists of `network.rhea.rds` & `met.rhea.db.rds` files and is based on [Rhea database](https://www.rhea-db.org/). 
-Reactions in Rhea have their own IDs, but unlike KEGG, metabolite IDs come from a separate database -- [ChEBI database](https://www.ebi.ac.uk/chebi/)
+Rhea network consists of `network.rhea.rds` & `met.rhea.db.rds` files and 
+is based on [Rhea database](https://www.rhea-db.org/). 
+
+Reactions in Rhea have their own IDs, but unlike KEGG, metabolite IDs come 
+from a separate database -- [ChEBI database](https://www.ebi.ac.uk/chebi/)
 
 To use Rhea network download the following files:
 
 ```{r}
 network.rhea <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rhea.rds"))
 met.rhea.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.rhea.db.rds"))
+```
+
+For proper work of the Rhea network we also need a corresponding 
+supplementary gene file (ref. [Supplementary Genes](#suppl-genes))
+
+```{r}
+gene2reaction.extra <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/gene2reaction.rhea.mmu.eg.tsv", colClasses="character")
 ```
 
 And run `gatom` on Rhea network:
@@ -280,7 +304,8 @@ rg <- makeMetabolicGraph(network=network.rhea,
                          org.gatom.anno=org.Mm.eg.gatom.anno,
                          gene.de=gene.de.raw,
                          met.db=met.rhea.db,
-                         met.de=met.de.raw)
+                         met.de=met.de.raw,
+                         gene2reaction.extra=gene2reaction.extra)
 
 rgs <- scoreGraph(rg, k.gene = 50, k.met = 50)
 
@@ -297,21 +322,24 @@ createShinyCyJSWidget(rm)
 
 ## Combined network
 
-Combined network comprises not only KEGG and Rhea reactions, but also transport reactions from [BIGG database](http://bigg.ucsd.edu/).
+Combined network comprises not only KEGG and Rhea reactions, but also transport 
+reactions from [BIGG database](http://bigg.ucsd.edu/).
 
-This means that reactions in such network have either KEGG or Rhea or BIGG IDs, and metabolite IDs are KEGGs and ChEBIs.
+This means that reactions in such network have either KEGG or Rhea or BIGG IDs, 
+and metabolite IDs are KEGGs and ChEBIs.
 
 ## Rhea lipid subnetwork
 
-Rhea lipid subnetwork is subset of Rhea reactions that involve lipids, and it consists of `network.rhea.lipids.rds` & `met.rhea.lipids.db.rds` files. 
+Rhea lipid subnetwork is subset of Rhea reactions that involve lipids, 
+and it consists of `network.rhea.lipids.rds` & `met.rhea.lipids.db.rds` files. 
 
 ```{r}
-network.lipids <- readRDS("/home/masha/Research/RCode/data/network.rhea.lipids.rds")
-# network.lipids <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rhea.lipids.rds"))
+network.lipids <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.rhea.lipids.rds"))
 met.lipids.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.lipids.db.rds"))
 ```
 
-For proper work of the lipid network we also need a corresponding supplementary gene file (ref. [Supplementary Genes](#suppl-genes))
+For proper work of the lipid network we will also need a corresponding 
+supplementary gene file (ref. [Supplementary Genes](#suppl-genes))
 
 ```{r}
 gene2reaction.extra <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/gene2reaction.rhea.mmu.eg.tsv", colClasses="character")
@@ -323,7 +351,8 @@ To test lipid network we will use a different dataset:
 met.de.lipids <- fread("https://artyomovlab.wustl.edu/publications/supp_materials/GATOM/Ctrl.vs.HighFat.lipid.de.csv")
 ```
 
-For lipid network we recommend setting topology to `metabolites` (ref. [Using metabolite-level network](#met-topology)):
+For lipid network we recommend setting topology to `metabolites` 
+(ref. [Using metabolite-level network](#met-topology)):
 
 ```{r}
 lg <- makeMetabolicGraph(network=network.lipids,
@@ -347,7 +376,8 @@ lm
 createShinyCyJSWidget(lm)
 ```
 
-If IDs for DE table for metabolites are of type `Species` we can process metabolite labels into more readable ones:
+If IDs for DE table for metabolites are of type `Species` we can process 
+metabolite labels into more readable ones:
 
 ```{r message=FALSE, warning=FALSE}
 lm1 <- abbreviateLabels(lm, orig.names = TRUE, abbrev.names = TRUE)
@@ -360,7 +390,7 @@ createShinyCyJSWidget(lm1)
 
 ## Supplementary gene files {#suppl-genes}
 
-For combined and lipid networks we provide supplementary files with genes 
+For combined, Rhea and lipid networks we provide supplementary files with genes 
 that either come from proteome or are not linked to a specific enzyme. 
 These files are organism-specific and are also available at  [http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/](http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/).
 
@@ -396,11 +426,11 @@ ge <- makeMetabolicGraph(network=network.combined,
 ge
 ```
 
-## Using exact solver
+## Using exact solver {#exact-solver}
 
 For proper analysis quality we recommend to use exact SGMWCS solver `virgo_solver()`, 
-which requires Java (version >= 11) and CPLEX (version >= 12.7) to be installed. If the requirements are met
-you can then find a module as following:
+which requires Java (version >= 11) and CPLEX (version >= 12.7) to be installed. 
+If the requirements are met you can then find a module as following:
 
 ```{r eval=FALSE}
 vsolver <- virgo_solver(cplex_dir=Sys.getenv("CPLEX_HOME"), 
@@ -442,7 +472,8 @@ gs <- scoreGraph(g, k.gene = NULL, k.met = 50)
 
 ## Using metabolite-level network {#met-topology}
 
-Sometimes it could make sense to work with metabolite-metabolite topology of the network, not atom-atom one. 
+Sometimes it could make sense to work with metabolite-metabolite topology 
+of the network, not atom-atom one. 
 Such network is less structured, but contains more genes.
 
 ```{r}

@@ -13,6 +13,15 @@ addHighlyExpressedEdges(m, g, top = 3000)
 
 \item{top}{Maximum rank value for the gene to be considered highly expressed}
 }
+\value{
+module with added edges that correspond to high average expression
+}
 \description{
 Add reactions without highly changing genes but with high average expression
+}
+\examples{
+data(mEx)
+data(gEx)
+m <- addHighlyExpressedEdges(m = mEx, g = gEx)
+
 }

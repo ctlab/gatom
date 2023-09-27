@@ -23,7 +23,30 @@ the larger will be the resulting module. If set to NULL, genes will not be used 
 
 \item{k.met}{Number of metabolite signals to be scored positively, the higher is the number,
 the larger will be the resulting module. If set to NULL, metabolites will not be used for scoring.}
+
+\item{vertex.threshold.min}{The worst acceptable estimated FDR for vertices.
+If necessary number of positive metabolite signals will be decreased from `k.met` to reach this threshold.
+Default value is 0.1.}
+
+\item{edge.threshold.min}{The worst acceptable estimated FDR for vertices.
+If necessary number of positive metabolite signals will be decreased from `k.gene` to reach this threshold.
+Default value is 0.1.}
+
+\item{met.score.coef}{Coefficient on which all vertex weights are multiplied. Can be used to balance vertex and edge
+weights. Default values is 1.}
+
+\item{show.warnings}{whether to show warnings}
+
+\item{raw}{whether to return raw scored graph, not a SGMWCS instance. Default to FALSE.}
+}
+\value{
+scored igraph object
 }
 \description{
 Score metabolic graph
+}
+\examples{
+data("gEx")
+gs <- scoreGraph(g = gEx, k.gene = 25, k.met = 25)
+
 }

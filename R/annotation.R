@@ -1,15 +1,25 @@
 #' Create an organism annotation object for network analysis
 #'
 #' @param org.db Bioconductor org.db object, e.g. org.Mm.eg.db
-#' @param idColumns vector of column names from `org.db` object to cread ID mappings.
+#' @param idColumns vector of column names from `org.db` object to creat ID mappings.
 #'                  First ID will be used as a base identifier, should be compatible
-#'                  with KEGG and Reactome databses.
+#'                  with KEGG and Reactome databases.
 #' @param nameColumn column with a human readable gene symbol. Default to "SYMBOL".
-#' @param enzymeColumn column with an Enzyme Commission ID. Defatult to "ENZYME".
+#' @param enzymeColumn column with an Enzyme Commission ID. Default to "ENZYME".
 #' @param appendEnzymesFromKegg if TRUE, KEGG databases will be sued to extend gene to
 #'     enzyme mappings obtained from org.db package.
-#' @param keggOrgCode KEGG organizm code, e.g. "mmu". If set to NULL, the code is determined
+#' @param appendOrthologiesFromKegg if TRUE, KEGG database will be sued to extend gene to
+#'     orthology mappings obtained from org.db package
+#' @param filterNonSpecificEnzymes if TRUE, will filter out non-specific enzymes from
+#'     gene to enzyme mappings obtained from org.db package
+#' @param keggOrgCode KEGG organism code, e.g. "mmu". If set to NULL, the code is determined
 #'     automatically.
+#'
+#' @return organism annotation object that will be used for network analysis
+#'
+#' @examples
+#' library(org.Mm.eg.db)
+#' org.Mm.eg.gatom.anno <- makeOrgGatomAnnotation(org.db = org.Mm.eg.db)
 #'
 #' @export
 makeOrgGatomAnnotation <- function(org.db,
@@ -120,6 +130,7 @@ makeOrgGatomAnnotation <- function(org.db,
 #' @param threshold threshold for Fisher test to filter out non-metabolic pathways
 #' @param includeReactome whether to include Reactome pathways (only works for Entrez ID universe)
 #' @param includeKEGG whether to include KEGG pathways and modules
+#' @return list of metabolic pathways for given organism and list of genes
 getMetabolicPathways <- function(universe,
                                  metGenes,
                                  keggOrgCode,
@@ -218,11 +229,13 @@ getMetabolicPathways <- function(universe,
   pathways
 }
 
-#' Prepare lipid labels for lipid module
+#' Abbreviate lipid labels for lipid module
 #'
 #' @param module Module to prepare
 #' @param orig.names whether to use original names from the dataset
 #' @param abbrev.names whether to use abbreviated names for all lipids
+#'
+#' @return module object with abbreviated labels
 #'
 #' @export
 abbreviateLabels <- function(module,

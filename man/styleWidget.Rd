@@ -6,6 +6,10 @@
 \usage{
 styleWidget(hw, style = "", addl_selector = "", elementId = NULL)
 }
+\value{
+styled html widget
+}
 \description{
 code adopted from https://github.com/ramnathv/htmlwidgets/issues/231
 }
+\keyword{internal}

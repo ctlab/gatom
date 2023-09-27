@@ -9,14 +9,14 @@ based on metadata object}
 prepareDE(de.raw, de.meta)
 }
 \arguments{
-\item{de.raw}{Table with defferential expression results, an object
+\item{de.raw}{Table with differential expression results, an object
 convertable to data.frame}
 
 \item{de.meta}{Object with differential expression table metadata
 acquired with getGeneDEMeta or getMetDEMeta functions}
 }
 \value{
-data.table object with converted differential expressiond table
+data.table object with converted differential expression table
 }
 \description{
 Makes data.table with differential expression results containing
@@ -28,4 +28,5 @@ data("org.Mm.eg.gatom.annoEx")
 data("gene.de.rawEx")
 de.meta <- getGeneDEMeta(gene.de.rawEx, org.gatom.anno = org.Mm.eg.gatom.annoEx)
 de <- prepareDE(gene.de.rawEx, de.meta)
+
 }

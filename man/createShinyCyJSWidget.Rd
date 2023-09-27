@@ -11,6 +11,21 @@ createShinyCyJSWidget(
   ...
 )
 }
+\arguments{
+\item{module}{Module}
+
+\item{layout}{Layout for the module}
+
+\item{...}{Other parameters}
+}
+\value{
+html widget of input module
+}
 \description{
 Creates shinyCyJS widget from module
+}
+\examples{
+data(mEx)
+hw <- createShinyCyJSWidget(module = mEx)
+
 }

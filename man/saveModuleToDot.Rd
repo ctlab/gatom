@@ -18,7 +18,16 @@ saveModuleToDot(
 \item{file}{File to save to}
 
 \item{name}{Name of the module}
+
+\item{extra.node.attrs}{Table with additional node attributes to be written to the dot file as is}
+
+\item{extra.edge.attrs}{Table with additional edge attributes to be written to the dot file as is}
 }
 \description{
 Save module to a graphviz dot file
+}
+\examples{
+data(mEx)
+saveModuleToDot(module = mEx, file = "module.dot")
+
 }

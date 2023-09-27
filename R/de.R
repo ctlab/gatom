@@ -77,18 +77,22 @@ prepareDEColumn <- function(gene.de, columnName, from) {
 #' Makes data.table with differential expression results containing
 #' all columns required for gatom and in the expected format
 #' based on metadata object
-#' @param de.raw Table with defferential expression results, an object
+#' @param de.raw Table with differential expression results, an object
 #'        convertable to data.frame
 #' @param de.meta Object with differential expression table metadata
 #'        acquired with getGeneDEMeta or getMetDEMeta functions
-#' @return data.table object with converted differential expressiond table
-#' @export
-#' @importFrom methods is
+#'
+#' @return data.table object with converted differential expression table
+#'
 #' @examples
 #' data("org.Mm.eg.gatom.annoEx")
 #' data("gene.de.rawEx")
 #' de.meta <- getGeneDEMeta(gene.de.rawEx, org.gatom.anno = org.Mm.eg.gatom.annoEx)
 #' de <- prepareDE(gene.de.rawEx, de.meta)
+#'
+#' @export
+#'
+#' @importFrom methods is
 prepareDE <- function(de.raw, de.meta) {
     if (is.null(de.raw)) {
         return(NULL)
@@ -221,12 +225,15 @@ idsListFromAnnotation <- function(org.gatom.anno) {
 #'      used in `addHighlyExpressedEdgues` function.
 #'      Could be NULL (automatic), character (column name)
 #'      function (evaluated in a scope of original data frame).
-#' @export
+#'
+#' @return object with prepared columns for the analysis for gene data
+#'
 #' @examples
 #' data("org.Mm.eg.gatom.annoEx")
 #' data("gene.de.rawEx")
 #' de.meta <- getGeneDEMeta(gene.de.rawEx, org.gatom.anno = org.Mm.eg.gatom.annoEx)
-#' de <- prepareDE(gene.de.rawEx, de.meta)
+#'
+#' @export
 getGeneDEMeta <- function(gene.de.raw,
                           org.gatom.anno,
                           idColumn=NULL,
@@ -309,6 +316,27 @@ getGeneDEMeta <- function(gene.de.raw,
 
 #' Finds columns in differential expression table for metabolites
 #' required for gatom analysis
+#'
+#' @param met.de.raw A table with differential expression results, an object
+#'                   convertable to data.frame.
+#' @param met.db Metabolite database
+#' @param idColumn Specifies column name with metabolite identifiers.
+#' @param idType Specifies type of metabolite IDs (one of the supported by annotation).
+#' @param pvalColumn Specifies column with p-values.
+#' @param logPvalColumn Specifies column with log p-values, if there is no such
+#'                      column one will be generated automatically.
+#' @param log2FCColumn Specifies column with log2-fold changes.
+#' @param signalColumn Specifies column with identifier of the measured entity
+#'      Could be NULL (automatic, set from based on pval and log2FC columns),
+#'      character (column name), or function (evaluated in a scope of original data frame)
+#'
+#' @return object with prepared columns for the analysis for metabolite data
+#'
+#' @examples
+#' data("met.kegg.dbEx")
+#' data("met.de.rawEx")
+#' de.meta <- getMetDEMeta(met.de.rawEx, met.db = met.kegg.dbEx)
+#'
 #' @export
 getMetDEMeta <- function(met.de.raw, met.db,
                          idColumn=NULL,

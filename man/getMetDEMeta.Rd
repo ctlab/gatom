@@ -16,7 +16,37 @@ getMetDEMeta(
   signalColumn = NULL
 )
 }
+\arguments{
+\item{met.de.raw}{A table with differential expression results, an object
+convertable to data.frame.}
+
+\item{met.db}{Metabolite database}
+
+\item{idColumn}{Specifies column name with metabolite identifiers.}
+
+\item{idType}{Specifies type of metabolite IDs (one of the supported by annotation).}
+
+\item{pvalColumn}{Specifies column with p-values.}
+
+\item{logPvalColumn}{Specifies column with log p-values, if there is no such
+column one will be generated automatically.}
+
+\item{log2FCColumn}{Specifies column with log2-fold changes.}
+
+\item{signalColumn}{Specifies column with identifier of the measured entity
+Could be NULL (automatic, set from based on pval and log2FC columns),
+character (column name), or function (evaluated in a scope of original data frame)}
+}
+\value{
+object with prepared columns for the analysis for metabolite data
+}
 \description{
 Finds columns in differential expression table for metabolites
 required for gatom analysis
+}
+\examples{
+data("met.kegg.dbEx")
+data("met.de.rawEx")
+de.meta <- getMetDEMeta(met.de.rawEx, met.db = met.kegg.dbEx)
+
 }

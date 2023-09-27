@@ -4,7 +4,15 @@
 #' @param name Name of the module
 #' @param n_iter Number of repel algorithm iterations
 #' @param force Value of repel force
+#'
+#' @return NULL
+#'
+#' @examples
+#' data(mEx)
+#' saveModuleToPdf(module = mEx, file = "module.pdf")
+#'
 #' @export
+#'
 #' @import GGally
 #' @import igraph
 saveModuleToPdf <- function(module, file, name=NULL, n_iter=100, force=1e-5) {
@@ -26,6 +34,7 @@ saveModuleToPdf <- function(module, file, name=NULL, n_iter=100, force=1e-5) {
          ggplot2::theme(plot.title=
                             ggplot2::element_text(size=max(c(node_attrs$fontsize, edge_attrs$fontsize)) * 5)))
     dev.off()
+    return(invisible(NULL))
 }
 
 getPdfModuleAttrs <- function(module) {
@@ -187,6 +196,13 @@ sanitizeForXml <- function (string) {
 #' @param module Module to save
 #' @param file File to save to
 #' @param name Name of the module
+#'
+#' @return NULL
+#'
+#' @examples
+#' data(mEx)
+#' saveModuleToXgmml(module = mEx, file = "module.xgmml")
+#'
 #' @export
 saveModuleToXgmml <- function(module, file, name=NULL) {
     if (is.null(name)) {
@@ -194,6 +210,7 @@ saveModuleToXgmml <- function(module, file, name=NULL) {
     }
     s <- getModuleXmlString(module, name)
     write(s, file)
+    return(invisible(NULL))
 }
 
 getModuleXmlString <- function(module, name) {
@@ -320,6 +337,15 @@ getEdgeXmlStrings <- function(module, indent="") {
 #' @param module Module to save
 #' @param file File to save to
 #' @param name Name of the module
+#' @param extra.node.attrs Table with additional node attributes to be written to the dot file as is
+#' @param extra.edge.attrs Table with additional edge attributes to be written to the dot file as is
+#'
+#' @return NULL
+#'
+#' @examples
+#' data(mEx)
+#' saveModuleToDot(module = mEx, file = "module.dot")
+#'
 #' @export
 saveModuleToDot <- function(module, file, name=NULL,
                             extra.node.attrs=NULL, extra.edge.attrs=NULL) {
@@ -328,6 +354,7 @@ saveModuleToDot <- function(module, file, name=NULL,
     }
     s <- getGraphDotString(module, name, extra.node.attrs, extra.edge.attrs)
     write(s, file)
+    return(invisible(NULL))
 }
 
 getGraphDotString <- function(module, name,
@@ -500,7 +527,17 @@ getEdgeDotStrings <- function(module, indent="", extra.attrs=NULL) {
 #' @param module Module to save
 #' @param file File to save to
 #' @param name Name of the module
+#' @param sizingPolicy A widget sizing policy
+#' @param ... Other parameters
+#'
+#' @return NULL
+#'
+#' @examples
+#' data(mEx)
+#' saveModuleToHtml(module = mEx, file = "module.html")
+#'
 #' @export
+#'
 #' @import htmlwidgets
 saveModuleToHtml <- function(module, file, name="",
                              sizingPolicy = htmlwidgets::sizingPolicy(defaultWidth = "100%",
@@ -512,10 +549,22 @@ saveModuleToHtml <- function(module, file, name="",
                                 ...)
     hw <- prependContent(hw, htmltools::tags$h2(name))
     saveWidget(hw, file=file, title=name)
+    return(invisible(NULL))
 }
 
 #' Creates shinyCyJS widget from module
+#' @param module Module
+#' @param layout Layout for the module
+#' @param ... Other parameters
+#'
+#' @return html widget of input module
+#'
+#' @examples
+#' data(mEx)
+#' hw <- createShinyCyJSWidget(module = mEx)
+#'
 #' @export
+#'
 #' @import shinyCyJS
 createShinyCyJSWidget <- function(module,
                                   layout = list(name="cose-bilkent",
@@ -536,17 +585,17 @@ createShinyCyJSWidget <- function(module,
     nodes$position.x <- positions[, 1]
     nodes$position.y <- positions[, 2]
 
-    nodes = buildElems(nodes, type = 'Node')
+    nodes <- buildElems(nodes, type = 'Node')
 
     if (dim(edge.table)[1] != 0) {
         edges <- getJsEdgeStyleAttributes(edge.table)
-        edges = buildElems(edges, type = 'Edge')
+        edges <- buildElems(edges, type = 'Edge')
         elements <- c(nodes, edges)
     } else {
         elements <- nodes
     }
 
-    hw = shinyCyJS(elements, layout = layout, ...)
+    hw <- shinyCyJS(elements, layout = layout, ...)
     hw <- styleWidget(hw, "background-color: #eee;")
     hw
 }
@@ -601,6 +650,10 @@ getJsEdgeStyleAttributes <- function(attrs) {
 }
 
 #' code adopted from https://github.com/ramnathv/htmlwidgets/issues/231
+#' @return styled html widget
+#'
+#' @keywords internal
+#'
 #' @import htmlwidgets
 #' @import htmltools
 styleWidget <- function(hw, style="", addl_selector="", elementId=NULL) {

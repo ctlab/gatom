@@ -16,3 +16,8 @@ saveModuleToXgmml(module, file, name = NULL)
 \description{
 Save module to an XGMML file
 }
+\examples{
+data(mEx)
+saveModuleToXgmml(module = mEx, file = "module.xgmml")
+
+}

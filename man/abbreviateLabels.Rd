@@ -2,7 +2,7 @@
 % Please edit documentation in R/annotation.R
 \name{abbreviateLabels}
 \alias{abbreviateLabels}
-\title{Prepare lipid labels for lipid module}
+\title{Abbreviate lipid labels for lipid module}
 \usage{
 abbreviateLabels(module, orig.names, abbrev.names)
 }
@@ -13,6 +13,9 @@ abbreviateLabels(module, orig.names, abbrev.names)
 
 \item{abbrev.names}{whether to use abbreviated names for all lipids}
 }
+\value{
+module object with abbreviated labels
+}
 \description{
-Prepare lipid labels for lipid module
+Abbreviate lipid labels for lipid module
 }

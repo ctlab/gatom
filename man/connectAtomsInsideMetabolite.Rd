@@ -9,6 +9,14 @@ connectAtomsInsideMetabolite(m)
 \arguments{
 \item{m}{Metabolic module}
 }
+\value{
+module in which atoms of the same metabolite are connected
+}
 \description{
 Connect atoms belonging to the same metabolite with edges
+}
+\examples{
+data(mEx)
+m <- connectAtomsInsideMetabolite(m = mEx)
+
 }
