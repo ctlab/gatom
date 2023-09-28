@@ -32,7 +32,7 @@ Imports:
     pryr,
     htmlwidgets,
     htmltools,
-    shinyCyJS (>=1.0)
+    shinyCyJS (>= 1.0.0)
 Suggests:
     testthat,
     knitr,
