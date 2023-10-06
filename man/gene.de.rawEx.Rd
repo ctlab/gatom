@@ -4,6 +4,9 @@
 \name{gene.de.rawEx}
 \alias{gene.de.rawEx}
 \title{Example gene differential expression data.}
+\format{
+tibble/data.frame object
+}
 \description{
 See file https://github.com/ctlab/gatom/blob/master/data-raw/example.R for details
 }

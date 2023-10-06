@@ -4,6 +4,9 @@
 \name{met.de.rawEx}
 \alias{met.de.rawEx}
 \title{Example metabolite differential abundance data.}
+\format{
+tibble/data.frame object
+}
 \description{
 See file https://github.com/ctlab/gatom/blob/master/data-raw/example.R for details
 }

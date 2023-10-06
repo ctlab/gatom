@@ -4,6 +4,9 @@
 \name{met.kegg.dbEx}
 \alias{met.kegg.dbEx}
 \title{Example KEGG-based metabolite database object}
+\format{
+list object
+}
 \description{
 See file https://github.com/ctlab/gatom/blob/master/data-raw/example.R for details
 }

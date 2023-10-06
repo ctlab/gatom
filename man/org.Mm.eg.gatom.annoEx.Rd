@@ -4,6 +4,9 @@
 \name{org.Mm.eg.gatom.annoEx}
 \alias{org.Mm.eg.gatom.annoEx}
 \title{Example organism annotation object}
+\format{
+list object
+}
 \description{
 See file https://github.com/ctlab/gatom/blob/master/data-raw/example.R for details
 }

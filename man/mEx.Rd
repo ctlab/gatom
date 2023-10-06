@@ -4,6 +4,9 @@
 \name{mEx}
 \alias{mEx}
 \title{Example metabolic module.}
+\format{
+igraph object
+}
 \description{
 See file https://github.com/ctlab/gatom/blob/master/data-raw/example.R for details
 }

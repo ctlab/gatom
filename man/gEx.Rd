@@ -4,6 +4,9 @@
 \name{gEx}
 \alias{gEx}
 \title{Example metabolic graph with atom topology.}
+\format{
+igraph object
+}
 \description{
 See file https://github.com/ctlab/gatom/blob/master/data-raw/example.R for details
 }

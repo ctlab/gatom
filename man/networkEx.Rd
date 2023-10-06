@@ -4,6 +4,9 @@
 \name{networkEx}
 \alias{networkEx}
 \title{Example KEGG-based network object}
+\format{
+list object
+}
 \description{
 See file https://github.com/ctlab/gatom/blob/master/data-raw/example.R for details
 }
