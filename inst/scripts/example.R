@@ -4,15 +4,24 @@ library(devtools)
 library(mwcsr)
 load_all()
 
-network <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.kegg.rds"))
+
+# Full org.Mm.eg.gatom.anno was created with following script:
+# https://github.com/ctlab/gatom/blob/master/inst/scripts/make_annotation.R
 org.Mm.eg.gatom.anno <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/org.Mm.eg.gatom.anno.rds"))
+
+# Full KEGG-based network object and corresponding KEGG-based metabolite database object
+# were created with: https://github.com/ctlab/KEGG-network-pipeline
+# Ref. article for details: https://doi.org/10.1093/nar/gkac427
+network <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/network.kegg.rds"))
 met.kegg.db <- readRDS(url("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/met.kegg.db.rds"))
 
+# Full gene differential expression data and metabolite differential abundance data come from
+# M0 vs M1 macrophage activation comparison from: http://dx.doi.org/10.1016/j.immuni.2015.02.005
 met.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.met.de.tsv.gz")
 gene.de.raw <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GAM/Ctrl.vs.MandLPSandIFNg.gene.de.tsv.gz")
 
-reactionsEx <- c(gsub("^rn:", "", unname(keggLink("reaction", "rn01200"))),
-                 "R02243")
+
+reactionsEx <- c(gsub("^rn:", "", unname(keggLink("reaction", "rn01200"))), "R02243")
 
 networkEx <- list()
 networkEx$reactions <- network$reactions[reaction %in% reactionsEx]
