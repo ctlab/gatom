@@ -8,5 +8,6 @@
 tibble/data.frame object
 }
 \description{
-See file https://github.com/ctlab/gatom/blob/master/data-raw/example.R for details
+See file \url{https://github.com/ctlab/gatom/blob/master/inst/scripts/example.R}
+for details.
 }
