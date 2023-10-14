@@ -1,4 +1,6 @@
-library(gatom)
+library(devtools)
+load_all()
+
 library(org.Mm.eg.db)
 org.Mm.eg.gatom.anno <- makeOrgGatomAnnotation(org.Mm.eg.db)
 saveRDS(org.Mm.eg.gatom.anno, file="org.Mm.eg.gatom.anno.rds")

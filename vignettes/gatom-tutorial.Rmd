@@ -1,7 +1,7 @@
 ---
 title: "Using gatom package"
 author: "Anstasiia Gainullina, Mariia Emelianova, Alexey Sergushichev"
-date: "September 2023"
+date: "October 2023"
 output:
   BiocStyle::html_document:
     toc: true
@@ -30,11 +30,11 @@ atom transition network.
 # Example workfow
 
 In this example we will find an active metabolic module based on macrophage 
-activation gene expression data 
-(ref. [Jha et al, Immunity 2015](http://dx.doi.org/10.1016/j.immuni.2015.02.005) for details).
+activation gene expression and metabolomics data 
+([Jha et al, Immunity 2015](http://dx.doi.org/10.1016/j.immuni.2015.02.005)).
+For improved performance here we will consider a simplified version of the data.
+See [Example on full data and full network](#example-full) section for the real-scale analysis.
 
-All data in this particular example was simplified for easier and faster
-reproducibility.
 
 ```{r message=FALSE}
 library(gatom)
@@ -43,31 +43,42 @@ library(igraph)
 library(mwcsr)
 ```
 
-First let's load input transcriptional and metabolomic data:
+First let's load the example tables with input differential gene expression 
+and metabolite abundance data for LPS-IFNg stimulated macrophages compared to controls:
 
 ```{r message=FALSE}
-data("met.de.rawEx")
 data("gene.de.rawEx")
+print(head(gene.de.rawEx))
+data("met.de.rawEx")
+print(head(met.de.rawEx))
 ```
 
-And data with atom mappings (`network` object), enzyme annotations 
-for mouse (`org.Mm.eg.gatom`) and metabolite annotations (`met.kegg.db.rda`).
-
-Here, `org.Mm.eg.gatom.annoEx` is a simplified annotation object for mouse
-that contains an organism-specific mapping between enzyme classes
-and genes, as well as mapping between different types of gene identifiers, 
-`networkEx` object is a simplified KEGG network object that contains a list of 
-reactions, their reactants and mappings to enzyme classes, 
-and `met.kegg.dbEx` is corresponding simplified KEGG metabolite annotation 
-that contains mappings between different metabolite identifiers. 
-
-For additional information on KEGG network, 
-see [KEGG network](#kegg-network) section.
+Next we will load example network related objects: global reaction network (`networkEx` object),
+metabolite annotations (`met.kegg.dbEx`), and organism-specific enzyme annotations for mouse (`org.Mm.eg.gatom.annoEx`).
 
 ```{r}
 data("networkEx")
 data("met.kegg.dbEx")
 data("org.Mm.eg.gatom.annoEx")
+```
+
+Here `networkEx` object contain information about `r nrow(networkEx$reactions)` KEGG reactions, their atom mappings and relation to enzymes:
+
+```{r}
+str(networkEx, max.level=1, give.attr = FALSE)
+```
+
+Object `met.kegg.dbEx` contains information about `r nrow(met.kegg.dbEx$metabolites)` KEGG metabolites, including mappings from HMDB and ChEBI:
+
+```{r}
+str(met.kegg.dbEx, max.level=2, give.attr = FALSE)
+```
+
+Object `org.Mm.eg.gatom.annoEx` contains mouse-specific mapping between enzyme classes
+and genes, as well as mapping between different types of gene identifiers:
+
+```{r}
+str(org.Mm.eg.gatom.annoEx, max.level=2, give.attr = FALSE)
 ```
 
 Then we create a metabolic graph with atom topology from the loaded data. 
@@ -137,51 +148,23 @@ set.seed(42)
 createShinyCyJSWidget(m)
 ```
 
-Next, reactions without highly changing genes but with high average 
-expression can be added.
-
-```{r message=FALSE, warning=FALSE}
-m.ext <- addHighlyExpressedEdges(m, gs)
-createShinyCyJSWidget(m.ext)
-```
-
-Sometimes, as in example above, the same metabolite can appear multiple times 
-in the module via different atoms. In such cases it is useful to either connect 
-atoms belonging to the same metabolite with edges or to collapse them into one 
-vertex.
-
-To connect atoms use `connectAtomsInsideMetabolite` function:
-
-```{r message=FALSE, warning=FALSE}
-m1 <- connectAtomsInsideMetabolite(m.ext)
-createShinyCyJSWidget(m1)
-```
-
-And to collapse them into one vertex use `collapseAtomsIntoMetabolites`:
-
-```{r message=FALSE, warning=FALSE}
-m2 <- collapseAtomsIntoMetabolites(m.ext)
-createShinyCyJSWidget(m2)
-```
-
-
 # Saving modules
 
 We can save the module to graphml format with `write_graph()` function from `igraph`:
 
 ```{r}
-write_graph(m, file = paste0(tempdir(), "M0.vs.M1.graphml"), format = "graphml")
+write_graph(m, file = file.path(tempdir(), "M0.vs.M1.graphml"), format = "graphml")
 ```
 
 Or it can be saved to an interactive html widget:
 
 ```{r message=FALSE}
-saveModuleToHtml(module = m, file = paste0(tempdir(), "M0.vs.M1.html"), 
+saveModuleToHtml(module = m, file = file.path(tempdir(), "M0.vs.M1.html"), 
                  name="M0.vs.M1")
 ```
 
 ```{r message=FALSE, warning=FALSE}
-htmltools::includeHTML(paste0(tempdir(), "M0.vs.M1.html"))
+htmltools::includeHTML(file.path(tempdir(), "M0.vs.M1.html"))
 ```
 
 
@@ -192,7 +175,7 @@ saveModuleToDot(m, file = paste0(tempdir(), "M0.vs.M1.dot"), name = "M0.vs.M1")
 ```
 
 Such dot file can be further used to generate svg file using `neato` tool 
-from graphviz suite:
+from graphviz suite if it is installed on the system:
 
 ```{r eval=FALSE}
 system(paste0("neato -Tsvg ", tempdir(), "M0.vs.M1.dot > ", tempdir(), "M0.vs.M1.svg"), 
@@ -214,18 +197,18 @@ saveModuleToPdf(m, file = paste0(tempdir(), "M0.vs.M1.pdf"), name = "M0.vs.M1",
 ```
 
 
-# Example on full data and full network
+# Example on full data and full network {#example-full}
 
-Let's now look at how the analysis will work with full dataset and full network.
-For this case we will be using combined network instead of KEGG network 
-(ref. [Networks](#networks) for details on gatom network types).
+Let's now look at how the analysis will work with the full dataset and the full network.
+For this case we will be using the combined network instead of KEGG network 
+(see [Networks](#networks) for details on the network types).
 
 ```{r message=FALSE}
 library(R.utils)
 library(data.table)
 ```
 
-Full dataset can be downloaded from 
+The full macrophage LPS+IFNG-activation dataset can be downloaded from 
 [http://artyomovlab.wustl.edu/publications/supp_materials/GAM/](http://artyomovlab.wustl.edu/publications/supp_materials/GAM/):
 
 ```{r message=FALSE}
@@ -244,13 +227,13 @@ org.Mm.eg.gatom.anno <- readRDS(url("http://artyomovlab.wustl.edu/publications/s
 ```
 
 For better work of the combined network we highly recommend using additional 
-supplementary gene files (ref. [Supplementary Genes](#suppl-genes)).
+supplementary gene files (see [Supplementary Genes](#suppl-genes)).
 
 ```{r}
 gene2reaction.extra <- fread("http://artyomovlab.wustl.edu/publications/supp_materials/GATOM/gene2reaction.combined.mmu.eg.tsv", colClasses="character")
 ```
 
-Running `gatom` on combined network and full dataset:
+Running `gatom` on the combined network and the full dataset:
 
 ```{r}
 cg <- makeMetabolicGraph(network=network.combined,
