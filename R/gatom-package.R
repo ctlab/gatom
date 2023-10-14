@@ -30,7 +30,8 @@
 #' \code{\link{saveModuleToHtml}}, \code{\link{saveModuleToDot}},
 #' \code{\link{saveModuleToPdf}}, \code{\link{saveModuleToXgmml}}
 #'
-#' For detailed pipeline analysis, see gatom vignette.
+#' For detailed pipeline analysis, see gatom vignette:
+#'  \code{vignette("gatom-tutorial", package = "gatom")}
 #'
 #' @section Example Data:
 #' Example data provided by gatom consists of:
