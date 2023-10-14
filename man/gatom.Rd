@@ -35,7 +35,8 @@ Exporting module:
 \code{\link{saveModuleToHtml}}, \code{\link{saveModuleToDot}},
 \code{\link{saveModuleToPdf}}, \code{\link{saveModuleToXgmml}}
 
-For detailed pipeline analysis, see gatom vignette: \code{vignette("gatom-tutorial", package = "gatom")}
+For detailed pipeline analysis, see gatom vignette:
+ \code{vignette("gatom-tutorial", package = "gatom")}
 }
 
 \section{Example Data}{
