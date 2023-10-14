@@ -13,12 +13,28 @@ vignette: >
   \VignetteEncoding{UTF-8}"
 ---
 
-This tutorial describes an R-package for finding active metabolic modules in 
-atom transition network.
+This tutorial describes an R-package for finding active metabolic modules 
+based on high throughput data. The pipeline takes as input transcriptional and/or metabolic data 
+and finds a metabolic subnetwork (module) most regulated between the two 
+conditions of interest. 
+
+The package relies on the active module analysis framework
+developed in [BioNet package](https://bioconductor.org/packages/BioNet),
+but extends it to work with metabolic reaction networks. 
+Further, it illustrates the usage of [mwcsr package](https://cran.r-project.org/package=mwcsr)
+which provides a number of solvers for Maximum Weight Connected Subgraph problem and its variants.
+
+Example of using the pipeline include:
+* studying metabolic differences between pro- and anti-inflammatory macrophage activation ([Jha et al, 2015](http://dx.doi.org/10.1016/j.immuni.2015.02.005));
+* studying metabolic rewiring associated with glucose-independent tumor growth ([Vinent at al, 2015](http://dx.doi.org/10.1016/j.molcel.2015.08.013));
+* identification of deregulation of energy metabolism in Trem2-deficient macrophages ([Ulland et al, 2017](http://doi.org/10.1016/j.cell.2017.07.023));
+* identification of inositol-triphosphate metabolism  activation in monocytes in fasting mice ([Jordan et al, 2019](https://doi.org/10.1016/j.cell.2019.07.050)).
+
+More details on the pipeline are available in [Sergushichev et al, 2016](http://dx.doi.org/10.1093/nar/gkw266) and [Emelianova et al, 2022](https://doi.org/10.1093/nar/gkac427).
 
 # Installation
 
-* You can install **gatom** via `BiocManager`:
+You can install **gatom** via `BiocManager`:
 ```{R eval = FALSE}
 # if (!require("BiocManager", quietly = TRUE))
 #     install.packages("BiocManager")
@@ -31,7 +47,7 @@ atom transition network.
 
 In this example we will find an active metabolic module based on macrophage 
 activation gene expression and metabolomics data 
-([Jha et al, Immunity 2015](http://dx.doi.org/10.1016/j.immuni.2015.02.005)).
+([Jha et al, 2015](http://dx.doi.org/10.1016/j.immuni.2015.02.005)).
 For improved performance here we will consider a simplified version of the data.
 See [Example on full data and full network](#example-full) section for the real-scale analysis.
 
