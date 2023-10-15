@@ -25,6 +25,7 @@ Further, it illustrates the usage of [mwcsr package](https://cran.r-project.org/
 which provides a number of solvers for Maximum Weight Connected Subgraph problem and its variants.
 
 Example of using the pipeline include:
+
 * studying metabolic differences between pro- and anti-inflammatory macrophage activation ([Jha et al, 2015](http://dx.doi.org/10.1016/j.immuni.2015.02.005));
 * studying metabolic rewiring associated with glucose-independent tumor growth ([Vinent at al, 2015](http://dx.doi.org/10.1016/j.molcel.2015.08.013));
 * identification of deregulation of energy metabolism in Trem2-deficient macrophages ([Ulland et al, 2017](http://doi.org/10.1016/j.cell.2017.07.023));
@@ -156,11 +157,7 @@ green to down-regulation (negative log-2 fold change). Blue nodes and edges
 come from data with absent log-2 fold change values. Bigger size of nodes and 
 width of edges reflect lower p-values.
 
-As layouts are randomly generated, we use `set.seed()` to ensure layout 
-consistency.
-
 ```{r}
-set.seed(42)
 createShinyCyJSWidget(m)
 ```
 
