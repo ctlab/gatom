@@ -156,7 +156,7 @@ makeMetabolicGraph <- function(network,
                           met.db,
                           met.de,
                           met.de.meta=getMetDEMeta(met.de, met.db),
-                          met.to.filter=fread(system.file("mets2mask.lst", package="gatom"))$ID,
+                          met.to.filter=fread(system.file("extdata", "mets2mask.lst", package="gatom"))$ID,
                           gene2reaction.extra=NULL,
                           keepReactionsWithoutEnzymes=FALSE,
                           largest.component=TRUE) {
