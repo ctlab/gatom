@@ -176,22 +176,18 @@ saveModuleToHtml(module = m, file = file.path(tempdir(), "M0.vs.M1.html"),
                  name="M0.vs.M1")
 ```
 
-```{r message=FALSE, warning=FALSE}
-htmltools::includeHTML(file.path(tempdir(), "M0.vs.M1.html"))
-```
-
-
 We can also save the module to dot format:
 
 ```{r}
-saveModuleToDot(m, file = paste0(tempdir(), "M0.vs.M1.dot"), name = "M0.vs.M1")
+saveModuleToDot(m, file = file.path(tempdir(), "M0.vs.M1.dot"), name = "M0.vs.M1")
 ```
 
 Such dot file can be further used to generate svg file using `neato` tool 
 from graphviz suite if it is installed on the system:
 
 ```{r eval=FALSE}
-system(paste0("neato -Tsvg ", tempdir(), "M0.vs.M1.dot > ", tempdir(), "M0.vs.M1.svg"), 
+system(paste0("neato -Tsvg ", file.path(tempdir(), "M0.vs.M1.dot"),
+              " > ", file.path(tempdir(), "M0.vs.M1.svg")), 
        ignore.stderr=TRUE)
 ```
 
@@ -205,7 +201,7 @@ You may also set different seed for different variants of edge layout with `set.
 
 ```{r results="hide", message=FALSE, warning=FALSE}
 set.seed(42)
-saveModuleToPdf(m, file = paste0(tempdir(), "M0.vs.M1.pdf"), name = "M0.vs.M1", 
+saveModuleToPdf(m, file = file.path(tempdir(), "M0.vs.M1.pdf"), name = "M0.vs.M1", 
                 n_iter=100, force=1e-5)
 ```
 
