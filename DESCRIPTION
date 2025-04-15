@@ -1,6 +1,6 @@
 Package: gatom
 Title: Finding an Active Metabolic Module in Atom Transition Network
-Version: 1.6.0
+Version: 1.7.0
 Authors@R: 
     c(
     person("Anastasiia", "Gainullina", role = c("aut")),
