@@ -220,7 +220,7 @@ makeMetabolicGraph <- function(network,
         setnames(vertex.table, "name", "name.orig")
     }
 
-    g <- graph.data.frame(edge.table, directed=FALSE, vertices = vertex.table)
+    g <- graph_from_data_frame(edge.table, directed=FALSE, vertices = vertex.table)
 
     if (!is.null(met.to.filter)) {
         nodes.to.del <- V(g)[metabolite %in% met.to.filter]
@@ -233,7 +233,7 @@ makeMetabolicGraph <- function(network,
 
     if (largest.component) {
         gc <- components(g)
-        g <- induced.subgraph(g, gc$membership == which.max(gc$csize))
+        g <- induced_subgraph(g, gc$membership == which.max(gc$csize))
     }
 
     g
@@ -383,7 +383,7 @@ connectAtomsInsideMetabolite <- function(m) {
     z <- matrix(c(toCollapse$v.x, toCollapse$v.y),
                 nrow=2,
                 byrow=TRUE)
-    res <- igraph::add.edges(m, t(as.matrix(toCollapse[, c("v.x", "v.y")])))
+    res <- igraph::add_edges(m, t(as.matrix(toCollapse[, c("v.x", "v.y")])))
     res
 }
 
@@ -414,7 +414,7 @@ collapseAtomsIntoMetabolites <- function(m) {
     edge.table.c <- edge.table.c[!duplicated(edge.table.c[, list(from, to)])]
 
 
-    res <- graph.data.frame(edge.table.c, directed=FALSE, vertices=vertex.table.c)
+    res <- graph_from_data_frame(edge.table.c, directed=FALSE, vertices=vertex.table.c)
     res
 }
 
@@ -435,7 +435,7 @@ collapseAtomsIntoMetabolites <- function(m) {
 #'
 #' @export
 addHighlyExpressedEdges <- function(m, g, top=3000) {
-    if (!"signalRank" %in% list.edge.attributes(g)) {
+    if (!"signalRank" %in% edge_attr_names(g)) {
         warning("No signalRank edge attribute, returing graph as is")
         return(m)
     }
@@ -455,5 +455,5 @@ addHighlyExpressedEdges <- function(m, g, top=3000) {
         rbind.fill(edge.table, toAdd.edge.table) %>%
         subset(!duplicated(paste0(from, "_", to)))
 
-    res <- graph.data.frame(res.edge.table, directed=FALSE, vertices=vertex.table)
+    res <- graph_from_data_frame(res.edge.table, directed=FALSE, vertices=vertex.table)
 }

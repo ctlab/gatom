@@ -28,7 +28,8 @@ saveModuleToPdf <- function(module, file, name=NULL, n_iter=100, force=1e-5) {
                 size=node_attrs$width, max_size=25, node.color=node_attrs$color,
                 node.label=V(module)$label, label.size=node_attrs$fontsize, label.color="grey13",
                 edge.size=edge_attrs$penwidth, edge.color=edge_attrs$color,
-                edge.label.fill=NA, edge.label=E(module)$label, edge.label.size=edge_attrs$fontsize,
+                edge.label.fill=NA,
+                edge.label=E(module)$label, edge.label.size=edge_attrs$fontsize,
                 legend.size=0, legend.position="up") +
          ggplot2::ggtitle(name) +
          ggplot2::theme(plot.title=
@@ -311,9 +312,9 @@ getEdgeXmlStrings <- function(module, indent="") {
     attr.values <- as_data_frame(module, what="edges")
     attr.xmlStrings <- getAttrXmlStrings(attr.values, paste0(indent, "  "))
 
-    edgelist.names <- get.edgelist(module, names=TRUE)
+    edgelist.names <- as_edgelist(module, names=TRUE)
     edgelist.names <- paste(edgelist.names[,1], edgelist.names[,2], sep=" (pp) ")
-    edgelist.ids <- get.edgelist(module, names=FALSE)
+    edgelist.ids <- as_edgelist(module, names=FALSE)
 
     xmlHeaders <- paste0(indent,
                          "<edge",
@@ -510,9 +511,9 @@ getEdgeDotStrings <- function(module, indent="", extra.attrs=NULL) {
                                  getAttrDotStrings(data.frame(URL=url, target="_blank")))
     }
 
-    edgelist.names <- get.edgelist(module, names=TRUE)
+    edgelist.names <- as_edgelist(module, names=TRUE)
     edgelist.names <- paste(edgelist.names[,1], edgelist.names[,2], sep=" (pp) ")
-    edgelist.ids <- get.edgelist(module, names=FALSE)
+    edgelist.ids <- as_edgelist(module, names=FALSE)
 
     edge.attrs <- apply(attr.dotStrings, 1, function(x) paste(na.omit(x), collapse=", "))
     edgeStrings <- sprintf("%sn%s -- n%s [ %s ];\n",
@@ -581,7 +582,7 @@ createShinyCyJSWidget <- function(module,
 
     nodes <- getJsNodeStyleAttributes(vertex.table)
 
-    positions <- layout.graphopt(module)
+    positions <-  layout_with_graphopt(module)
     nodes$position.x <- positions[, 1]
     nodes$position.y <- positions[, 2]
 
