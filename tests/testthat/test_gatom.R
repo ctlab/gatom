@@ -47,7 +47,7 @@ test_that("overall pipeline works", {
     components <- components[sapply(components, length) > 1]
     for (component in components) {
         for (v in component) {
-            expect_equivalent(setdiff(component, V(m.connected)[nei(v)]$name), v)
+            expect_equivalent(setdiff(component, V(m.connected)[.nei(v)]$name), v)
         }
     }
 
