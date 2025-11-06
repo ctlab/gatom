@@ -2,6 +2,7 @@
 % Please edit documentation in R/gatom-package.R
 \docType{package}
 \name{gatom}
+\alias{gatom-package}
 \alias{gatom}
 \title{gatom: a package for finding an active metabolic module in atom transition network}
 \description{
@@ -52,3 +53,22 @@ scored metabolic graph with atom topology (\code{\link{gsEx}}),
 and metabolic module (\code{\link{mEx}}).
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/ctlab/gatom/}
+  \item Report bugs at \url{https://github.com/ctlab/gatom/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Alexey Sergushichev \email{alsergbox@gmail.com}
+
+Authors:
+\itemize{
+  \item Anastasiia Gainullina
+  \item Mariia Emelianova
+}
+
+}
+\keyword{internal}

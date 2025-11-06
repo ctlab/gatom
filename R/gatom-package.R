@@ -44,9 +44,9 @@
 #' scored metabolic graph with atom topology (\code{\link{gsEx}}),
 #' and metabolic module (\code{\link{mEx}}).
 #'
-#' @docType package
 #' @name gatom
-NULL
+#' @keywords internal
+"_PACKAGE"
 
 #' Example metabolic graph with atom topology.
 #'

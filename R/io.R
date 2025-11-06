@@ -13,29 +13,90 @@
 #'
 #' @export
 #'
-#' @import GGally
+#' @import ggnetwork
+#' @importFrom scales expand_range
+#' @import ggplot2
 #' @import igraph
-saveModuleToPdf <- function(module, file, name=NULL, n_iter=100, force=1e-5) {
-
-    pdflayout <- getModulePdfLayout(module, n_iter, force)
-    layout2 <- pdflayout$layout2
+saveModuleToPdf <- function(module, file, name = NULL, n_iter = 100, force = 1e-5) {
+    pdflayout  <- getModulePdfLayout(module, n_iter, force)
+    layout2    <- pdflayout$layout2
     node_attrs <- getPdfModuleAttrs(module)$produce_node_attrs
     edge_attrs <- getPdfModuleAttrs(module)$produce_edge_attrs
 
-    pdf(file=file, width=pdflayout$gwidth, height=pdflayout$gheight)
-    plot(ggnet2(module, mode=layout2$layouts[[length(layout2$layouts)]],
-                layout.exp=0.3 * (60 / length(V(module))),
-                size=node_attrs$width, max_size=25, node.color=node_attrs$color,
-                node.label=V(module)$label, label.size=node_attrs$fontsize, label.color="grey13",
-                edge.size=edge_attrs$penwidth, edge.color=edge_attrs$color,
-                edge.label.fill=NA,
-                edge.label=E(module)$label, edge.label.size=edge_attrs$fontsize,
-                legend.size=0, legend.position="up") +
-         ggplot2::ggtitle(name) +
-         ggplot2::theme(plot.title=
-                            ggplot2::element_text(size=max(c(node_attrs$fontsize, edge_attrs$fontsize)) * 5)))
-    dev.off()
-    return(invisible(NULL))
+    # below is ChatGPT-based rewrite from ggnet
+    coords <- layout2$layouts[[length(layout2$layouts)]]
+    coords <- as.matrix(coords)
+
+
+    el <- igraph::as_edgelist(module, names = FALSE)
+    net <- network::network(
+        el,
+        directed = igraph::is_directed(module),
+        matrix.type = "edgelist"
+    )
+
+    network::set.vertex.attribute(net, "node_size",   node_attrs$width)
+    network::set.vertex.attribute(net, "node_color",  node_attrs$color)
+    network::set.vertex.attribute(net, "node_label",  V(module)$label)
+
+    network::set.edge.attribute(net, "edge_size",   edge_attrs$penwidth)
+    network::set.edge.attribute(net, "edge_color",  edge_attrs$color)
+    network::set.edge.attribute(net, "edge_label",  E(module)$label)
+
+    net_df <- ggnetwork::ggnetwork(
+        net,
+        layout = coords,
+        scale  = FALSE
+    )
+
+    # scaling the x as in ggnet
+    layout_exp <- 0.3 * (60 / length(V(module)))
+
+    x_range  <- range(net_df$x, na.rm = TRUE)
+    x_limits <- scales::expand_range(x_range, layout_exp / 2)
+
+
+    p <- ggplot2::ggplot(
+        net_df,
+        ggplot2::aes(x = x, y = y, xend = xend, yend = yend)
+    ) +
+        ggnetwork::geom_edges(
+            ggplot2::aes(size = edge_size, colour = edge_color),
+            show.legend = FALSE
+        ) +
+        ggnetwork::geom_edgetext(
+            ggplot2::aes(label = edge_label),
+            size       = edge_attrs$fontsize,
+            colour     = "grey13",
+            fill       = NA,   # <-- transparent background
+            show.legend = FALSE
+        ) +
+        ggnetwork::geom_nodes(
+            ggplot2::aes(size = node_size, colour = node_color),
+            show.legend = FALSE
+        ) +
+        ggnetwork::geom_nodetext(
+            ggplot2::aes(label = node_label),
+            size   = node_attrs$fontsize,
+            colour = "grey13"
+        ) +
+        ggplot2::scale_size_identity() +
+        ggplot2::scale_colour_identity() +
+        ggnetwork::theme_blank() +
+        ggplot2::ggtitle(name) +
+        ggplot2::theme(
+            plot.title = ggplot2::element_text(
+                size = max(c(node_attrs$fontsize, edge_attrs$fontsize)) * 5
+            ),
+            legend.position = "none"
+        ) +
+        scale_x_continuous(breaks = NULL, limits = x_limits) +
+        scale_y_continuous(breaks = NULL)
+
+    ggsave(filename=file, plot=p, device="pdf",
+           width = pdflayout$gwidth, height = pdflayout$gheight)
+
+    invisible(NULL)
 }
 
 getPdfModuleAttrs <- function(module) {
