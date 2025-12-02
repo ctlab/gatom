@@ -61,7 +61,7 @@ saveModuleToPdf <- function(module, file, name = NULL, n_iter = 100, force = 1e-
         ggplot2::aes(x = x, y = y, xend = xend, yend = yend)
     ) +
         ggnetwork::geom_edges(
-            ggplot2::aes(size = edge_size, colour = edge_color),
+            ggplot2::aes(linewidth = edge_size, colour = edge_color),
             show.legend = FALSE
         ) +
         ggnetwork::geom_edgetext(
@@ -94,7 +94,8 @@ saveModuleToPdf <- function(module, file, name = NULL, n_iter = 100, force = 1e-
         scale_y_continuous(breaks = NULL)
 
     ggsave(filename=file, plot=p, device="pdf",
-           width = pdflayout$gwidth, height = pdflayout$gheight)
+           width = pdflayout$gwidth, height = pdflayout$gheight,
+           limitsize=FALSE)
 
     invisible(NULL)
 }
