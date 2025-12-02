@@ -175,7 +175,7 @@ findIdColumn <- function(de, idsList,
     # No column named ID, but may be something with unique values
 
     idCandidates <- colnames(de)[sapply(de,
-                                        pryr::compose(all, `!`, duplicated))]
+                                        function(x) all(!duplicated(x)))]
 
     z1 <- z[idCandidates, , drop=FALSE]
     if (max(z1) / nrow(de.sample) >= match.threshold) {
