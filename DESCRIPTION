@@ -37,7 +37,7 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    KEGGREST,
+    KEGGREST (>= 1.53.2),
     AnnotationDbi,
     org.Mm.eg.db,
     reactome.db,
