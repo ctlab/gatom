@@ -42,9 +42,8 @@ makeOrgGatomAnnotation <- function(org.db,
             meta <- AnnotationDbi::metadata(org.db)
             organismName <- meta$value[match("ORGANISM", meta$name)]
             genomeListRaw <- KEGGREST::keggList("genome")
-            keggOrgCodes <- as.data.table(tstrsplit(genomeListRaw, split="; ", fixed=TRUE))
-            setnames(keggOrgCodes, new=c("organism", "species"))
-            keggOrgCode <- keggOrgCodes[grep(organismName, species), organism]
+            keggOrgCodes <- as.data.table(genomeListRaw)
+            keggOrgCode <- keggOrgCodes[grep(organismName, organism), genome]
         }
     }
 
