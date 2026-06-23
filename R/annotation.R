@@ -41,8 +41,9 @@ makeOrgGatomAnnotation <- function(org.db,
         if (is.null(keggOrgCode)) {
             meta <- AnnotationDbi::metadata(org.db)
             organismName <- meta$value[match("ORGANISM", meta$name)]
-            keggOrgCodes <- data.table(KEGGREST::keggList("organism"))
-            keggOrgCode <- keggOrgCodes[grep(organismName, species), organism]
+            genomeListRaw <- KEGGREST::keggList("genome")
+            keggOrgCodes <- as.data.table(genomeListRaw)
+            keggOrgCode <- keggOrgCodes[grep(organismName, organism), genome]
         }
     }
 
@@ -83,7 +84,7 @@ makeOrgGatomAnnotation <- function(org.db,
     }
 
     if (appendOrthologiesFromKegg) {
-        kegg.gene2orthology <- KEGGREST::keggLink("orthology", keggOrgCode)
+        kegg.gene2orthology <- KEGGREST::keggLink("ko", keggOrgCode)
         kegg.gene2orthology <- data.table(gene=gsub(paste0(keggOrgCode, ":"), "",
                                                     names(kegg.gene2orthology)),
                                           enzyme=gsub("ko:", "", kegg.gene2orthology))
